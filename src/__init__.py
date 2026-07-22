@@ -1,0 +1,1 @@
+"""Vietnamese speaker-verification utilities."""

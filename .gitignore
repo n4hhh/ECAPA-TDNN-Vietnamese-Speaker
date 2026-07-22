@@ -1,0 +1,42 @@
+﻿# Python environments
+.venv/
+.venv-gpu/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# IDE and OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Raw datasets
+augmented_dataset/
+data/
+datasets/
+*.wav
+*.flac
+*.mp3
+*.zip
+
+# Local manifest containing absolute paths
+manifests/full_manifest.csv
+
+# Pretrained models and checkpoints
+pretrained_models/
+checkpoints/
+*.ckpt
+*.pth
+*.pt
+*.onnx
+
+# Training outputs
+runs/
+logs/
+wandb/
+outputs/
