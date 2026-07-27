@@ -1,0 +1,30 @@
+{
+  "expected_rows": {
+    "test": 9198,
+    "train": 31998,
+    "validation": 8504
+  },
+  "expected_speakers": {
+    "test": 100,
+    "train": 488,
+    "validation": 100
+  },
+  "manifest_version": 1,
+  "output_splits": [
+    "train",
+    "validation",
+    "test"
+  ],
+  "path_base": "dataset_root_cli_argument",
+  "path_separator": "/",
+  "quarantine_groups": [
+    "part",
+    "test"
+  ],
+  "train_label_order": "numeric_aware_speaker_id",
+  "trusted_groups": [
+    "train",
+    "train_small"
+  ],
+  "validation_test_label": -1
+}

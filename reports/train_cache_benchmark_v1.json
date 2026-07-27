@@ -1,0 +1,486 @@
+{
+  "analysis": {
+    "batch_diversity": {
+      "sample-random": {
+        "16": {
+          "batches_one_speaker_at_least_25pct_pct": 1.7008504252126062,
+          "batches_one_speaker_at_least_50pct_pct": 0.0,
+          "batches_with_duplicate_speakers_pct": 68.83441720860431,
+          "complete_batches": 1999,
+          "max_samples_from_one_speaker": {
+            "max": 5,
+            "mean": 1.8139069534767385,
+            "median": 2,
+            "min": 1
+          },
+          "represented_speaker_sample_count_distribution": {
+            "1": 27699,
+            "2": 1789,
+            "3": 189,
+            "4": 30,
+            "5": 4
+          },
+          "unique_speakers_per_batch": {
+            "max": 16.0,
+            "mean": 14.862931465732867,
+            "median": 15.0,
+            "min": 10.0,
+            "q1": 14.0,
+            "q3": 16.0
+          }
+        },
+        "32": {
+          "batches_one_speaker_at_least_25pct_pct": 0.1001001001001001,
+          "batches_one_speaker_at_least_50pct_pct": 0.0,
+          "batches_with_duplicate_speakers_pct": 98.998998998999,
+          "complete_batches": 999,
+          "max_samples_from_one_speaker": {
+            "max": 8,
+            "mean": 2.73973973973974,
+            "median": 3,
+            "min": 1
+          },
+          "represented_speaker_sample_count_distribution": {
+            "1": 24680,
+            "2": 2521,
+            "3": 506,
+            "4": 137,
+            "5": 22,
+            "6": 8,
+            "7": 2,
+            "8": 1
+          },
+          "unique_speakers_per_batch": {
+            "max": 32.0,
+            "mean": 27.904904904904903,
+            "median": 28.0,
+            "min": 21.0,
+            "q1": 27.0,
+            "q3": 29.0
+          }
+        }
+      },
+      "sequential": {
+        "16": {
+          "batches_one_speaker_at_least_25pct_pct": 100.0,
+          "batches_one_speaker_at_least_50pct_pct": 98.59929964982491,
+          "batches_with_duplicate_speakers_pct": 100.0,
+          "complete_batches": 1999,
+          "max_samples_from_one_speaker": {
+            "max": 16,
+            "mean": 15.02551275637819,
+            "median": 16,
+            "min": 6
+          },
+          "represented_speaker_sample_count_distribution": {
+            "1": 58,
+            "10": 56,
+            "11": 42,
+            "12": 44,
+            "13": 51,
+            "14": 30,
+            "15": 37,
+            "16": 1615,
+            "2": 48,
+            "3": 71,
+            "4": 59,
+            "5": 80,
+            "6": 81,
+            "7": 67,
+            "8": 64,
+            "9": 54
+          },
+          "unique_speakers_per_batch": {
+            "max": 4.0,
+            "mean": 1.2291145572786393,
+            "median": 1.0,
+            "min": 1.0,
+            "q1": 1.0,
+            "q3": 1.0
+          }
+        },
+        "32": {
+          "batches_one_speaker_at_least_25pct_pct": 100.0,
+          "batches_one_speaker_at_least_50pct_pct": 95.3953953953954,
+          "batches_with_duplicate_speakers_pct": 100.0,
+          "complete_batches": 999,
+          "max_samples_from_one_speaker": {
+            "max": 32,
+            "mean": 28.68268268268268,
+            "median": 32,
+            "min": 8
+          },
+          "represented_speaker_sample_count_distribution": {
+            "1": 23,
+            "10": 29,
+            "11": 27,
+            "12": 23,
+            "13": 28,
+            "14": 16,
+            "15": 27,
+            "16": 26,
+            "17": 20,
+            "18": 15,
+            "19": 18,
+            "2": 26,
+            "20": 18,
+            "21": 23,
+            "22": 23,
+            "23": 10,
+            "24": 16,
+            "25": 16,
+            "26": 23,
+            "27": 15,
+            "28": 17,
+            "29": 18,
+            "3": 39,
+            "30": 16,
+            "31": 12,
+            "32": 675,
+            "4": 31,
+            "5": 60,
+            "6": 50,
+            "7": 53,
+            "8": 43,
+            "9": 33
+          },
+          "unique_speakers_per_batch": {
+            "max": 6.0,
+            "mean": 1.4704704704704705,
+            "median": 1.0,
+            "min": 1.0,
+            "q1": 1.0,
+            "q3": 2.0
+          }
+        }
+      },
+      "shard-local": {
+        "16": {
+          "batches_one_speaker_at_least_25pct_pct": 97.89894947473736,
+          "batches_one_speaker_at_least_50pct_pct": 65.43271635817909,
+          "batches_with_duplicate_speakers_pct": 100.0,
+          "complete_batches": 1999,
+          "max_samples_from_one_speaker": {
+            "max": 16,
+            "mean": 9.88544272136068,
+            "median": 9,
+            "min": 2
+          },
+          "represented_speaker_sample_count_distribution": {
+            "1": 2090,
+            "10": 127,
+            "11": 132,
+            "12": 134,
+            "13": 78,
+            "14": 96,
+            "15": 43,
+            "16": 350,
+            "2": 1420,
+            "3": 850,
+            "4": 597,
+            "5": 445,
+            "6": 330,
+            "7": 266,
+            "8": 205,
+            "9": 164
+          },
+          "unique_speakers_per_batch": {
+            "max": 13.0,
+            "mean": 3.6653326663331667,
+            "median": 3.0,
+            "min": 1.0,
+            "q1": 2.0,
+            "q3": 5.0
+          }
+        },
+        "32": {
+          "batches_one_speaker_at_least_25pct_pct": 96.49649649649649,
+          "batches_one_speaker_at_least_50pct_pct": 62.36236236236236,
+          "batches_with_duplicate_speakers_pct": 100.0,
+          "complete_batches": 999,
+          "max_samples_from_one_speaker": {
+            "max": 32,
+            "mean": 19.38738738738739,
+            "median": 18,
+            "min": 4
+          },
+          "represented_speaker_sample_count_distribution": {
+            "1": 843,
+            "10": 119,
+            "11": 82,
+            "12": 66,
+            "13": 66,
+            "14": 64,
+            "15": 50,
+            "16": 56,
+            "17": 57,
+            "18": 42,
+            "19": 34,
+            "2": 630,
+            "20": 22,
+            "21": 27,
+            "22": 27,
+            "23": 35,
+            "24": 33,
+            "25": 31,
+            "26": 28,
+            "27": 22,
+            "28": 9,
+            "29": 16,
+            "3": 443,
+            "30": 26,
+            "31": 1,
+            "32": 161,
+            "4": 340,
+            "5": 289,
+            "6": 219,
+            "7": 193,
+            "8": 146,
+            "9": 141
+          },
+          "unique_speakers_per_batch": {
+            "max": 17.0,
+            "mean": 4.322322322322322,
+            "median": 4.0,
+            "min": 1.0,
+            "q1": 2.0,
+            "q3": 6.0
+          }
+        }
+      }
+    },
+    "index_order": {
+      "consecutive_same_speaker_run_length": {
+        "max": 1595.0,
+        "mean": 65.56967213114754,
+        "median": 29.0,
+        "min": 5.0,
+        "q1": 10.0,
+        "q3": 75.25
+      },
+      "neighbor_pairs": 31997,
+      "neighbor_same_speaker_pct": 98.47798231084164,
+      "runs": 488,
+      "speaker_transitions": 487
+    },
+    "seed": 20260727,
+    "shard_distribution": {
+      "all_feature_indexes_valid_and_unique": true,
+      "dominant_speaker_share": {
+        "max": 1.0,
+        "mean": 0.599484251968504,
+        "median": 0.5625,
+        "min": 0.12890625,
+        "q1": 0.390625,
+        "q3": 0.78515625
+      },
+      "shards_at_least_25pct_dominant": 119,
+      "shards_at_least_50pct_dominant": 72,
+      "shards_at_least_75pct_dominant": 38,
+      "single_speaker_shards": 22,
+      "unique_speakers": {
+        "max": 22.0,
+        "mean": 4.888,
+        "median": 4.0,
+        "min": 1.0,
+        "q1": 2.0,
+        "q3": 6.0
+      }
+    },
+    "speaker_distribution": {
+      "speakers_fewer_than_10": 119,
+      "speakers_fewer_than_20": 204,
+      "speakers_fewer_than_50": 316,
+      "speakers_more_than_100": 84,
+      "speakers_more_than_500": 6,
+      "utterances_per_speaker": {
+        "max": 1595.0,
+        "mean": 65.56967213114754,
+        "median": 29.0,
+        "min": 5.0,
+        "q1": 10.0,
+        "q3": 75.25
+      }
+    },
+    "train_confirmation": {
+      "label_max": 487,
+      "label_min": 0,
+      "labels_contiguous_0_487": true,
+      "rows": 31998,
+      "shards": 125,
+      "speakers": 488
+    }
+  },
+  "benchmarks": [
+    {
+      "access_pattern": "sequential",
+      "actual_measured_samples": 512,
+      "all_shapes_and_metadata_valid": true,
+      "batch_size": 32,
+      "batches_per_second": 140.14790859927197,
+      "completed_successfully": true,
+      "dataset_shard_load_count": 3,
+      "error": null,
+      "final_cached_shard_count": 2,
+      "first_batch_latency_seconds": 0.014995599999565457,
+      "max_cached_shards": 2,
+      "measured_elapsed_seconds": 0.11416509999980917,
+      "measured_shard_load_count": 2,
+      "memory_metric": null,
+      "num_workers": 0,
+      "requested_measured_samples": 512,
+      "samples_per_second": 4484.733075176703,
+      "shard_loads_per_measured_sample": 0.00390625,
+      "validate_finite": true,
+      "warmup_batches": 2
+    },
+    {
+      "access_pattern": "sample-random",
+      "actual_measured_samples": 512,
+      "all_shapes_and_metadata_valid": true,
+      "batch_size": 32,
+      "batches_per_second": 5.28136540196057,
+      "completed_successfully": true,
+      "dataset_shard_load_count": 598,
+      "error": null,
+      "final_cached_shard_count": 2,
+      "first_batch_latency_seconds": 0.2511530000001585,
+      "max_cached_shards": 2,
+      "measured_elapsed_seconds": 3.0295195999997304,
+      "measured_shard_load_count": 502,
+      "memory_metric": null,
+      "num_workers": 0,
+      "requested_measured_samples": 512,
+      "samples_per_second": 169.00369286273823,
+      "shard_loads_per_measured_sample": 0.98046875,
+      "validate_finite": true,
+      "warmup_batches": 2
+    },
+    {
+      "access_pattern": "sample-random",
+      "actual_measured_samples": 512,
+      "all_shapes_and_metadata_valid": true,
+      "batch_size": 32,
+      "batches_per_second": 6.309407507990607,
+      "completed_successfully": true,
+      "dataset_shard_load_count": 598,
+      "error": null,
+      "final_cached_shard_count": 2,
+      "first_batch_latency_seconds": 0.16855539999960456,
+      "max_cached_shards": 2,
+      "measured_elapsed_seconds": 2.5358957999997074,
+      "measured_shard_load_count": 502,
+      "memory_metric": null,
+      "num_workers": 0,
+      "requested_measured_samples": 512,
+      "samples_per_second": 201.90104025569943,
+      "shard_loads_per_measured_sample": 0.98046875,
+      "validate_finite": false,
+      "warmup_batches": 2
+    },
+    {
+      "access_pattern": "sample-random",
+      "actual_measured_samples": 512,
+      "all_shapes_and_metadata_valid": true,
+      "batch_size": 32,
+      "batches_per_second": 6.575723046985441,
+      "completed_successfully": true,
+      "dataset_shard_load_count": 576,
+      "error": null,
+      "final_cached_shard_count": 8,
+      "first_batch_latency_seconds": 0.16582160000052681,
+      "max_cached_shards": 8,
+      "measured_elapsed_seconds": 2.4331924999996772,
+      "measured_shard_load_count": 484,
+      "memory_metric": null,
+      "num_workers": 0,
+      "requested_measured_samples": 512,
+      "samples_per_second": 210.42313750353412,
+      "shard_loads_per_measured_sample": 0.9453125,
+      "validate_finite": false,
+      "warmup_batches": 2
+    },
+    {
+      "access_pattern": "sample-random",
+      "actual_measured_samples": 512,
+      "all_shapes_and_metadata_valid": true,
+      "batch_size": 32,
+      "batches_per_second": 6.499956064360233,
+      "completed_successfully": true,
+      "dataset_shard_load_count": null,
+      "error": null,
+      "final_cached_shard_count": null,
+      "first_batch_latency_seconds": 2.2333793999996487,
+      "max_cached_shards": 8,
+      "measured_elapsed_seconds": 2.461555099999714,
+      "measured_shard_load_count": null,
+      "memory_metric": null,
+      "num_workers": 1,
+      "requested_measured_samples": 512,
+      "samples_per_second": 207.99859405952745,
+      "shard_loads_per_measured_sample": null,
+      "validate_finite": false,
+      "warmup_batches": 2
+    },
+    {
+      "access_pattern": "sample-random",
+      "actual_measured_samples": 512,
+      "all_shapes_and_metadata_valid": true,
+      "batch_size": 32,
+      "batches_per_second": 9.387759652231157,
+      "completed_successfully": true,
+      "dataset_shard_load_count": null,
+      "error": null,
+      "final_cached_shard_count": null,
+      "first_batch_latency_seconds": 3.81566870000006,
+      "max_cached_shards": 8,
+      "measured_elapsed_seconds": 1.7043469999998706,
+      "measured_shard_load_count": null,
+      "memory_metric": null,
+      "num_workers": 2,
+      "requested_measured_samples": 512,
+      "samples_per_second": 300.408308871397,
+      "shard_loads_per_measured_sample": null,
+      "validate_finite": false,
+      "warmup_batches": 2
+    },
+    {
+      "access_pattern": "shard-local",
+      "actual_measured_samples": 512,
+      "all_shapes_and_metadata_valid": true,
+      "batch_size": 32,
+      "batches_per_second": 636.8615462984973,
+      "completed_successfully": true,
+      "dataset_shard_load_count": 3,
+      "error": null,
+      "final_cached_shard_count": 2,
+      "first_batch_latency_seconds": 0.0061894000000393135,
+      "max_cached_shards": 2,
+      "measured_elapsed_seconds": 0.025123200000052748,
+      "measured_shard_load_count": 2,
+      "memory_metric": null,
+      "num_workers": 0,
+      "requested_measured_samples": 512,
+      "samples_per_second": 20379.569481551913,
+      "shard_loads_per_measured_sample": 0.00390625,
+      "validate_finite": false,
+      "warmup_batches": 2
+    }
+  ],
+  "environment": {
+    "operating_system": "Windows",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.10.11",
+    "torch": "2.2.0+cu121"
+  },
+  "method": {
+    "cache_dir": "outputs/fbank_cache_v1",
+    "first_batch_precedes_warmup": true,
+    "memory_reporting": "unavailable; no new dependency installed",
+    "operating_system_file_cache_affects_results": true,
+    "seed": 20260727,
+    "short_diagnostic_not_full_epoch": true,
+    "worker_shard_load_counts_available": false
+  },
+  "schema_version": 1
+}

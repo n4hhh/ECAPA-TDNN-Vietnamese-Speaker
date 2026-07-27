@@ -1,5 +1,6 @@
 ﻿# Python environments
 .venv/
+.venv-cuda/
 .venv-gpu/
 venv/
 env/
@@ -26,6 +27,14 @@ datasets/
 
 # Local manifest containing absolute paths
 manifests/full_manifest.csv
+
+# Portable manifests contain only dataset-root-relative paths
+!manifests/portable/
+!manifests/portable/train_manifest_v1.csv
+!manifests/portable/validation_manifest_v1.csv
+!manifests/portable/test_manifest_v1.csv
+!manifests/portable/speaker_to_label_v1.json
+!manifests/portable/portable_manifest_config_v1.json
 
 # Pretrained models and checkpoints
 pretrained_models/

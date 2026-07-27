@@ -1,0 +1,8 @@
+--index-url https://download.pytorch.org/whl/cu121
+--extra-index-url https://pypi.org/simple
+torch==2.2.0+cu121
+torchaudio==2.2.0+cu121
+speechbrain==1.0.3
+huggingface_hub==0.36.0
+numpy==1.26.4
+soundfile==0.13.1

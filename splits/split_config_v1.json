@@ -1,0 +1,30 @@
+{
+  "manifest": "manifests\\full_manifest.csv",
+  "minimum_evaluation_utterances": 10,
+  "minimum_train_utterances": 5,
+  "quarantine_groups": [
+    "test",
+    "part"
+  ],
+  "seed": 2026,
+  "test_target": 100,
+  "trusted_groups": [
+    "train",
+    "train_small"
+  ],
+  "utterance_buckets": {
+    "10-19": [
+      10,
+      19
+    ],
+    "20-49": [
+      20,
+      49
+    ],
+    "50+": [
+      50,
+      null
+    ]
+  },
+  "validation_target": 100
+}
