@@ -13,10 +13,16 @@ from torch.utils.data import Sampler
 from src.cached_fbank_dataset import CachedFbankDataset
 
 
-def validate_train_sampler_metadata(dataset: CachedFbankDataset) -> dict[str, object]:
+def validate_train_sampler_metadata(
+    dataset: CachedFbankDataset,
+    *,
+    validate_shard_existence: bool = True,
+) -> dict[str, object]:
     """Validate the train index invariants required by all sampler implementations."""
     if not isinstance(dataset, CachedFbankDataset):
         raise TypeError("dataset must be a CachedFbankDataset")
+    if not isinstance(validate_shard_existence, bool):
+        raise TypeError("validate_shard_existence must be a bool")
     if dataset.split != "train":
         raise ValueError("training batch samplers require the train split")
     if not dataset.rows:
@@ -54,13 +60,14 @@ def validate_train_sampler_metadata(dataset: CachedFbankDataset) -> dict[str, ob
             f"expected 0..{len(speaker_to_label) - 1}, got "
             f"{min(actual_labels)}..{max(actual_labels)} with gaps"
         )
-    missing = []
-    for relative in sorted(shards):
-        path = dataset.cache_dir / Path(*PurePosixPath(relative).parts)
-        if not path.is_file():
-            missing.append(relative)
-    if missing:
-        raise FileNotFoundError(f"missing referenced train shards: {missing[:3]}")
+    if validate_shard_existence:
+        missing = []
+        for relative in sorted(shards):
+            path = dataset.cache_dir / Path(*PurePosixPath(relative).parts)
+            if not path.is_file():
+                missing.append(relative)
+        if missing:
+            raise FileNotFoundError(f"missing referenced train shards: {missing[:3]}")
     if assigned != len(dataset):
         raise ValueError(
             f"sampler grouping assigned {assigned} rows, expected {len(dataset)}"
@@ -112,9 +119,12 @@ class _PKBase(Sampler[list[int]]):
     def __init__(
         self, dataset: CachedFbankDataset, *, speakers_per_batch: int = 16,
         samples_per_speaker: int = 2, num_batches: int | None = None,
-        seed: int = 0,
+        seed: int = 0, validate_shard_existence: bool = True,
     ) -> None:
-        validation = validate_train_sampler_metadata(dataset)
+        validation = validate_train_sampler_metadata(
+            dataset,
+            validate_shard_existence=validate_shard_existence,
+        )
         if speakers_per_batch < 1:
             raise ValueError("speakers_per_batch (P) must be at least 1")
         if samples_per_speaker < 1:

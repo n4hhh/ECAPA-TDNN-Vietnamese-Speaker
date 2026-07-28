@@ -1,0 +1,659 @@
+{
+  "schema_name": "ecapa_aam_one_epoch_pilot_report",
+  "schema_version": 1,
+  "technical_pass": true,
+  "training_pass": true,
+  "checkpoint_pass": true,
+  "validation_pass": true,
+  "scope_compliance_pass": false,
+  "overall_pass": false,
+  "model_quality_result": "IMPROVED",
+  "environment": {
+    "interpreter": ".venv-cuda/Scripts/python.exe",
+    "python": "3.10.11",
+    "torch": "2.2.0+cu121",
+    "speechbrain": "1.0.3",
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_memory_bytes": 4294443008
+  },
+  "baseline_metrics": {
+    "interpolated_eer": 0.11665301106104056,
+    "interpolated_eer_percentage": 11.665301106104057,
+    "empirical_threshold": 0.31165990233421326,
+    "empirical_far": 0.11665301106104056,
+    "empirical_frr": 0.11665301106104056,
+    "empirical_average_error": 0.11665301106104056,
+    "same_speaker_scores": {
+      "mean": 0.4905432510233207,
+      "standard_deviation": 0.1512383760047422,
+      "median": 0.5050629079341888
+    },
+    "different_speaker_scores": {
+      "mean": 0.16336830629613902,
+      "standard_deviation": 0.11727968425816838,
+      "median": 0.15320874005556107
+    },
+    "score_range": [
+      -0.20446446537971497,
+      0.935106635093689
+    ],
+    "same_speaker_rule": "cosine score >= threshold",
+    "role": "historical comparison reference only"
+  },
+  "pilot_metrics": {
+    "interpolated_eer": 0.0646251536255633,
+    "interpolated_eer_percentage": 6.46251536255633,
+    "interpolated_threshold": 0.1744520664215088,
+    "interpolated_threshold_kind": "non-empirical linearly interpolated ROC crossing",
+    "interpolated_far": 0.0646251536255633,
+    "interpolated_frr": 0.0646251536255633,
+    "empirical_threshold": 0.1744520664215088,
+    "empirical_far": 0.0646251536255633,
+    "empirical_frr": 0.0646251536255633,
+    "empirical_far_frr_gap": 0.0,
+    "empirical_average_error": 0.0646251536255633,
+    "same_speaker_scores": {
+      "count": 9764,
+      "minimum": -0.20374907553195953,
+      "mean": 0.42481032643701927,
+      "standard_deviation": 0.15599993927001696,
+      "q1": 0.3339083716273308,
+      "median": 0.4358007609844208,
+      "q3": 0.5242005735635757,
+      "maximum": 0.9287939071655273
+    },
+    "different_speaker_scores": {
+      "count": 9764,
+      "minimum": -0.3212318420410156,
+      "mean": 0.008027285437529052,
+      "standard_deviation": 0.10356156850219239,
+      "q1": -0.06446131318807602,
+      "median": 0.0005986420437693596,
+      "q3": 0.06763310916721821,
+      "maximum": 0.47702693939208984
+    },
+    "score_count": 19528,
+    "score_range": [
+      -0.3212318420410156,
+      0.9287939071655273
+    ],
+    "metric_implementation": "grouped_sorted_eer_v2",
+    "metric_complexity": "O(N log N) sort plus O(N) grouped scan",
+    "same_speaker_rule": "cosine score >= threshold"
+  },
+  "metric_differences": {
+    "baseline_interpolated_eer": 0.11665301106104056,
+    "pilot_interpolated_eer": 0.0646251536255633,
+    "signed_eer_difference": -0.05202785743547726,
+    "absolute_eer_difference": 0.05202785743547726,
+    "percentage_point_difference": -5.202785743547726,
+    "relative_eer_change": -0.44600526777875327,
+    "relative_eer_reduction_percentage": 44.60052677787533,
+    "numerical_tolerance": 1e-12,
+    "model_quality_result": "IMPROVED"
+  },
+  "training_configuration": {
+    "pretrained_model_identifier": "speechbrain/spkrec-ecapa-voxceleb",
+    "cached_feature_shape": [
+      301,
+      80
+    ],
+    "cached_feature_dtype": "float32 CPU",
+    "forward_path": "cached Fbank -> mean_var_norm -> embedding_model -> squeeze dim 1 -> AAM",
+    "epoch": 0,
+    "logical_batches": 1000,
+    "logical_batch_size": 32,
+    "sample_selections": 32000,
+    "physical_microbatch_size": 4,
+    "accumulation_steps": 8,
+    "num_workers": 0,
+    "max_cached_shards": 8,
+    "augmentation": false,
+    "scheduler": false,
+    "warmup": false,
+    "gradient_clipping": false,
+    "early_stopping": false,
+    "microbatch_2_fallback_attempted": false
+  },
+  "sampler_configuration": {
+    "name": "HybridShardAwareSpeakerBatchSampler",
+    "speakers_per_batch": 16,
+    "samples_per_speaker": 2,
+    "logical_batch_size": 32,
+    "active_shard_window": 8,
+    "seed": 20260727,
+    "epoch": 0,
+    "num_logical_batches": 1000,
+    "sample_selections": 32000,
+    "round_robin_order": "first utterance from 16 speakers, then second utterance from the same 16 speakers",
+    "plan_sha256": "796f9f3ec2eff82a45052e0482cfde997a5b793b22ddcd6741e68f62ee196b04",
+    "all_batches_exact_p16k2": true,
+    "duplicate_dataset_index_within_batch": false,
+    "speakers_selected": 488,
+    "unique_dataset_indexes_selected": 16897,
+    "repeated_sample_selections": 15103,
+    "speaker_selection_minimum": 56,
+    "speaker_selection_median": 68.0,
+    "speaker_selection_maximum": 76,
+    "queue_cycles": 1666
+  },
+  "optimizer_configuration": [
+    {
+      "group": "embedding_model",
+      "optimizer": "AdamW",
+      "learning_rate": 1e-05,
+      "weight_decay": 0.0001
+    },
+    {
+      "group": "aam_classifier",
+      "optimizer": "AdamW",
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001
+    }
+  ],
+  "aam_configuration": {
+    "classes": 488,
+    "embedding_dimension": 192,
+    "weight_shape": [
+      488,
+      192
+    ],
+    "bias": false,
+    "margin_radians": 0.2,
+    "scale": 30.0,
+    "math_dtype": "float32"
+  },
+  "batchnorm_policy": {
+    "embedding_model_training": true,
+    "batchnorm_modules_eval": true,
+    "batchnorm_affine_trainable": true,
+    "running_buffers_bit_exactly_frozen": true,
+    "tracked_modules": 31,
+    "tracked_buffers": 93
+  },
+  "amp_policy": {
+    "enabled": true,
+    "ecapa_autocast_dtype": "float16",
+    "aam_math_dtype": "float32",
+    "loss_dtype": "float32",
+    "grad_scaler_initial_scale": 128.0
+  },
+  "training_summary": {
+    "task_started_utc": "2026-07-28T08:00:46.030100+00:00",
+    "task_ended_utc": "2026-07-28T08:12:10.434877+00:00",
+    "task_duration_seconds": 684.4041123000025,
+    "training_started_utc": "2026-07-28T08:00:59.590293+00:00",
+    "training_ended_utc": "2026-07-28T08:11:04.479631+00:00",
+    "training_duration_seconds": 604.8890577999991,
+    "epochs_started": [
+      0
+    ],
+    "epochs_completed": [
+      0
+    ],
+    "epoch_1_started": false,
+    "next_epoch": 1,
+    "next_logical_batch_position": 0,
+    "optimizer_updates": 1000,
+    "logical_sample_selections": 32000,
+    "oom_occurred": false,
+    "finite_validation_passed": true,
+    "loss": {
+      "count": 1000,
+      "first": 14.10267436504364,
+      "final": 1.342349648475647,
+      "mean": 5.100674975889735,
+      "minimum": 0.47721143439412117,
+      "maximum": 15.313348054885864
+    },
+    "ecapa_gradient_norm": {
+      "count": 1000,
+      "first": 59.820916009264685,
+      "final": 38.96678272901164,
+      "mean": 48.718236445551575,
+      "minimum": 22.10841567044168,
+      "maximum": 67.12837878484218
+    },
+    "aam_gradient_norm": {
+      "count": 1000,
+      "first": 8.563820396025983,
+      "final": 4.2688503717152875,
+      "mean": 6.506972899575333,
+      "minimum": 2.6217307668304,
+      "maximum": 8.678117474452085
+    },
+    "grad_scaler": {
+      "initial": 128.0,
+      "minimum": 128.0,
+      "maximum": 128.0,
+      "final": 128.0,
+      "optimizer_post_hook_count": 1000,
+      "skipped_optimizer_updates": 0
+    },
+    "step_duration_seconds": {
+      "count": 1000,
+      "first": 2.460299999998824,
+      "final": 0.5069484000014199,
+      "mean": 0.5347478141999782,
+      "minimum": 0.47203930000250693,
+      "maximum": 2.460299999998824
+    },
+    "cuda_peak_memory_allocated_bytes": 775443456,
+    "cuda_peak_memory_reserved_bytes": 874512384
+  },
+  "logging_summary": {
+    "artifact": "outputs/ecapa_aam_one_epoch_pilot_v1/training_log.jsonl",
+    "logical_losses_artifact": "outputs/ecapa_aam_one_epoch_pilot_v1/logical_losses_epoch_000.json",
+    "record_count": 20,
+    "logged_steps": [
+      50,
+      100,
+      150,
+      200,
+      250,
+      300,
+      350,
+      400,
+      450,
+      500,
+      550,
+      600,
+      650,
+      700,
+      750,
+      800,
+      850,
+      900,
+      950,
+      1000
+    ],
+    "latest_window_mean_loss": [
+      {
+        "step": 50,
+        "mean": 14.08393856048584
+      },
+      {
+        "step": 100,
+        "mean": 12.019001777172088
+      },
+      {
+        "step": 150,
+        "mean": 10.432876251935959
+      },
+      {
+        "step": 200,
+        "mean": 9.202434445619582
+      },
+      {
+        "step": 250,
+        "mean": 7.92286917924881
+      },
+      {
+        "step": 300,
+        "mean": 6.861934618353843
+      },
+      {
+        "step": 350,
+        "mean": 5.84722490131855
+      },
+      {
+        "step": 400,
+        "mean": 4.970992584228515
+      },
+      {
+        "step": 450,
+        "mean": 4.321863998845219
+      },
+      {
+        "step": 500,
+        "mean": 3.764565050005913
+      },
+      {
+        "step": 550,
+        "mean": 3.415242707952857
+      },
+      {
+        "step": 600,
+        "mean": 2.9405364802107217
+      },
+      {
+        "step": 650,
+        "mean": 2.618602541126311
+      },
+      {
+        "step": 700,
+        "mean": 2.476743625961244
+      },
+      {
+        "step": 750,
+        "mean": 2.1956059302017095
+      },
+      {
+        "step": 800,
+        "mean": 2.109951032437384
+      },
+      {
+        "step": 850,
+        "mean": 1.907561029214412
+      },
+      {
+        "step": 900,
+        "mean": 1.6893292402662337
+      },
+      {
+        "step": 950,
+        "mean": 1.7030389439594
+      },
+      {
+        "step": 1000,
+        "mean": 1.5291866192501038
+      }
+    ],
+    "records_are_detached_python_scalars": true
+  },
+  "checkpoint_summary": {
+    "rolling_checkpoint_path": "outputs/ecapa_aam_one_epoch_pilot_v1/last.pt",
+    "rolling_checkpoints": [
+      {
+        "global_optimizer_step": 250,
+        "next_epoch": 0,
+        "next_logical_batch_position": 250,
+        "size_bytes": 250708244,
+        "write_and_validation_seconds": 0.6844722999994701,
+        "atomic_save": true,
+        "readable_and_schema_valid": true,
+        "batchnorm_baseline_exact": true
+      },
+      {
+        "global_optimizer_step": 500,
+        "next_epoch": 0,
+        "next_logical_batch_position": 500,
+        "size_bytes": 250708244,
+        "write_and_validation_seconds": 0.6463032999999996,
+        "atomic_save": true,
+        "readable_and_schema_valid": true,
+        "batchnorm_baseline_exact": true
+      },
+      {
+        "global_optimizer_step": 750,
+        "next_epoch": 0,
+        "next_logical_batch_position": 750,
+        "size_bytes": 250708244,
+        "write_and_validation_seconds": 0.36195629999929224,
+        "atomic_save": true,
+        "readable_and_schema_valid": true,
+        "batchnorm_baseline_exact": true
+      },
+      {
+        "global_optimizer_step": 1000,
+        "next_epoch": 1,
+        "next_logical_batch_position": 0,
+        "size_bytes": 250708244,
+        "write_and_validation_seconds": 0.4403965000019525,
+        "atomic_save": true,
+        "readable_and_schema_valid": true,
+        "batchnorm_baseline_exact": true
+      }
+    ],
+    "epoch_checkpoint": {
+      "path": "outputs/ecapa_aam_one_epoch_pilot_v1/epoch_000.pt",
+      "sha256": "e82ba006aef4a505244769f137af897a94bbb601a26ffe2b68fbfec135201b67",
+      "size_bytes": 250711923,
+      "global_optimizer_step": 1000,
+      "next_epoch": 1,
+      "next_logical_batch_position": 0,
+      "write_and_validation_seconds": 0.36164629999984754,
+      "atomic_save": true,
+      "readable_and_schema_valid": true,
+      "batchnorm_baseline_exact": true
+    },
+    "epoch_roundtrip": {
+      "fresh_objects_constructed": true,
+      "embedding_model_state_exact": true,
+      "mean_var_norm_state_exact": true,
+      "aam_classifier_state_exact": true,
+      "optimizer_state_exact": true,
+      "grad_scaler_state_exact": true,
+      "rng_restored_exact": true,
+      "batchnorm_policy_reapplied": true,
+      "batchnorm_baseline_exact": true,
+      "counters_and_schema_valid": true,
+      "epoch_0_complete": true,
+      "global_optimizer_step": 1000,
+      "next_epoch": 1,
+      "next_logical_batch_position": 0,
+      "optimizer_steps_taken_after_load": 0,
+      "compute_features_retained": false,
+      "pretrained_classifier_retained": false
+    },
+    "best_checkpoint": {
+      "path": "outputs/ecapa_aam_one_epoch_pilot_v1/best.pt",
+      "size_bytes": 250710356,
+      "creation_reason": "best_validation",
+      "global_optimizer_step": 1000,
+      "next_epoch": 1,
+      "next_logical_batch_position": 0,
+      "write_and_validation_seconds": 0.7127476999994542,
+      "atomic_save": true,
+      "readable_and_schema_valid": true,
+      "state_matches_epoch_000": true
+    }
+  },
+  "validation_summary": {
+    "validation_rows": 8504,
+    "validation_speakers": 100,
+    "batch_size": 32,
+    "num_workers": 0,
+    "sequential_traversal": true,
+    "inference_mode": true,
+    "augmentation": false,
+    "embedding_shape": [
+      8504,
+      192
+    ],
+    "embedding_dtype": "torch.float32",
+    "embedding_finite": true,
+    "extraction_seconds": 58.01379679999809,
+    "utterances_per_second": 146.58582042677614,
+    "positive_trials": 9764,
+    "negative_trials": 9764,
+    "score_count": 19528,
+    "scoring_seconds": 0.7327373000007356,
+    "metric_seconds": 0.12257150000004913,
+    "trial_path_ownership_validated": true,
+    "aam_classifier_calls": 0,
+    "compute_feature_frontend_calls": 0,
+    "pretrained_classifier_calls": 0,
+    "waveform_frontend_calls": 0,
+    "cuda_peak_memory_allocated_bytes": 1340804096,
+    "cuda_peak_memory_reserved_bytes": 1725956096,
+    "artifacts": {
+      "embeddings": "outputs/ecapa_aam_one_epoch_pilot_v1/validation_embeddings_epoch_000.pt",
+      "scores": "outputs/ecapa_aam_one_epoch_pilot_v1/validation_scores_epoch_000.pt",
+      "metrics": "outputs/ecapa_aam_one_epoch_pilot_v1/validation_metrics_epoch_000.json",
+      "runtime": "outputs/ecapa_aam_one_epoch_pilot_v1/validation_runtime_epoch_000.json"
+    }
+  },
+  "best_checkpoint_decision": {
+    "selection_scope": "best among trained pilot checkpoints",
+    "selection_metric": "lowest interpolated validation EER",
+    "tie_break_1": "lowest empirical average error",
+    "tie_break_2": "earlier checkpoint",
+    "selected_checkpoint": "epoch_000.pt",
+    "best_checkpoint_created": true,
+    "baseline_is_comparison_reference_only": true,
+    "improved_relative_to_pretrained": true,
+    "model_quality_result": "IMPROVED"
+  },
+  "protected_hashes": {
+    "files_compared": 158,
+    "train_shards": 118,
+    "validation_shards": 34,
+    "before_set_sha256": "ccf48065c43930df185087e5e18512b9f9b68de39af80bea11e9200e33ab0d2d",
+    "after_set_sha256": "ccf48065c43930df185087e5e18512b9f9b68de39af80bea11e9200e33ab0d2d",
+    "unchanged": true,
+    "mismatches": {},
+    "core": {
+      "outputs/fbank_cache_v1/fbank_cache_config_v1.json": "c829b31d0795ff8460d1bcc6a8aac9a57e6c419d788d9888db0e34289bb029e9",
+      "outputs/fbank_cache_v1/train_feature_index_v1.csv": "5bd1999f92623084cba2558f19337f76cf4eb78878b63211366768742c6c9a99",
+      "outputs/fbank_cache_v1/validation_feature_index_v1.csv": "7346073ed9b47354c5f85889222ad9a538d2c4ee14e0b7d85001e3c0d61608bc",
+      "manifests/portable/validation_manifest_v1.csv": "9f553fa55b50ee071120bcbb2ce3c2caf9de4799cfb615eb732bbefd0d73d38b",
+      "manifests/verification/validation_trials_v1.csv": "3badacbe16aa82537b618efe1d494241680fcf309c5bf7cc8103a25c172e7f6f",
+      "manifests/verification/validation_trials_config_v1.json": "a6457bc571965855633f1d277a43427507d708afe779b32ab4e0ec2c58d2eb9a"
+    },
+    "full_per_file_mapping_artifact": "outputs/ecapa_aam_one_epoch_pilot_v1/pilot_runtime.json"
+  },
+  "scope_compliance_audit": {
+    "strict_result": "FAIL",
+    "post_run_override_of_runtime_self_report": true,
+    "runtime_artifact_scope_compliance_pass": true,
+    "runtime_artifact_overall_pass": true,
+    "train_shard_paths_referenced_by_index": 125,
+    "train_shards_selected_opened_loaded_and_hashed": 118,
+    "unselected_train_shard_paths_statted_by_sampler_preflight": [
+      "train/shard_00075.pt",
+      "train/shard_00083.pt",
+      "train/shard_00084.pt",
+      "train/shard_00086.pt",
+      "train/shard_00112.pt",
+      "train/shard_00114.pt",
+      "train/shard_00117.pt"
+    ],
+    "unselected_train_shards_opened_loaded_or_hashed": false,
+    "quarantined_or_final_test_paths_accessed": false,
+    "reason": "The existing sampler metadata validator called Path.is_file() for all 125 train-index shard paths before the deterministic epoch plan narrowed tensor access to 118 selected shards. Under the exact-path allowlist, the seven extra metadata-only stats fail strict scope compliance.",
+    "current_implementation_hardened": true,
+    "hardening": "Sampler metadata validation now has an explicit validate_shard_existence switch; the pilot disables broad existence checks, materializes the deterministic plan, and then stats/hashes/loads only its selected shard allowlist.",
+    "current_implementation_reexecuted_on_cuda": false
+  },
+  "post_run_dataset_audit": {
+    "train_rows": 31998,
+    "train_speakers": 488,
+    "train_labels_exactly_0_through_487": true,
+    "validation_rows": 8504,
+    "validation_speakers": 100,
+    "train_validation_speaker_disjoint": true,
+    "validation_labels_all_minus_one": true
+  },
+  "validation_trial_hash": "3badacbe16aa82537b618efe1d494241680fcf309c5bf7cc8103a25c172e7f6f",
+  "final_test_accessed": false,
+  "recursive_listing_used": false,
+  "waveform_accessed": false,
+  "compute_features_called": false,
+  "pretrained_voxceleb_classifier_used": false,
+  "commit_or_push_performed": false,
+  "git_status_short": [
+    " M reports/CODEX_WORKLOG.md",
+    " M src/cached_fbank_samplers.py",
+    "?? reports/ecapa_aam_one_epoch_pilot_v1.json",
+    "?? reports/ecapa_aam_one_epoch_pilot_v1.md",
+    "?? scripts/run_ecapa_aam_one_epoch_pilot.py",
+    "?? src/ecapa_one_epoch_pilot.py",
+    "?? tests/test_ecapa_one_epoch_pilot.py"
+  ],
+  "tests": {
+    "py_compile": {
+      "passed": true,
+      "files": 4
+    },
+    "focused_pilot_tests": {
+      "passed": true,
+      "tests_run": 20
+    },
+    "complete_unittest_discovery": {
+      "passed": true,
+      "tests_run": 100
+    },
+    "git_diff_check": {
+      "passed": true
+    },
+    "post_run_artifact_validation": {
+      "passed": true,
+      "checkpoints_validated": [
+        "last.pt",
+        "epoch_000.pt",
+        "best.pt"
+      ],
+      "training_log_records": 20,
+      "logical_losses": 1000,
+      "validation_embeddings": 8504,
+      "validation_scores": 19528
+    },
+    "commands": [
+      ".venv-cuda\\Scripts\\python.exe -m py_compile src\\cached_fbank_samplers.py src\\ecapa_one_epoch_pilot.py scripts\\run_ecapa_aam_one_epoch_pilot.py tests\\test_ecapa_one_epoch_pilot.py",
+      ".venv-cuda\\Scripts\\python.exe -m unittest tests.test_ecapa_one_epoch_pilot -v",
+      ".venv-cuda\\Scripts\\python.exe -m unittest discover -s tests -p \"test_*.py\" -v",
+      ".venv-cuda\\Scripts\\python.exe scripts\\run_ecapa_aam_one_epoch_pilot.py --device cuda:0 1> outputs\\ecapa_aam_one_epoch_pilot_v1\\console.stdout.log 2> outputs\\ecapa_aam_one_epoch_pilot_v1\\console.stderr.log",
+      "git diff --check",
+      "git diff -- src\\cached_fbank_samplers.py src\\ecapa_one_epoch_pilot.py scripts\\run_ecapa_aam_one_epoch_pilot.py tests\\test_ecapa_one_epoch_pilot.py reports\\ecapa_aam_one_epoch_pilot_v1.md reports\\ecapa_aam_one_epoch_pilot_v1.json reports\\CODEX_WORKLOG.md",
+      "git status --short"
+    ]
+  },
+  "allowlisted_files_inspected": [
+    "AGENTS.md",
+    ".gitignore",
+    "reports/CODEX_WORKLOG.md",
+    "reports/aam_softmax_training_smoke_v1.md",
+    "reports/aam_softmax_training_smoke_v1.json",
+    "reports/aam_softmax_training_smoke_v1_1.md",
+    "reports/aam_softmax_training_smoke_v1_1.json",
+    "reports/validation_trials_v1_summary.md",
+    "reports/pretrained_ecapa_validation_baseline_v1.md",
+    "reports/pretrained_ecapa_validation_baseline_v1.json",
+    "reports/validation_eer_metrics_patch_v1.md",
+    "src/aam_training.py",
+    "src/cached_fbank_dataset.py",
+    "src/cached_fbank_samplers.py",
+    "src/verification_trials.py",
+    "src/verification_metrics.py",
+    "src/verification_baseline.py",
+    "scripts/smoke_test_aam_training_cuda.py",
+    "scripts/evaluate_pretrained_validation_baseline.py",
+    "scripts/recompute_pretrained_validation_metrics.py",
+    "tests/test_aam_training.py",
+    "tests/test_verification_trials.py",
+    "tests/test_verification_metrics.py",
+    "tests/test_verification_baseline.py"
+  ],
+  "files_created": [
+    "src/ecapa_one_epoch_pilot.py",
+    "scripts/run_ecapa_aam_one_epoch_pilot.py",
+    "tests/test_ecapa_one_epoch_pilot.py",
+    "reports/ecapa_aam_one_epoch_pilot_v1.md",
+    "reports/ecapa_aam_one_epoch_pilot_v1.json",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/console.stdout.log",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/console.stderr.log",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/training_log.jsonl",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/logical_losses_epoch_000.json",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/last.pt",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/epoch_000.pt",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/best.pt",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/validation_embeddings_epoch_000.pt",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/validation_scores_epoch_000.pt",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/validation_metrics_epoch_000.json",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/validation_runtime_epoch_000.json",
+    "outputs/ecapa_aam_one_epoch_pilot_v1/pilot_runtime.json"
+  ],
+  "files_modified": [
+    "src/cached_fbank_samplers.py",
+    "reports/CODEX_WORKLOG.md"
+  ],
+  "limitations": [
+    "This is a single deterministic epoch and one fixed-validation observation, not a statistical study or a full fine-tuning result.",
+    "Strict scope compliance and therefore overall PASS are false because the executed version performed metadata-only existence stats on seven train shards not selected by the epoch plan. Those files were not opened, loaded, or hashed.",
+    "The implementation has been hardened to avoid those stats, but the CUDA epoch was not rerun because the task authorizes only one training epoch.",
+    "A post-execution code-hardening edit added explicit 488-speaker and train/validation speaker-disjoint preflight assertions; an independent read-only audit verified those properties for the executed inputs, and the CUDA epoch was not repeated.",
+    "The final test split remains completely untouched, so no final generalization claim is made."
+  ],
+  "deferred": [
+    "epoch 1 and all later training epochs",
+    "full multi-epoch fine-tuning",
+    "hyperparameter tuning",
+    "augmentation",
+    "scheduler, warmup, gradient clipping, and early stopping",
+    "all final-test access and evaluation",
+    "cache, manifest, split, and trial regeneration",
+    "commit and push"
+  ]
+}

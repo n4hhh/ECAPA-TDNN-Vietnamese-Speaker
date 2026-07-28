@@ -920,3 +920,424 @@ model-quality result. Deferred: full fine-tuning, epochs, augmentation,
 validation extraction and scoring, threshold selection, EER, checkpoint
 selection, scheduler work, all final-test evaluation, cache/manifest/split
 regeneration, distributed training, commit, and push.
+
+## 2026-07-28 - One-Epoch ECAPA-TDNN Fine-Tuning Pilot + Fixed Validation v1
+
+### Goal and exact scope
+
+Implement and execute only one deterministic balanced ECAPA-TDNN + AAM epoch,
+perform a full fresh-object checkpoint roundtrip without another optimizer
+step, score the existing immutable validation protocol, compare epoch 0 with
+the historical pretrained validation baseline, and stop. The task did not
+authorize epoch 1, full fine-tuning, hyperparameter work, final-test access,
+commit, or push.
+
+**Outcome: technical PASS; scope-compliance PASS; overall PASS; model-quality
+result IMPROVED.** Exactly 1,000 optimizer updates and 32,000 logical
+selections completed in epoch 0. Epoch 1 was not started.
+
+### Allowlisted files inspected
+
+Before editing or execution, the following mandatory context was read:
+
+- `AGENTS.md`, `.gitignore`, full `reports/CODEX_WORKLOG.md`, initial
+  `git status --short`, and targeted task-file diffs
+- `reports/aam_softmax_training_smoke_v1.md` and `.json`
+- `reports/aam_softmax_training_smoke_v1_1.md` and `.json`
+- `reports/validation_trials_v1_summary.md`
+- `reports/pretrained_ecapa_validation_baseline_v1.md` and `.json`
+- `reports/validation_eer_metrics_patch_v1.md`
+- `src/aam_training.py`, `src/cached_fbank_dataset.py`,
+  `src/cached_fbank_samplers.py`, `src/verification_trials.py`,
+  `src/verification_metrics.py`, and `src/verification_baseline.py`
+- `scripts/smoke_test_aam_training_cuda.py`,
+  `scripts/evaluate_pretrained_validation_baseline.py`, and
+  `scripts/recompute_pretrained_validation_metrics.py`
+- `tests/test_aam_training.py`, `tests/test_verification_trials.py`,
+  `tests/test_verification_metrics.py`, and
+  `tests/test_verification_baseline.py`
+
+No recursive repository, `outputs/`, cache, or manifest listing was used. No
+final-test artifact was accessed, enumerated, statted, hashed, opened, loaded,
+or evaluated.
+
+### Implementation decisions
+
+- Added a narrow fixed-constant pilot helper and one explicit CUDA runner,
+  reusing the smoke-tested AAM, BatchNorm, optimizer grouping, logical
+  round-robin, cached Dataset/sampler, verification scorer, and EER logic.
+- Enforced epoch 0 only, exact step/cursor/checkpoint triggers, strict
+  scalar-only logging, strict checkpoint/runtime/metric schemas, safe atomic
+  writes, fixed allowlisted paths, immutable trial identity, and final-test
+  path rejection.
+- Used the production cached-feature path:
+  `[B,301,80] -> mean_var_norm -> embedding_model -> [B,1,192] ->
+  squeeze(1)`.
+- Validated every trainable gradient and every AdamW parameter step counter on
+  every optimizer update; used an optimizer post-hook to detect skipped
+  GradScaler updates.
+- Revalidated saved validation tensors and JSON artifacts after writing.
+- After the CUDA run, added explicit 488-speaker and train/validation
+  speaker-disjoint preflight assertions. A separate read-only audit verified
+  those properties for the executed inputs; the one-epoch CUDA run was not
+  repeated.
+
+### Files created
+
+- `src/ecapa_one_epoch_pilot.py`
+- `scripts/run_ecapa_aam_one_epoch_pilot.py`
+- `tests/test_ecapa_one_epoch_pilot.py`
+- `reports/ecapa_aam_one_epoch_pilot_v1.md`
+- `reports/ecapa_aam_one_epoch_pilot_v1.json`
+- Ignored `outputs/ecapa_aam_one_epoch_pilot_v1/` runtime directory containing
+  console logs, JSONL/logical-loss logs, `last.pt`, `epoch_000.pt`, `best.pt`,
+  validation embedding/score/metric/runtime artifacts, and
+  `pilot_runtime.json`
+
+### Files modified
+
+- `reports/CODEX_WORKLOG.md` (this append-only entry)
+
+No existing source implementation, source audio, manifest, split, cache
+tensor, trial protocol, pretrained weight, or environment was modified.
+
+### Exact commands
+
+```text
+.venv-cuda\Scripts\python.exe -m py_compile src\ecapa_one_epoch_pilot.py scripts\run_ecapa_aam_one_epoch_pilot.py tests\test_ecapa_one_epoch_pilot.py
+.venv-cuda\Scripts\python.exe -m unittest tests.test_ecapa_one_epoch_pilot -v
+.venv-cuda\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -v
+.venv-cuda\Scripts\python.exe scripts\run_ecapa_aam_one_epoch_pilot.py --device cuda:0
+git diff --check
+git diff -- src\ecapa_one_epoch_pilot.py scripts\run_ecapa_aam_one_epoch_pilot.py tests\test_ecapa_one_epoch_pilot.py reports\ecapa_aam_one_epoch_pilot_v1.md reports\ecapa_aam_one_epoch_pilot_v1.json reports\CODEX_WORKLOG.md
+git status --short
+```
+
+The CUDA command's stdout and stderr were redirected to ignored files in the
+pilot output directory.
+
+### Training configuration
+
+- Interpreter: `.venv-cuda/Scripts/python.exe`
+- Python / PyTorch / SpeechBrain:
+  `3.10.11 / 2.2.0+cu121 / 1.0.3`
+- GPU: NVIDIA GeForce RTX 3050 Laptop GPU, `cuda:0`
+- Model: `speechbrain/spkrec-ecapa-voxceleb`
+- Sampler: `HybridShardAwareSpeakerBatchSampler`, P16K2, W8, seed `20260727`,
+  epoch `0`
+- Exact epoch: 1,000 logical batches x 32 = 32,000 selections
+- Physical microbatch / accumulation: `4 / 8`; no microbatch-2 fallback
+- AAM: 488 classes, 192 dimensions, no bias, margin `0.2`, scale `30`,
+  float32 math
+- AdamW groups:
+  ECAPA `lr=1e-5`, AAM `lr=1e-3`, both `weight_decay=1e-4`
+- AMP: ECAPA float16 autocast, AAM/loss float32, GradScaler initial scale 128
+- BatchNorm: embedding model train mode; only its 31 BatchNorm modules eval;
+  affine parameters trainable; all 93 running-stat buffers bit-exact
+- No augmentation, scheduler, warmup, gradient clipping, or early stopping
+
+The sampler plan SHA-256 was
+`796f9f3ec2eff82a45052e0482cfde997a5b793b22ddcd6741e68f62ee196b04`.
+All 1,000 batches were exact P16K2, no logical batch duplicated a Dataset
+index, and all 488 speakers were selected.
+
+### One-epoch result
+
+- Task UTC start/end:
+  `2026-07-28T08:00:46.030100+00:00` /
+  `2026-07-28T08:12:10.434877+00:00`
+- Task duration: `684.4041123000025` seconds
+- Training UTC start/end:
+  `2026-07-28T08:00:59.590293+00:00` /
+  `2026-07-28T08:11:04.479631+00:00`
+- Training duration: `604.8890577999991` seconds
+- Optimizer updates / selections: `1000 / 32000`
+- Epochs started/completed: `[0] / [0]`
+- Final cursor: next epoch `1`, batch position `0`
+- Epoch 1 started: false
+- OOM / skipped optimizer updates: `false / 0`
+- GradScaler stayed at `128` for all 1,000 updates
+
+Loss count/first/final/mean/minimum/maximum was:
+
+```text
+1000
+14.10267436504364
+1.342349648475647
+5.100674975889735
+0.47721143439412117
+15.313348054885864
+```
+
+ECAPA gradient norm first/final/mean/minimum/maximum was
+`59.820916009264685 / 38.96678272901164 / 48.718236445551575 /
+22.10841567044168 / 67.12837878484218`.
+
+AAM gradient norm first/final/mean/minimum/maximum was
+`8.563820396025983 / 4.2688503717152875 / 6.506972899575333 /
+2.6217307668304 / 8.678117474452085`.
+
+The JSONL log contains exactly 20 scalar-only records at steps 50 through
+1,000, and the ignored logical-loss artifact contains exactly 1,000 values.
+The full 20-window history is in the versioned report.
+
+### Checkpoint results
+
+Atomic rolling `last.pt` writes succeeded at:
+
+- Step 250 -> next cursor `(epoch 0, batch 250)`
+- Step 500 -> next cursor `(epoch 0, batch 500)`
+- Step 750 -> next cursor `(epoch 0, batch 750)`
+- Step 1000 -> next cursor `(epoch 1, batch 0)`
+
+Each was non-empty, readable, schema/counter-valid, and BatchNorm-exact.
+`epoch_000.pt` was 250,711,923 bytes with SHA-256
+`e82ba006aef4a505244769f137af897a94bbb601a26ffe2b68fbfec135201b67`.
+
+The fresh-object epoch checkpoint roundtrip matched the embedding model,
+mean/variance normalization, AAM, AdamW including nonempty moments and all
+step counters, GradScaler, RNG, schema/configuration, counters, and BatchNorm
+buffers exactly. The loaded cursor was global step 1,000, next epoch 1,
+position 0. No post-load optimizer step was taken.
+
+After successful validation, `best.pt` was created atomically as the best among
+trained pilot checkpoints; its model state matches `epoch_000.pt`. The
+pretrained baseline remains a historical comparison reference only.
+
+### Validation result
+
+Validation ran only after the checkpoint roundtrip passed, in eval and
+`torch.inference_mode()` with sequential cached-Fbank traversal, batch size 32,
+`num_workers=0`, and no AAM or augmentation.
+
+- Embeddings: 8,504 rows, 100 speakers, `[8504,192]` float32 CPU, all finite
+- Extraction duration / throughput:
+  `58.01379679999809` seconds / `146.58582042677614` utterances/second
+- Fixed trials: `9764` positive + `9764` negative = `19528`
+- Scoring / metric durations:
+  `0.7327373000007356 / 0.12257150000004913` seconds
+- Trial path ownership validated: true
+- AAM / pretrained classifier / waveform frontend / `compute_features` calls:
+  `0 / 0 / 0 / 0`
+- Pilot interpolated EER:
+  `0.0646251536255633` (6.46251536255633%)
+- Interpolated non-empirical threshold:
+  `0.1744520664215088`
+- Executable empirical threshold:
+  `0.1744520664215088`
+- Empirical FAR / FRR / gap / average:
+  `0.0646251536255633 / 0.0646251536255633 / 0.0 /
+  0.0646251536255633`
+- Same-speaker mean/std/median:
+  `0.42481032643701927 / 0.15599993927001696 / 0.4358007609844208`
+- Different-speaker mean/std/median:
+  `0.008027285437529052 / 0.10356156850219239 /
+  0.0005986420437693596`
+- Score range:
+  `[-0.3212318420410156, 0.9287939071655273]`
+
+### Baseline comparison and model quality
+
+The official historical pretrained interpolated EER was
+`0.11665301106104056` (11.665301106104057%), with empirical threshold/FAR/FRR
+`0.31165990233421326 / 0.11665301106104056 /
+0.11665301106104056`.
+
+Pilot minus baseline interpolated EER was `-0.05202785743547726`, or
+`-5.202785743547726` percentage points. Relative EER change was
+`-0.44600526777875327`, a 44.60052677787533% reduction. With numerical
+tolerance `1e-12`, the model-quality classification is **IMPROVED**.
+
+No automatic continuation was triggered by this observation.
+
+### GPU memory
+
+- Training peak allocated/reserved:
+  `775443456 / 874512384` bytes
+- Validation peak allocated/reserved:
+  `1340804096 / 1725956096` bytes
+- GPU total:
+  `4294443008` bytes
+
+### Protected hashes
+
+Pre/post SHA-256 covered 158 explicitly approved accessed files: six core
+inputs, the exact 118 train shards used by epoch 0, and the exact 34 validation
+shards loaded. The before and after mappings were identical with zero
+mismatches. Aggregate set SHA-256:
+`ccf48065c43930df185087e5e18512b9f9b68de39af80bea11e9200e33ab0d2d`.
+
+- Cache configuration:
+  `c829b31d0795ff8460d1bcc6a8aac9a57e6c419d788d9888db0e34289bb029e9`
+- Train index:
+  `5bd1999f92623084cba2558f19337f76cf4eb78878b63211366768742c6c9a99`
+- Validation index:
+  `7346073ed9b47354c5f85889222ad9a538d2c4ee14e0b7d85001e3c0d61608bc`
+- Validation manifest:
+  `9f553fa55b50ee071120bcbb2ce3c2caf9de4799cfb615eb732bbefd0d73d38b`
+- Validation trial config:
+  `a6457bc571965855633f1d277a43427507d708afe779b32ab4e0ec2c58d2eb9a`
+- Validation trial CSV:
+  `3badacbe16aa82537b618efe1d494241680fcf309c5bf7cc8103a25c172e7f6f`
+
+The immutable trial CSV hash matched the required value exactly. The complete
+per-file hash mapping is in ignored `pilot_runtime.json`. No final-test file
+was included.
+
+### Tests and repository audit
+
+- `py_compile`: PASS for all three new Python files
+- Focused pilot suite: 19 passed
+- Complete repository suite: 99 passed
+- Post-run strict artifact audit: PASS for `last.pt`, `epoch_000.pt`,
+  `best.pt`, 20 log records, 1,000 logical losses, 8,504 validation
+  embeddings, 19,528 aligned scores, and runtime/metric schemas
+- `git diff --check`: PASS
+- No commit or push performed
+
+### Limitations and deferred work
+
+This was one deterministic epoch and one fixed-validation observation, not a
+statistical study or full fine-tuning result. The final test split remains
+untouched, so no final-test or generalization claim is made.
+
+Explicitly deferred: epoch 1 and every later epoch, full fine-tuning,
+hyperparameter tuning, augmentation, scheduler, warmup, gradient clipping,
+early stopping, every final-test operation, cache/manifest/split/trial
+regeneration, commit, and push.
+
+### Post-run strict scope audit and final correction
+
+This append-only correction supersedes the provisional scope/overall PASS
+statements earlier in this dated entry.
+
+The saved numerical artifacts, checkpoints, validation results, fixed-trial
+identity, and 158-file protected pre/post hash map all validate cleanly.
+However, the executed version constructed
+`HybridShardAwareSpeakerBatchSampler` before the exact 118-shard epoch plan was
+known. The existing sampler metadata validator called `Path.is_file()` for all
+125 train shard paths referenced by the train index. The seven unselected
+train-shard paths statted were:
+
+```text
+train/shard_00075.pt
+train/shard_00083.pt
+train/shard_00084.pt
+train/shard_00086.pt
+train/shard_00112.pt
+train/shard_00114.pt
+train/shard_00117.pt
+```
+
+Those seven train shards were not opened, tensor-loaded, or hashed. No
+quarantined validation or final-test path was touched. Nevertheless, metadata
+stat is outside the task's exact selected-shard allowlist, so the final
+classification is:
+
+- Technical pipeline: **PASS**
+- Scope compliance: **FAIL**
+- Overall result: **FAIL**
+- Model-quality result: **IMPROVED**
+
+The original ignored `pilot_runtime.json` self-reported scope/overall PASS
+before this issue was discovered. The versioned JSON/Markdown reports
+explicitly override those two runtime flags and are authoritative for the
+post-run audit.
+
+The final implementation was hardened without rerunning CUDA:
+
+- `src/cached_fbank_samplers.py` now keeps shard-existence validation enabled
+  by default but accepts an explicit `validate_shard_existence=False` for
+  metadata-only planning.
+- The fixed pilot uses that option, materializes its deterministic plan, and
+  then stats, hashes, and loads only the selected shard allowlist.
+- A synthetic focused test proves that planning can succeed without statting
+  missing/unselected real shard paths.
+
+Final Python/test commands and results:
+
+```text
+.venv-cuda\Scripts\python.exe -m py_compile src\cached_fbank_samplers.py src\ecapa_one_epoch_pilot.py scripts\run_ecapa_aam_one_epoch_pilot.py tests\test_ecapa_one_epoch_pilot.py
+.venv-cuda\Scripts\python.exe -m unittest tests.test_ecapa_one_epoch_pilot -v
+.venv-cuda\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -v
+.venv-cuda\Scripts\python.exe scripts\run_ecapa_aam_one_epoch_pilot.py --device cuda:0 1> outputs\ecapa_aam_one_epoch_pilot_v1\console.stdout.log 2> outputs\ecapa_aam_one_epoch_pilot_v1\console.stderr.log
+git diff --check
+git diff -- src\cached_fbank_samplers.py src\ecapa_one_epoch_pilot.py scripts\run_ecapa_aam_one_epoch_pilot.py tests\test_ecapa_one_epoch_pilot.py reports\ecapa_aam_one_epoch_pilot_v1.md reports\ecapa_aam_one_epoch_pilot_v1.json reports\CODEX_WORKLOG.md
+git status --short
+```
+
+- `py_compile`: PASS for four new or modified Python files
+- Focused pilot suite: 20 passed
+- Complete repository suite: 100 passed
+- CUDA training commands rerun after hardening: zero
+- Epoch 1 started: false
+- Commit or push: none
+
+The newly modified existing source file is
+`src/cached_fbank_samplers.py`. The exact 118 selected train shards and 34
+loaded validation shards remain unchanged under the original protected
+pre/post map. The seven metadata-only stat paths cannot be given a valid
+pre-task content hash retroactively and were not hashed after discovery.
+
+## 2026-07-28 17:55:00 +07:00 - Resumed Multi-Epoch ECAPA-AAM Fine-Tuning v1
+
+### Goal and scope
+
+Resume only from the completed epoch-0 pilot checkpoint, train epochs 1
+through 4 at most with per-step cosine decay and fixed validation, select the
+best checkpoint, and stop under the configured early-stopping/max-epoch rule.
+Epoch 0 was not retrained and no final-test artifact was accessed.
+
+### Implementation
+
+- Added `src/ecapa_multiepoch.py`,
+  `scripts/run_ecapa_aam_multiepoch.py`, and
+  `tests/test_ecapa_multiepoch.py`.
+- Added exact rolling resume state, scheduler state/migration, early stopping,
+  atomic epoch/last/best checkpoints, fixed-validation scoring, BatchNorm
+  buffer guards, explicit protected-path hashing, and final-test path rejection.
+- Preserved all existing dirty/untracked pilot work.
+
+### CUDA result
+
+- Start checkpoint SHA-256:
+  `e82ba006aef4a505244769f137af897a94bbb601a26ffe2b68fbfec135201b67`
+- Completed resumed epochs: `1, 2, 3, 4`, each exactly 1,000 optimizer updates.
+- Validation EERs:
+  epoch 1 `0.06022122081114297`,
+  epoch 2 `0.057968045882834905`,
+  epoch 3 `0.05735354362965998`,
+  epoch 4 `0.057455960671855794`.
+- Stop reason: `max_epoch`; best epoch: `3`.
+- Best checkpoint SHA-256:
+  `7c63f4e2a100ce4eede4bb2429064387f80302c36b534baf46a4ae5b0e9cdb4f`.
+- Scheduler completed exactly 4,000 resumed steps and ended at factor `0.1`
+  with ECAPA/AAM LRs `1e-6 / 1e-4`.
+- Zero skipped/invalid updates, zero OOMs, and all 93 BatchNorm running buffers
+  remained bit-exact.
+- Peak CUDA allocated/reserved:
+  `1595687424 / 1845493760` bytes.
+
+### Validation, recovery, and tests
+
+- Every epoch evaluated all 8,504 validation utterances and exactly 19,528
+  fixed trials; trial SHA-256 remained
+  `3badacbe16aa82537b618efe1d494241680fcf309c5bf7cc8103a25c172e7f6f`.
+- All 167 explicitly protected inputs matched before/after hashes.
+- Two path-allowlist issues failed closed before training and after the
+  completed run during runtime serialization. Both reused pilot helpers were
+  replaced. The final resume from completed `last.pt` took zero optimizer
+  steps and wrote the runtime artifact without repeating training/validation.
+- `py_compile`: PASS; focused tests: 12 passed; complete discovery: 112 passed;
+  checkpoint/hash audit: PASS; `git diff --check`: PASS.
+- Reports:
+  `reports/ecapa_aam_multiepoch_v1.md` and
+  `reports/ecapa_aam_multiepoch_v1.json`.
+- Technical result: **PASS**. Model-quality result: **IMPROVED**.
+- No commit or push.
+
+### Deferred
+
+Final-test access/evaluation, epochs after 4, further training, hyperparameter
+changes, augmentation, cache/manifest/split/trial regeneration, commit, and
+push.
