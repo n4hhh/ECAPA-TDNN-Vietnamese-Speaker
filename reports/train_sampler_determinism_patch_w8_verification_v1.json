@@ -1,0 +1,290 @@
+{
+  "benchmark_aggregates": [
+    {
+      "actual_shard_loads_per_sample": {
+        "max": 0.1953125,
+        "median": 0.1953125,
+        "min": 0.1953125
+      },
+      "candidate": "hybrid_w8",
+      "end_to_end_elapsed_seconds": {
+        "max": 1.20593849999932,
+        "median": 1.20593849999932,
+        "min": 1.20593849999932
+      },
+      "first_batch_latency_seconds": {
+        "max": 0.8612687999993796,
+        "median": 0.8612687999993796,
+        "min": 0.8612687999993796
+      },
+      "num_workers": 0,
+      "repeats": 1,
+      "steady_state_samples_per_second": {
+        "max": 443.26578840020414,
+        "median": 443.26578840020414,
+        "min": 443.26578840020414
+      }
+    }
+  ],
+  "benchmark_runs": [
+    {
+      "actual_shard_loads_per_sample": 0.1953125,
+      "all_batches_valid": true,
+      "candidate": "hybrid_w8",
+      "completed_successfully": true,
+      "dataset_shard_load_count": 38,
+      "end_to_end_elapsed_seconds": 1.20593849999932,
+      "final_lru_shard_count": 8,
+      "first_batch_latency_seconds": 0.8612687999993796,
+      "measured_batches": 4,
+      "measured_samples": 128,
+      "measured_shard_load_count": 25,
+      "num_workers": 0,
+      "repeat": 0,
+      "steady_state_batches_per_second": 13.85205588750638,
+      "steady_state_elapsed_seconds": 0.28876579999996466,
+      "steady_state_samples_per_second": 443.26578840020414
+    }
+  ],
+  "candidate_analysis": [
+    {
+      "batches": 1000,
+      "candidate": "hybrid_w8",
+      "determinism": {
+        "dataset_unmodified": true,
+        "different_epoch_different": true,
+        "same_seed_epoch_identical": true
+      },
+      "duplicate_indexes_inside_batches": 0,
+      "full_batches": 1000,
+      "malformed_batch_sizes": 0,
+      "maximum_speaker_share": {
+        "max": 0.0625,
+        "mean": 0.0625,
+        "median": 0.0625,
+        "min": 0.0625,
+        "q1": 0.0625,
+        "q3": 0.0625
+      },
+      "out_of_range_indexes": 0,
+      "partial_batches": 0,
+      "pk_structure_violating_batches": 0,
+      "samples_per_batch": {
+        "max": 32.0,
+        "mean": 32.0,
+        "median": 32.0,
+        "min": 32.0,
+        "q1": 32.0,
+        "q3": 32.0
+      },
+      "samples_per_represented_speaker": {
+        "max": 2.0,
+        "mean": 2.0,
+        "median": 2.0,
+        "min": 2.0,
+        "q1": 2.0,
+        "q3": 2.0
+      },
+      "shard_locality": {
+        "distinct_shards_per_batch": {
+          "max": 12.0,
+          "mean": 6.28,
+          "median": 6.0,
+          "min": 2.0,
+          "q1": 5.0,
+          "q3": 7.0
+        },
+        "estimated_shard_transitions": 25006,
+        "lru_simulations": [
+          {
+            "cache_size": 2,
+            "estimated_loads_per_batch": 19.014,
+            "estimated_loads_per_sample": 0.5941875,
+            "estimated_shard_loads": 19014
+          },
+          {
+            "cache_size": 8,
+            "estimated_loads_per_batch": 6.386,
+            "estimated_loads_per_sample": 0.1995625,
+            "estimated_shard_loads": 6386
+          },
+          {
+            "cache_size": 16,
+            "estimated_loads_per_batch": 6.052,
+            "estimated_loads_per_sample": 0.189125,
+            "estimated_shard_loads": 6052
+          }
+        ]
+      },
+      "speaker_exposure": {
+        "all_speakers_selected": true,
+        "batches_per_speaker": {
+          "max": 38.0,
+          "mean": 32.78688524590164,
+          "median": 34.0,
+          "min": 28.0,
+          "q1": 29.0,
+          "q3": 35.0
+        },
+        "least_exposed": [
+          "31",
+          "32",
+          "34",
+          "35",
+          "90",
+          "99",
+          "119",
+          "121",
+          "123",
+          "124",
+          "134",
+          "135",
+          "148",
+          "150",
+          "151",
+          "152",
+          "244",
+          "246",
+          "269",
+          "270",
+          "271",
+          "357",
+          "363",
+          "365",
+          "392",
+          "396",
+          "1111",
+          "1116",
+          "1119",
+          "1126",
+          "1133",
+          "1134",
+          "1136",
+          "1172",
+          "1178",
+          "1180",
+          "1181",
+          "1182",
+          "1186",
+          "1199",
+          "1202",
+          "1209",
+          "1211",
+          "1236",
+          "1243",
+          "1246",
+          "1249",
+          "1251",
+          "1252",
+          "1253",
+          "1254",
+          "1255",
+          "1258",
+          "1261",
+          "1263",
+          "1264",
+          "1268",
+          "1274",
+          "1278",
+          "1282",
+          "1283",
+          "1284",
+          "1386",
+          "1393",
+          "1395",
+          "1399",
+          "1424",
+          "1426",
+          "1463",
+          "1479",
+          "1487",
+          "1511",
+          "1674"
+        ],
+        "most_exposed": [
+          "1438",
+          "1441",
+          "1448",
+          "1449",
+          "1668",
+          "1669"
+        ],
+        "original_count_sampled_exposure_correlation": 0.2560272977022454,
+        "sample_exposure_cv": 0.09265763595084867,
+        "samples_per_speaker": {
+          "max": 76.0,
+          "mean": 65.57377049180327,
+          "median": 68.0,
+          "min": 56.0,
+          "q1": 58.0,
+          "q3": 70.0
+        }
+      },
+      "unique_speakers_per_batch": {
+        "max": 16.0,
+        "mean": 16.0,
+        "median": 16.0,
+        "min": 16.0,
+        "q1": 16.0,
+        "q3": 16.0
+      },
+      "utterance_coverage": {
+        "maximum_selection_count": 15,
+        "omitted": 15101,
+        "omitted_pct": 47.193574598412404,
+        "queue_cycles": 1666,
+        "repeated_selection_pct": 47.196875,
+        "repeated_selections": 15103,
+        "selected_samples": 32000,
+        "unique_selected": 16897,
+        "unique_selected_pct": 52.806425401587596
+      }
+    }
+  ],
+  "environment": {
+    "operating_system": "Windows",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.10.11",
+    "torch": "2.2.0+cu121"
+  },
+  "execution_orders": [
+    {
+      "num_workers": 0,
+      "order": [
+        "hybrid_w8"
+      ],
+      "repeat": 0
+    }
+  ],
+  "invariants": {
+    "labels_contiguous": true,
+    "rows": 31998,
+    "shards": 125,
+    "speakers": 488
+  },
+  "method": {
+    "active_windows": [
+      8,
+      16,
+      32
+    ],
+    "batch_size": 32,
+    "cache_dir": "outputs/fbank_cache_v1",
+    "cold_disk_performance_claimed": false,
+    "epoch_batches": 1000,
+    "k": 2,
+    "max_cached_shards": 8,
+    "measured_batches": 4,
+    "os_file_cache_affects_results": true,
+    "p": 16,
+    "repeats": 1,
+    "run_label": "post-fix hybrid W8 short verification",
+    "seed": 20260727,
+    "validate_finite": false,
+    "warmup_batches": 1,
+    "worker_actual_shard_loads_available": false,
+    "worker_prefetch_can_affect_steady_state": true
+  },
+  "overall_result": "PASS",
+  "schema_version": 1
+}

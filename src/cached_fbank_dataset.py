@@ -10,7 +10,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Sequence
 
 import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, Sampler
 
 SPLITS = ("train", "validation", "test")
 INDEX_FIELDS = {
@@ -217,6 +217,7 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
             raise ValueError(f"non-finite feature at {row.feature_shard_path}[{position}]")
         return {
             "fbank": feature,
+            "dataset_index": index,
             "speaker_label": row.speaker_label,
             "speaker_id": row.speaker_id,
             "relative_audio_path": row.relative_audio_path,
@@ -230,6 +231,9 @@ def collate_cached_fbank(samples: Sequence[dict[str, Any]]) -> dict[str, Any]:
         raise ValueError("cannot collate an empty batch")
     return {
         "fbank": torch.stack([sample["fbank"] for sample in samples]),
+        "dataset_index": torch.tensor(
+            [sample["dataset_index"] for sample in samples], dtype=torch.long
+        ),
         "speaker_label": torch.tensor([sample["speaker_label"] for sample in samples], dtype=torch.long),
         "speaker_id": [sample["speaker_id"] for sample in samples],
         "relative_audio_path": [sample["relative_audio_path"] for sample in samples],
@@ -247,4 +251,19 @@ def create_cached_fbank_dataloader(
     return DataLoader(
         dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers,
         collate_fn=collate_cached_fbank, drop_last=False,
+    )
+
+
+def create_cached_fbank_training_dataloader(
+    dataset: CachedFbankDataset, batch_sampler: Sampler[list[int]], *,
+    num_workers: int = 0, generator: torch.Generator | None = None,
+) -> DataLoader:
+    """Create a train loader whose batch structure is supplied by a batch sampler."""
+    if dataset.split != "train":
+        raise ValueError("training DataLoader requires the train split")
+    if num_workers < 0:
+        raise ValueError("num_workers must be non-negative")
+    return DataLoader(
+        dataset, batch_sampler=batch_sampler, num_workers=num_workers,
+        collate_fn=collate_cached_fbank, generator=generator,
     )

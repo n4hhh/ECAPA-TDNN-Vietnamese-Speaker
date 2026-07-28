@@ -1,0 +1,297 @@
+{
+  "environment": {
+    "cuda_available": true,
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_memory_bytes": 4294443008,
+    "python": "3.10.11",
+    "speechbrain": "1.0.3",
+    "torch": "2.2.0+cu121"
+  },
+  "forbidden_call_proof": {
+    "compute_features_calls": 0,
+    "loader": {
+      "batchnorm_module_count": 31,
+      "checkpoint_module_names": [
+        "classifier",
+        "compute_features",
+        "embedding_model",
+        "mean_var_norm",
+        "mean_var_norm_emb"
+      ],
+      "compute_features_retained": false,
+      "pretrained_classifier_retained": false,
+      "retained_modules": [
+        "mean_var_norm",
+        "embedding_model"
+      ]
+    },
+    "pretrained_classifier_calls": 0
+  },
+  "logical_batch": {
+    "dataset_indexes_unique": true,
+    "distinct_speakers_per_microbatch": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "feature_device": "cpu",
+    "feature_dtype": "torch.float32",
+    "feature_finite": true,
+    "feature_shape": [
+      32,
+      301,
+      80
+    ],
+    "label_dtype": "torch.int64",
+    "label_max": 460,
+    "label_min": 7,
+    "label_shape": [
+      32
+    ],
+    "physical_microbatches": 8,
+    "samples_per_speaker": 2,
+    "speakers": 16
+  },
+  "mode": "microbatch_4_capacity_probe",
+  "result": "PASS",
+  "scope": {
+    "accumulation_steps": 8,
+    "checkpoint_or_resume": false,
+    "final_test_access": false,
+    "logical_batches_consumed": 1,
+    "num_workers": 0,
+    "optimizer_steps": 1,
+    "physical_microbatch_size": 4,
+    "train_cache_only": true,
+    "validation_access": false
+  },
+  "step": {
+    "aam_gradient_norm": 8.563820396025983,
+    "aam_parameter_delta": {
+      "aggregate_absolute_delta": 93.68618774414062,
+      "maximum_absolute_delta": 0.0010000169277191162
+    },
+    "batchnorm_running_buffers_compared": 93,
+    "batchnorm_running_buffers_exactly_unchanged": true,
+    "duration_seconds": 1.4691242999997485,
+    "ecapa_gradient_norm": 59.82091489954806,
+    "ecapa_parameter_delta": {
+      "aggregate_absolute_delta": 202.67372208437882,
+      "maximum_absolute_delta": 1.0013580322265625e-05
+    },
+    "grad_scaler_scale_after": 128.0,
+    "grad_scaler_scale_before": 128.0,
+    "logical_loss": 14.10267436504364,
+    "max_memory_allocated_bytes": 603883520,
+    "max_memory_reserved_bytes": 723517440,
+    "microbatch_shapes": [
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      }
+    ],
+    "optimizer_step": 1
+  }
+}

@@ -1,0 +1,488 @@
+{
+  "environment": {
+    "cuda_available": true,
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_memory_bytes": 4294443008,
+    "python": "3.10.11",
+    "speechbrain": "1.0.3",
+    "torch": "2.2.0+cu121"
+  },
+  "forbidden_call_proof": {
+    "compute_features_calls": 0,
+    "loader": {
+      "batchnorm_module_count": 31,
+      "checkpoint_module_names": [
+        "classifier",
+        "compute_features",
+        "embedding_model",
+        "mean_var_norm",
+        "mean_var_norm_emb"
+      ],
+      "compute_features_retained": false,
+      "pretrained_classifier_retained": false,
+      "retained_modules": [
+        "mean_var_norm",
+        "embedding_model"
+      ]
+    },
+    "pretrained_classifier_calls": 0
+  },
+  "logical_batch": {
+    "all_final_split_train": true,
+    "dataset_indexes_unique": true,
+    "distinct_speakers_per_microbatch": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "feature_device": "cpu",
+    "feature_dtype": "torch.float32",
+    "feature_finite": true,
+    "feature_shape": [
+      32,
+      301,
+      80
+    ],
+    "label_dtype": "torch.int64",
+    "label_max": 460,
+    "label_min": 7,
+    "label_shape": [
+      32
+    ],
+    "physical_microbatches": 8,
+    "samples_per_speaker": 2,
+    "speakers": 16
+  },
+  "mode": "microbatch_4_capacity_probe",
+  "result": "PASS",
+  "scope": {
+    "accumulation_steps": 8,
+    "checkpoint_or_resume": false,
+    "final_test_access": false,
+    "logical_batches_consumed": 1,
+    "num_workers": 0,
+    "optimizer_steps": 1,
+    "physical_microbatch_size": 4,
+    "recursive_listing_used": false,
+    "train_cache_only": true,
+    "validation_access": false
+  },
+  "step": {
+    "aam_gradient_norm": 8.563820396025983,
+    "aam_parameter_delta": {
+      "aggregate_absolute_delta": 93.68618774414062,
+      "maximum_absolute_delta": 0.0010000169277191162
+    },
+    "batchnorm_running_buffers_compared": 93,
+    "batchnorm_running_buffers_exactly_unchanged": true,
+    "duration_seconds": 1.1910272000004625,
+    "ecapa_gradient_norm": 59.82091489954806,
+    "ecapa_parameter_delta": {
+      "aggregate_absolute_delta": 202.67372208437882,
+      "maximum_absolute_delta": 1.0013580322265625e-05
+    },
+    "grad_scaler_scale_after": 128.0,
+    "grad_scaler_scale_before": 128.0,
+    "logical_loss": 14.10267436504364,
+    "max_memory_allocated_bytes": 603883520,
+    "max_memory_reserved_bytes": 723517440,
+    "microbatch_shapes": [
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          4,
+          192
+        ],
+        "input": [
+          4,
+          301,
+          80
+        ],
+        "logits": [
+          4,
+          488
+        ],
+        "normalized": [
+          4,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          4,
+          1,
+          192
+        ]
+      }
+    ],
+    "optimizer_step": 1
+  },
+  "train_data_identity": {
+    "files": [
+      {
+        "path": "outputs/fbank_cache_v1/fbank_cache_config_v1.json",
+        "sha256": "c829b31d0795ff8460d1bcc6a8aac9a57e6c419d788d9888db0e34289bb029e9"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train_feature_index_v1.csv",
+        "sha256": "5bd1999f92623084cba2558f19337f76cf4eb78878b63211366768742c6c9a99"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00002.pt",
+        "sha256": "db28031d694fdc59e293e3d1ca0b182a5adf773115ebb2418964167a2b8a860c"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00007.pt",
+        "sha256": "3def87a5cbf1498c4f6529a015d203981bca8057c56a06dd5262dff37ca462b2"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00038.pt",
+        "sha256": "cbcda4a6d5ccdae5db370accb9bf7046df736216502aa9e96d05bb0a6b5c85a1"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00047.pt",
+        "sha256": "46b04cca1eadbbaf76317bcbfe6b403077c92e4b2b1c736ffcf86159b636feef"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00065.pt",
+        "sha256": "2fcee501f599ad5e13ad93d1e4fd49b1081989bfd3d143e224d74ddff244fae1"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00085.pt",
+        "sha256": "f920a3bb5af3b50ae74a6cfb2c5c3786ae80f2f1dfa89193e71ad0cb084857d2"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00110.pt",
+        "sha256": "5a00ca71abb4ebfae313c1b15b7307f4f601f43d860317c98b8d59cbd46bd7d5"
+      }
+    ]
+  },
+  "train_only_guard": {
+    "metadata": {
+      "all_final_split_train": true,
+      "labels_in_0_487": true,
+      "referenced_train_shards": [
+        "train/shard_00000.pt",
+        "train/shard_00001.pt",
+        "train/shard_00002.pt",
+        "train/shard_00003.pt",
+        "train/shard_00004.pt",
+        "train/shard_00005.pt",
+        "train/shard_00006.pt",
+        "train/shard_00007.pt",
+        "train/shard_00008.pt",
+        "train/shard_00009.pt",
+        "train/shard_00010.pt",
+        "train/shard_00011.pt",
+        "train/shard_00012.pt",
+        "train/shard_00013.pt",
+        "train/shard_00014.pt",
+        "train/shard_00015.pt",
+        "train/shard_00016.pt",
+        "train/shard_00017.pt",
+        "train/shard_00018.pt",
+        "train/shard_00019.pt",
+        "train/shard_00020.pt",
+        "train/shard_00021.pt",
+        "train/shard_00022.pt",
+        "train/shard_00023.pt",
+        "train/shard_00024.pt",
+        "train/shard_00025.pt",
+        "train/shard_00026.pt",
+        "train/shard_00027.pt",
+        "train/shard_00028.pt",
+        "train/shard_00029.pt",
+        "train/shard_00030.pt",
+        "train/shard_00031.pt",
+        "train/shard_00032.pt",
+        "train/shard_00033.pt",
+        "train/shard_00034.pt",
+        "train/shard_00035.pt",
+        "train/shard_00036.pt",
+        "train/shard_00037.pt",
+        "train/shard_00038.pt",
+        "train/shard_00039.pt",
+        "train/shard_00040.pt",
+        "train/shard_00041.pt",
+        "train/shard_00042.pt",
+        "train/shard_00043.pt",
+        "train/shard_00044.pt",
+        "train/shard_00045.pt",
+        "train/shard_00046.pt",
+        "train/shard_00047.pt",
+        "train/shard_00048.pt",
+        "train/shard_00049.pt",
+        "train/shard_00050.pt",
+        "train/shard_00051.pt",
+        "train/shard_00052.pt",
+        "train/shard_00053.pt",
+        "train/shard_00054.pt",
+        "train/shard_00055.pt",
+        "train/shard_00056.pt",
+        "train/shard_00057.pt",
+        "train/shard_00058.pt",
+        "train/shard_00059.pt",
+        "train/shard_00060.pt",
+        "train/shard_00061.pt",
+        "train/shard_00062.pt",
+        "train/shard_00063.pt",
+        "train/shard_00064.pt",
+        "train/shard_00065.pt",
+        "train/shard_00066.pt",
+        "train/shard_00067.pt",
+        "train/shard_00068.pt",
+        "train/shard_00069.pt",
+        "train/shard_00070.pt",
+        "train/shard_00071.pt",
+        "train/shard_00072.pt",
+        "train/shard_00073.pt",
+        "train/shard_00074.pt",
+        "train/shard_00075.pt",
+        "train/shard_00076.pt",
+        "train/shard_00077.pt",
+        "train/shard_00078.pt",
+        "train/shard_00079.pt",
+        "train/shard_00080.pt",
+        "train/shard_00081.pt",
+        "train/shard_00082.pt",
+        "train/shard_00083.pt",
+        "train/shard_00084.pt",
+        "train/shard_00085.pt",
+        "train/shard_00086.pt",
+        "train/shard_00087.pt",
+        "train/shard_00088.pt",
+        "train/shard_00089.pt",
+        "train/shard_00090.pt",
+        "train/shard_00091.pt",
+        "train/shard_00092.pt",
+        "train/shard_00093.pt",
+        "train/shard_00094.pt",
+        "train/shard_00095.pt",
+        "train/shard_00096.pt",
+        "train/shard_00097.pt",
+        "train/shard_00098.pt",
+        "train/shard_00099.pt",
+        "train/shard_00100.pt",
+        "train/shard_00101.pt",
+        "train/shard_00102.pt",
+        "train/shard_00103.pt",
+        "train/shard_00104.pt",
+        "train/shard_00105.pt",
+        "train/shard_00106.pt",
+        "train/shard_00107.pt",
+        "train/shard_00108.pt",
+        "train/shard_00109.pt",
+        "train/shard_00110.pt",
+        "train/shard_00111.pt",
+        "train/shard_00112.pt",
+        "train/shard_00113.pt",
+        "train/shard_00114.pt",
+        "train/shard_00115.pt",
+        "train/shard_00116.pt",
+        "train/shard_00117.pt",
+        "train/shard_00118.pt",
+        "train/shard_00119.pt",
+        "train/shard_00120.pt",
+        "train/shard_00121.pt",
+        "train/shard_00122.pt",
+        "train/shard_00123.pt",
+        "train/shard_00124.pt"
+      ],
+      "rows_validated": 31998
+    },
+    "request": {
+      "cache_dir": "outputs/fbank_cache_v1",
+      "index_path": "outputs/fbank_cache_v1/train_feature_index_v1.csv",
+      "shard_directory": "outputs/fbank_cache_v1/train",
+      "split": "train"
+    }
+  },
+  "train_shards_loaded": [
+    "train/shard_00002.pt",
+    "train/shard_00007.pt",
+    "train/shard_00038.pt",
+    "train/shard_00047.pt",
+    "train/shard_00065.pt",
+    "train/shard_00085.pt",
+    "train/shard_00110.pt"
+  ]
+}

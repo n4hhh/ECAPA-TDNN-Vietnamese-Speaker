@@ -1,0 +1,1415 @@
+{
+  "aam": {
+    "embedding_dim": 192,
+    "initialization_seed": 20260727,
+    "margin_radians": 0.2,
+    "num_classes": 488,
+    "scale": 30.0
+  },
+  "amp_policy": {
+    "aam_math_dtype": "float32",
+    "ecapa_autocast_dtype": "float16",
+    "enabled": true,
+    "grad_scaler_initial_scale": 128.0,
+    "loss_dtype": "float32"
+  },
+  "batchnorm_policy": {
+    "batchnorm_affine_trainable": true,
+    "batchnorm_modules_eval": true,
+    "embedding_model_training": true,
+    "running_buffers_exactly_frozen": true
+  },
+  "checkpoint": {
+    "atomic_save": true,
+    "relative_path": "outputs/aam_softmax_training_smoke_v1_1/checkpoint_v1.pt",
+    "schema_valid": true,
+    "size_bytes": 250701631,
+    "state_roundtrip": {
+      "aam_state_exact": true,
+      "batchnorm_policy_reapplied": true,
+      "configuration_and_counters_valid": true,
+      "embedding_model_state_exact": true,
+      "grad_scaler_state_exact": true,
+      "mean_var_norm_state_exact": true,
+      "optimizer_state_exact": true
+    },
+    "whole_payload_roundtrip_exact": true
+  },
+  "environment": {
+    "cuda_available": true,
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_memory_bytes": 4294443008,
+    "python": "3.10.11",
+    "speechbrain": "1.0.3",
+    "torch": "2.2.0+cu121"
+  },
+  "forbidden_call_proof": {
+    "compute_features_calls": 0,
+    "pretrained_classifier_calls": 0,
+    "resume_loader": {
+      "batchnorm_module_count": 31,
+      "checkpoint_module_names": [
+        "classifier",
+        "compute_features",
+        "embedding_model",
+        "mean_var_norm",
+        "mean_var_norm_emb"
+      ],
+      "compute_features_retained": false,
+      "pretrained_classifier_retained": false,
+      "retained_modules": [
+        "mean_var_norm",
+        "embedding_model"
+      ]
+    },
+    "step1_loader": {
+      "batchnorm_module_count": 31,
+      "checkpoint_module_names": [
+        "classifier",
+        "compute_features",
+        "embedding_model",
+        "mean_var_norm",
+        "mean_var_norm_emb"
+      ],
+      "compute_features_retained": false,
+      "pretrained_classifier_retained": false,
+      "retained_modules": [
+        "mean_var_norm",
+        "embedding_model"
+      ]
+    }
+  },
+  "logical_batch_1": {
+    "all_final_split_train": true,
+    "dataset_indexes_unique": true,
+    "distinct_speakers_per_microbatch": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "feature_device": "cpu",
+    "feature_dtype": "torch.float32",
+    "feature_finite": true,
+    "feature_shape": [
+      32,
+      301,
+      80
+    ],
+    "label_dtype": "torch.int64",
+    "label_max": 460,
+    "label_min": 7,
+    "label_shape": [
+      32
+    ],
+    "physical_microbatches": 16,
+    "samples_per_speaker": 2,
+    "speakers": 16
+  },
+  "logical_batch_2": {
+    "all_final_split_train": true,
+    "dataset_indexes_unique": true,
+    "distinct_speakers_per_microbatch": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "feature_device": "cpu",
+    "feature_dtype": "torch.float32",
+    "feature_finite": true,
+    "feature_shape": [
+      32,
+      301,
+      80
+    ],
+    "label_dtype": "torch.int64",
+    "label_max": 465,
+    "label_min": 150,
+    "label_shape": [
+      32
+    ],
+    "physical_microbatches": 16,
+    "samples_per_speaker": 2,
+    "speakers": 16
+  },
+  "main_max_memory_allocated_bytes": 661258752,
+  "main_max_memory_reserved_bytes": 861929472,
+  "mode": "main_microbatch_2",
+  "model_path": "cached Fbank [B, 301, 80] -> mean_var_norm -> embedding_model -> [B, 1, 192] -> squeeze(1) -> [B, 192]",
+  "optimizer_groups": [
+    {
+      "learning_rate": 1e-05,
+      "name": "embedding_model",
+      "weight_decay": 0.0001
+    },
+    {
+      "learning_rate": 0.001,
+      "name": "aam_classifier",
+      "weight_decay": 0.0001
+    }
+  ],
+  "result": "PASS",
+  "resume": {
+    "fresh_objects_constructed": true,
+    "global_optimizer_step": 2,
+    "originally_expected_second_batch_exact": true,
+    "resumed_identity_exact": true,
+    "rng_restored": true,
+    "sampler_recreated": true,
+    "saved_next_position": 1
+  },
+  "sampler": {
+    "active_shard_window": 8,
+    "epoch": 0,
+    "logical_batch_size": 32,
+    "name": "HybridShardAwareSpeakerBatchSampler",
+    "samples_per_speaker": 2,
+    "seed": 20260727,
+    "speakers_per_batch": 16
+  },
+  "scope": {
+    "accumulation_steps": 16,
+    "augmentation": false,
+    "final_test_access": false,
+    "logical_batches_consumed": 2,
+    "num_workers": 0,
+    "optimizer_steps": 2,
+    "physical_microbatch_size": 2,
+    "recursive_listing_used": false,
+    "train_cache_only": true,
+    "validation_access": false
+  },
+  "step_1": {
+    "aam_gradient_norm": 8.563820396025983,
+    "aam_parameter_delta": {
+      "aggregate_absolute_delta": 93.6861801147461,
+      "maximum_absolute_delta": 0.0010000169277191162
+    },
+    "batchnorm_running_buffers_compared": 93,
+    "batchnorm_running_buffers_exactly_unchanged": true,
+    "duration_seconds": 2.0199535000010655,
+    "ecapa_gradient_norm": 59.820380658764286,
+    "ecapa_parameter_delta": {
+      "aggregate_absolute_delta": 202.6730268294923,
+      "maximum_absolute_delta": 1.0013580322265625e-05
+    },
+    "grad_scaler_scale_after": 128.0,
+    "grad_scaler_scale_before": 128.0,
+    "logical_loss": 14.102674305438995,
+    "max_memory_allocated_bytes": 497169920,
+    "max_memory_reserved_bytes": 683671552,
+    "microbatch_shapes": [
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      }
+    ],
+    "optimizer_step": 1
+  },
+  "step_2": {
+    "aam_gradient_norm": 8.381696159213307,
+    "aam_parameter_delta": {
+      "aggregate_absolute_delta": 67.10301208496094,
+      "maximum_absolute_delta": 0.0010013654828071594
+    },
+    "batchnorm_running_buffers_compared": 93,
+    "batchnorm_running_buffers_exactly_unchanged": true,
+    "duration_seconds": 1.1580651999993279,
+    "ecapa_gradient_norm": 60.42722928136366,
+    "ecapa_parameter_delta": {
+      "aggregate_absolute_delta": 131.15723157610046,
+      "maximum_absolute_delta": 1.0013580322265625e-05
+    },
+    "grad_scaler_scale_after": 128.0,
+    "grad_scaler_scale_before": 128.0,
+    "logical_loss": 14.168766677379608,
+    "max_memory_allocated_bytes": 661258752,
+    "max_memory_reserved_bytes": 861929472,
+    "microbatch_shapes": [
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      },
+      {
+        "embedding": [
+          2,
+          192
+        ],
+        "input": [
+          2,
+          301,
+          80
+        ],
+        "logits": [
+          2,
+          488
+        ],
+        "normalized": [
+          2,
+          301,
+          80
+        ],
+        "raw_embedding": [
+          2,
+          1,
+          192
+        ]
+      }
+    ],
+    "optimizer_step": 2
+  },
+  "train_data_identity": {
+    "files": [
+      {
+        "path": "outputs/fbank_cache_v1/fbank_cache_config_v1.json",
+        "sha256": "c829b31d0795ff8460d1bcc6a8aac9a57e6c419d788d9888db0e34289bb029e9"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train_feature_index_v1.csv",
+        "sha256": "5bd1999f92623084cba2558f19337f76cf4eb78878b63211366768742c6c9a99"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00002.pt",
+        "sha256": "db28031d694fdc59e293e3d1ca0b182a5adf773115ebb2418964167a2b8a860c"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00007.pt",
+        "sha256": "3def87a5cbf1498c4f6529a015d203981bca8057c56a06dd5262dff37ca462b2"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00038.pt",
+        "sha256": "cbcda4a6d5ccdae5db370accb9bf7046df736216502aa9e96d05bb0a6b5c85a1"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00039.pt",
+        "sha256": "90e22b4b8fe03ebd4c8b60a17f0233afdbdb41222c53b6f3b589da332ec6d485"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00047.pt",
+        "sha256": "46b04cca1eadbbaf76317bcbfe6b403077c92e4b2b1c736ffcf86159b636feef"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00050.pt",
+        "sha256": "1730345009fecaafc8adc5a1d1a12c4c7d12e99f2a2efd8964d1ea7696848072"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00065.pt",
+        "sha256": "2fcee501f599ad5e13ad93d1e4fd49b1081989bfd3d143e224d74ddff244fae1"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00078.pt",
+        "sha256": "53f34507e6b5586ed152e02f948690ddc80f365197756717a586c28dd733cfcc"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00080.pt",
+        "sha256": "834a94ec2620fe49e16349ba402bc0aff547d7a569252f0a3eb5bad867a4b88a"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00085.pt",
+        "sha256": "f920a3bb5af3b50ae74a6cfb2c5c3786ae80f2f1dfa89193e71ad0cb084857d2"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00095.pt",
+        "sha256": "69e480b7079e980bc56dba9c13c1d6f82fb97e491d2d7d07365e51cd84363030"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00110.pt",
+        "sha256": "5a00ca71abb4ebfae313c1b15b7307f4f601f43d860317c98b8d59cbd46bd7d5"
+      },
+      {
+        "path": "outputs/fbank_cache_v1/train/shard_00119.pt",
+        "sha256": "5425602afefe3148b8caf4eac0ea7daba9f415bcdfd4b22b9c7c63b209d09bb7"
+      }
+    ]
+  },
+  "train_only_guards": {
+    "initial_dataset": {
+      "metadata": {
+        "all_final_split_train": true,
+        "labels_in_0_487": true,
+        "referenced_train_shards": [
+          "train/shard_00000.pt",
+          "train/shard_00001.pt",
+          "train/shard_00002.pt",
+          "train/shard_00003.pt",
+          "train/shard_00004.pt",
+          "train/shard_00005.pt",
+          "train/shard_00006.pt",
+          "train/shard_00007.pt",
+          "train/shard_00008.pt",
+          "train/shard_00009.pt",
+          "train/shard_00010.pt",
+          "train/shard_00011.pt",
+          "train/shard_00012.pt",
+          "train/shard_00013.pt",
+          "train/shard_00014.pt",
+          "train/shard_00015.pt",
+          "train/shard_00016.pt",
+          "train/shard_00017.pt",
+          "train/shard_00018.pt",
+          "train/shard_00019.pt",
+          "train/shard_00020.pt",
+          "train/shard_00021.pt",
+          "train/shard_00022.pt",
+          "train/shard_00023.pt",
+          "train/shard_00024.pt",
+          "train/shard_00025.pt",
+          "train/shard_00026.pt",
+          "train/shard_00027.pt",
+          "train/shard_00028.pt",
+          "train/shard_00029.pt",
+          "train/shard_00030.pt",
+          "train/shard_00031.pt",
+          "train/shard_00032.pt",
+          "train/shard_00033.pt",
+          "train/shard_00034.pt",
+          "train/shard_00035.pt",
+          "train/shard_00036.pt",
+          "train/shard_00037.pt",
+          "train/shard_00038.pt",
+          "train/shard_00039.pt",
+          "train/shard_00040.pt",
+          "train/shard_00041.pt",
+          "train/shard_00042.pt",
+          "train/shard_00043.pt",
+          "train/shard_00044.pt",
+          "train/shard_00045.pt",
+          "train/shard_00046.pt",
+          "train/shard_00047.pt",
+          "train/shard_00048.pt",
+          "train/shard_00049.pt",
+          "train/shard_00050.pt",
+          "train/shard_00051.pt",
+          "train/shard_00052.pt",
+          "train/shard_00053.pt",
+          "train/shard_00054.pt",
+          "train/shard_00055.pt",
+          "train/shard_00056.pt",
+          "train/shard_00057.pt",
+          "train/shard_00058.pt",
+          "train/shard_00059.pt",
+          "train/shard_00060.pt",
+          "train/shard_00061.pt",
+          "train/shard_00062.pt",
+          "train/shard_00063.pt",
+          "train/shard_00064.pt",
+          "train/shard_00065.pt",
+          "train/shard_00066.pt",
+          "train/shard_00067.pt",
+          "train/shard_00068.pt",
+          "train/shard_00069.pt",
+          "train/shard_00070.pt",
+          "train/shard_00071.pt",
+          "train/shard_00072.pt",
+          "train/shard_00073.pt",
+          "train/shard_00074.pt",
+          "train/shard_00075.pt",
+          "train/shard_00076.pt",
+          "train/shard_00077.pt",
+          "train/shard_00078.pt",
+          "train/shard_00079.pt",
+          "train/shard_00080.pt",
+          "train/shard_00081.pt",
+          "train/shard_00082.pt",
+          "train/shard_00083.pt",
+          "train/shard_00084.pt",
+          "train/shard_00085.pt",
+          "train/shard_00086.pt",
+          "train/shard_00087.pt",
+          "train/shard_00088.pt",
+          "train/shard_00089.pt",
+          "train/shard_00090.pt",
+          "train/shard_00091.pt",
+          "train/shard_00092.pt",
+          "train/shard_00093.pt",
+          "train/shard_00094.pt",
+          "train/shard_00095.pt",
+          "train/shard_00096.pt",
+          "train/shard_00097.pt",
+          "train/shard_00098.pt",
+          "train/shard_00099.pt",
+          "train/shard_00100.pt",
+          "train/shard_00101.pt",
+          "train/shard_00102.pt",
+          "train/shard_00103.pt",
+          "train/shard_00104.pt",
+          "train/shard_00105.pt",
+          "train/shard_00106.pt",
+          "train/shard_00107.pt",
+          "train/shard_00108.pt",
+          "train/shard_00109.pt",
+          "train/shard_00110.pt",
+          "train/shard_00111.pt",
+          "train/shard_00112.pt",
+          "train/shard_00113.pt",
+          "train/shard_00114.pt",
+          "train/shard_00115.pt",
+          "train/shard_00116.pt",
+          "train/shard_00117.pt",
+          "train/shard_00118.pt",
+          "train/shard_00119.pt",
+          "train/shard_00120.pt",
+          "train/shard_00121.pt",
+          "train/shard_00122.pt",
+          "train/shard_00123.pt",
+          "train/shard_00124.pt"
+        ],
+        "rows_validated": 31998
+      },
+      "request": {
+        "cache_dir": "outputs/fbank_cache_v1",
+        "index_path": "outputs/fbank_cache_v1/train_feature_index_v1.csv",
+        "shard_directory": "outputs/fbank_cache_v1/train",
+        "split": "train"
+      }
+    },
+    "resumed_dataset": {
+      "metadata": {
+        "all_final_split_train": true,
+        "labels_in_0_487": true,
+        "referenced_train_shards": [
+          "train/shard_00000.pt",
+          "train/shard_00001.pt",
+          "train/shard_00002.pt",
+          "train/shard_00003.pt",
+          "train/shard_00004.pt",
+          "train/shard_00005.pt",
+          "train/shard_00006.pt",
+          "train/shard_00007.pt",
+          "train/shard_00008.pt",
+          "train/shard_00009.pt",
+          "train/shard_00010.pt",
+          "train/shard_00011.pt",
+          "train/shard_00012.pt",
+          "train/shard_00013.pt",
+          "train/shard_00014.pt",
+          "train/shard_00015.pt",
+          "train/shard_00016.pt",
+          "train/shard_00017.pt",
+          "train/shard_00018.pt",
+          "train/shard_00019.pt",
+          "train/shard_00020.pt",
+          "train/shard_00021.pt",
+          "train/shard_00022.pt",
+          "train/shard_00023.pt",
+          "train/shard_00024.pt",
+          "train/shard_00025.pt",
+          "train/shard_00026.pt",
+          "train/shard_00027.pt",
+          "train/shard_00028.pt",
+          "train/shard_00029.pt",
+          "train/shard_00030.pt",
+          "train/shard_00031.pt",
+          "train/shard_00032.pt",
+          "train/shard_00033.pt",
+          "train/shard_00034.pt",
+          "train/shard_00035.pt",
+          "train/shard_00036.pt",
+          "train/shard_00037.pt",
+          "train/shard_00038.pt",
+          "train/shard_00039.pt",
+          "train/shard_00040.pt",
+          "train/shard_00041.pt",
+          "train/shard_00042.pt",
+          "train/shard_00043.pt",
+          "train/shard_00044.pt",
+          "train/shard_00045.pt",
+          "train/shard_00046.pt",
+          "train/shard_00047.pt",
+          "train/shard_00048.pt",
+          "train/shard_00049.pt",
+          "train/shard_00050.pt",
+          "train/shard_00051.pt",
+          "train/shard_00052.pt",
+          "train/shard_00053.pt",
+          "train/shard_00054.pt",
+          "train/shard_00055.pt",
+          "train/shard_00056.pt",
+          "train/shard_00057.pt",
+          "train/shard_00058.pt",
+          "train/shard_00059.pt",
+          "train/shard_00060.pt",
+          "train/shard_00061.pt",
+          "train/shard_00062.pt",
+          "train/shard_00063.pt",
+          "train/shard_00064.pt",
+          "train/shard_00065.pt",
+          "train/shard_00066.pt",
+          "train/shard_00067.pt",
+          "train/shard_00068.pt",
+          "train/shard_00069.pt",
+          "train/shard_00070.pt",
+          "train/shard_00071.pt",
+          "train/shard_00072.pt",
+          "train/shard_00073.pt",
+          "train/shard_00074.pt",
+          "train/shard_00075.pt",
+          "train/shard_00076.pt",
+          "train/shard_00077.pt",
+          "train/shard_00078.pt",
+          "train/shard_00079.pt",
+          "train/shard_00080.pt",
+          "train/shard_00081.pt",
+          "train/shard_00082.pt",
+          "train/shard_00083.pt",
+          "train/shard_00084.pt",
+          "train/shard_00085.pt",
+          "train/shard_00086.pt",
+          "train/shard_00087.pt",
+          "train/shard_00088.pt",
+          "train/shard_00089.pt",
+          "train/shard_00090.pt",
+          "train/shard_00091.pt",
+          "train/shard_00092.pt",
+          "train/shard_00093.pt",
+          "train/shard_00094.pt",
+          "train/shard_00095.pt",
+          "train/shard_00096.pt",
+          "train/shard_00097.pt",
+          "train/shard_00098.pt",
+          "train/shard_00099.pt",
+          "train/shard_00100.pt",
+          "train/shard_00101.pt",
+          "train/shard_00102.pt",
+          "train/shard_00103.pt",
+          "train/shard_00104.pt",
+          "train/shard_00105.pt",
+          "train/shard_00106.pt",
+          "train/shard_00107.pt",
+          "train/shard_00108.pt",
+          "train/shard_00109.pt",
+          "train/shard_00110.pt",
+          "train/shard_00111.pt",
+          "train/shard_00112.pt",
+          "train/shard_00113.pt",
+          "train/shard_00114.pt",
+          "train/shard_00115.pt",
+          "train/shard_00116.pt",
+          "train/shard_00117.pt",
+          "train/shard_00118.pt",
+          "train/shard_00119.pt",
+          "train/shard_00120.pt",
+          "train/shard_00121.pt",
+          "train/shard_00122.pt",
+          "train/shard_00123.pt",
+          "train/shard_00124.pt"
+        ],
+        "rows_validated": 31998
+      },
+      "request": {
+        "cache_dir": "outputs/fbank_cache_v1",
+        "index_path": "outputs/fbank_cache_v1/train_feature_index_v1.csv",
+        "shard_directory": "outputs/fbank_cache_v1/train",
+        "split": "train"
+      }
+    }
+  },
+  "train_shards_loaded": [
+    "train/shard_00002.pt",
+    "train/shard_00007.pt",
+    "train/shard_00038.pt",
+    "train/shard_00039.pt",
+    "train/shard_00047.pt",
+    "train/shard_00050.pt",
+    "train/shard_00065.pt",
+    "train/shard_00078.pt",
+    "train/shard_00080.pt",
+    "train/shard_00085.pt",
+    "train/shard_00095.pt",
+    "train/shard_00110.pt",
+    "train/shard_00119.pt"
+  ]
+}
