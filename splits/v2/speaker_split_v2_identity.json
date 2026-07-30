@@ -1,0 +1,144 @@
+{
+  "bucket_capacities": {
+    "100-199": 202,
+    "20-49": 250,
+    "200-499": 120,
+    "50-99": 199,
+    "500+": 29
+  },
+  "creation_tool": "scripts/create_speaker_split_package_v2.py",
+  "creation_tool_version": "speaker_split_package_v2_schema_1",
+  "duplicate_counts_by_split": {
+    "excluded": {
+      "duplicate_file_count": 0,
+      "duplicate_group_count": 0
+    },
+    "test": {
+      "duplicate_file_count": 4,
+      "duplicate_group_count": 2
+    },
+    "train": {
+      "duplicate_file_count": 4,
+      "duplicate_group_count": 2
+    },
+    "validation": {
+      "duplicate_file_count": 0,
+      "duplicate_group_count": 0
+    }
+  },
+  "duration_seconds": {
+    "excluded": "384.000000",
+    "test": "46065.000000",
+    "train": "285027.000000",
+    "validation": "46065.000000"
+  },
+  "evaluation_balance": {
+    "duplicate_file_absolute_difference": 4,
+    "test_duplicate_files": 4,
+    "test_speakers_by_bucket": {
+      "100-199": 25,
+      "20-49": 31,
+      "200-499": 15,
+      "50-99": 25,
+      "500+": 4
+    },
+    "test_utterances": 15355,
+    "utterance_absolute_difference": 0,
+    "validation_duplicate_files": 0,
+    "validation_speakers_by_bucket": {
+      "100-199": 25,
+      "20-49": 32,
+      "200-499": 15,
+      "50-99": 25,
+      "500+": 3
+    },
+    "validation_utterances": 15355
+  },
+  "final_test_quarantine": true,
+  "full_manifest_identity_relative_path": "manifests/v2/full_manifest_v2_identity.json",
+  "full_manifest_identity_sha256": "f7b6c1cbc95b8a0d20b596b4841de7ebc26e69d6bd7c130801937dab681c544e",
+  "full_manifest_relative_path": "manifests/v2/full_manifest_v2.csv",
+  "full_manifest_sha256": "26a0157abce3bb00ce5f0ca16f9b964e180f72484e53f9d2602577f5ce4acf8f",
+  "identity_kind": "speaker_split_v2",
+  "minimum_evaluation_utterances": 20,
+  "minimum_train_utterances": 2,
+  "path_base_semantics": "relative_to_supplied_dataset_root",
+  "path_separator": "/",
+  "row_counts": {
+    "excluded": 128,
+    "test": 15355,
+    "train": 95009,
+    "validation": 15355
+  },
+  "schema_version": 1,
+  "selected_evaluation_speakers_by_bucket": {
+    "100-199": 50,
+    "20-49": 63,
+    "200-499": 30,
+    "50-99": 50,
+    "500+": 7
+  },
+  "selection_algorithm": "sha256_bucket_largest_remainder_exact_balance_v1",
+  "sort_order": {
+    "label_mapping": "numeric speaker_id ascending",
+    "speaker_split": "numeric speaker_id ascending",
+    "test_manifest": "numeric speaker_id then relative_audio_path ordinal",
+    "train_manifest": "speaker_label then relative_audio_path ordinal",
+    "validation_manifest": "numeric speaker_id then relative_audio_path ordinal"
+  },
+  "speaker_counts": {
+    "excluded": 128,
+    "test": 100,
+    "train": 1347,
+    "validation": 100
+  },
+  "speaker_to_label_relative_path": "manifests/portable_v2/speaker_to_label_v2.json",
+  "speaker_to_label_sha256": "9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8",
+  "split_csv_relative_path": "splits/v2/speaker_split_v2.csv",
+  "split_csv_sha256": "cbbcdcd4d3561ff2470a6cd713187cbb612939e643e5bc8cf4ed25504539f87e",
+  "split_policy_relative_path": "splits/v2/split_policy_v2.json",
+  "split_policy_sha256": "3e414836b4fe307841810cffa56c3f0040d0c662d265d276d73a7d00a16a5d10",
+  "split_policy_version": "final_speaker_disjoint_v2_policy_1",
+  "split_seed": 20260729,
+  "split_version": "v2",
+  "test_manifest_relative_path": "manifests/portable_v2/test_manifest_v2.csv",
+  "test_manifest_sha256": "14c782fa36d9c23040dd7a7fce26d91b9a57a230bdeebd19658dbcb2ee8364eb",
+  "timestamps_in_identity": false,
+  "train_class_count": 1347,
+  "train_label_range": [
+    0,
+    1346
+  ],
+  "train_manifest_relative_path": "manifests/portable_v2/train_manifest_v2.csv",
+  "train_manifest_sha256": "f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b",
+  "utterance_buckets": [
+    {
+      "maximum": 49,
+      "minimum": 20,
+      "name": "20-49"
+    },
+    {
+      "maximum": 99,
+      "minimum": 50,
+      "name": "50-99"
+    },
+    {
+      "maximum": 199,
+      "minimum": 100,
+      "name": "100-199"
+    },
+    {
+      "maximum": 499,
+      "minimum": 200,
+      "name": "200-499"
+    },
+    {
+      "maximum": null,
+      "minimum": 500,
+      "name": "500+"
+    }
+  ],
+  "validation_manifest_relative_path": "manifests/portable_v2/validation_manifest_v2.csv",
+  "validation_manifest_sha256": "9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc",
+  "validation_test_label": -1
+}

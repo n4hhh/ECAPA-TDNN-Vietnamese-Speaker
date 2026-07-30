@@ -1,0 +1,292 @@
+{
+  "artifact_reconciliation": {
+    "approved_cursor": {
+      "completed_batch_position": 2031,
+      "epoch": 2,
+      "global_optimizer_step": 7969,
+      "phase": "training",
+      "resumed_optimizer_steps": 5000
+    },
+    "committed_epoch_one_artifact_hashes": {
+      "logical_losses_epoch_001.json": "11660f93de2d365bf4a9c8940d9d83eff313ed449334999fa43fa18bb6024855",
+      "validation_embeddings_epoch_001.pt": "a9f3e989881e940df15bc475920f172a93dbb6c7f91f2c6850f3be422f85de56",
+      "validation_metrics_epoch_001.json": "3a98c57b8378191cea632829f5823ca02e086e8bcf7d4a1e71f6aa27609f4240",
+      "validation_scores_epoch_001.pt": "716ce6ab43d4b3a8a07ed18e5ae7bea066c9af8e0a7d5c9ff805736a56d5a504"
+    },
+    "epoch_001_checkpoint_sha256": "a7820ec84eec75acaca595219a81603d7d9056382024d004617613150271711b",
+    "epoch_two_artifacts_present_before_recovery": [],
+    "historical_artifacts_modified": false,
+    "historical_failure_bindings": {
+      "epoch_001": {
+        "path": "outputs/ecapa_aam_multiepoch_v2/epoch_001.pt",
+        "sha256": "a7820ec84eec75acaca595219a81603d7d9056382024d004617613150271711b"
+      },
+      "failure_record": {
+        "path": "outputs/ecapa_aam_multiepoch_v2/failure_v2.json",
+        "sha256": "fe8d940fed333624b5475f4a1442e82c2dbcd9da8f7f2d7bacb50fddaacf47ae"
+      },
+      "json_report": {
+        "path": "reports/ecapa_aam_multiepoch_v2.json",
+        "sha256": "a6a1ab26830c0f9fcd31b97347d57259a09d9e1e1099817bb661efb4b11008bc"
+      },
+      "markdown_report": {
+        "path": "reports/ecapa_aam_multiepoch_v2.md",
+        "sha256": "1b76649637b837cc42663dcdfeb7f5f79cc60c16d3763f91865b740455e7de9e"
+      },
+      "runtime": {
+        "path": "outputs/ecapa_aam_multiepoch_v2/runtime_v2.json",
+        "sha256": "b99b68b7d2c5885a1c4a8d9228786d12a3ca5c602e7760394e45d084bd10adcb"
+      }
+    },
+    "recovery_checkpoint_path": "outputs/ecapa_aam_multiepoch_v2/recovery_start_last.pt",
+    "recovery_checkpoint_sha256": "3b8d613012ee8340a30ad264729c83ea97501b793e6c97e1d0ed78555e5c96a0",
+    "result": "PASS",
+    "scalar_log": {
+      "removed_count": 5,
+      "removed_resumed_steps": [
+        5100,
+        5200,
+        5300,
+        5400,
+        5500
+      ],
+      "retained_count": 51
+    },
+    "scalar_log_sha256_after": "3c0614b67db0416615a95f98142a51092616e4453d9ad9535fc42859b9658df4",
+    "scalar_log_sha256_before": "72d69eacc59791eb2d683d68a290bc0c9a77124edce68fced935f9ff98a6e795",
+    "schema_name": "viespeaker2_multiepoch_amp_recovery_reconciliation",
+    "schema_version": 1
+  },
+  "counter_invariants": {
+    "failed_attempts_advanced_zero": true,
+    "logical_batches_skipped": 0,
+    "recovered_events_advanced_once": true
+  },
+  "final_test_accessed": false,
+  "historical_failure_identity": {
+    "epoch_001": {
+      "path": "outputs/ecapa_aam_multiepoch_v2/epoch_001.pt",
+      "sha256": "a7820ec84eec75acaca595219a81603d7d9056382024d004617613150271711b"
+    },
+    "failure_record": {
+      "path": "outputs/ecapa_aam_multiepoch_v2/failure_v2.json",
+      "sha256": "fe8d940fed333624b5475f4a1442e82c2dbcd9da8f7f2d7bacb50fddaacf47ae"
+    },
+    "json_report": {
+      "path": "reports/ecapa_aam_multiepoch_v2.json",
+      "sha256": "a6a1ab26830c0f9fcd31b97347d57259a09d9e1e1099817bb661efb4b11008bc"
+    },
+    "markdown_report": {
+      "path": "reports/ecapa_aam_multiepoch_v2.md",
+      "sha256": "1b76649637b837cc42663dcdfeb7f5f79cc60c16d3763f91865b740455e7de9e"
+    },
+    "runtime": {
+      "path": "outputs/ecapa_aam_multiepoch_v2/runtime_v2.json",
+      "sha256": "b99b68b7d2c5885a1c4a8d9228786d12a3ca5c602e7760394e45d084bd10adcb"
+    }
+  },
+  "historical_failure_replay": {
+    "affected_parameter_name": "blocks.0.norm.norm.weight",
+    "attempted_global_optimizer_step": 8470,
+    "epoch": 2,
+    "logical_batch_position": 2532,
+    "replay_batch_identity": "3a7e984fc826e9e5e0a0ad4b07af744bd8ac370e7e325f2b3984b02cee189bfd",
+    "replay_result": "not_reproduced",
+    "saved_batch_identity_available": false
+  },
+  "overflow_counters": {
+    "failed_overflow_count": 0,
+    "overflow_attempt_count": 3,
+    "recovered_overflow_count": 3,
+    "recovery_session_successful_updates": 6876,
+    "successful_optimizer_updates": 11876
+  },
+  "overflow_policy": {
+    "advance_counters_on_failed_attempt": false,
+    "maximum_retries_per_logical_batch": 1,
+    "minimum_retry_scale": 1.0,
+    "restore_pre_attempt_rng": true,
+    "retry_same_materialized_logical_batch": true,
+    "scale_reduction_factor": 0.5,
+    "schema_name": "viespeaker2_amp_gradient_overflow_recovery",
+    "schema_version": 1
+  },
+  "recovered_events": [
+    {
+      "attempted_global_optimizer_step": 8523,
+      "batch_identity": "7fb66763e5ff878858563f0563d65f5fd732306833f255eb0f04c236cbfe33f6",
+      "epoch": 2,
+      "failed_attempt": {
+        "optimizer_step_called": false,
+        "rng_restored_exact": true,
+        "scaled_gradient_diagnostics": {
+          "affected_parameter_names": [
+            "blocks.0.norm.norm.weight"
+          ],
+          "all_finite": false,
+          "finite_elements": 21026175,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 1,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 1,
+          "total_elements": 21026176
+        },
+        "transaction_invariants_exact": true,
+        "unscaled_gradient_diagnostics": {
+          "affected_parameter_names": [
+            "blocks.0.norm.norm.weight"
+          ],
+          "all_finite": false,
+          "finite_elements": 21026175,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 1,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 1,
+          "total_elements": 21026176
+        }
+      },
+      "logical_batch_position": 2585,
+      "original_scale": 2048.0,
+      "result": "RECOVERED",
+      "retry": {
+        "optimizer_step_called": true,
+        "unscaled_gradient_diagnostics": {
+          "affected_parameter_names": [],
+          "all_finite": true,
+          "finite_elements": 21026176,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 0,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 0,
+          "total_elements": 21026176
+        }
+      },
+      "retry_scale": 1024.0
+    },
+    {
+      "attempted_global_optimizer_step": 10002,
+      "batch_identity": "86beab5c3828636bfb593015d614af857c783973055f0b91239a9673d7ecb5bb",
+      "epoch": 3,
+      "failed_attempt": {
+        "optimizer_step_called": false,
+        "rng_restored_exact": true,
+        "scaled_gradient_diagnostics": {
+          "affected_parameter_names": [
+            "blocks.0.norm.norm.weight"
+          ],
+          "all_finite": false,
+          "finite_elements": 21026175,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 1,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 1,
+          "total_elements": 21026176
+        },
+        "transaction_invariants_exact": true,
+        "unscaled_gradient_diagnostics": {
+          "affected_parameter_names": [
+            "blocks.0.norm.norm.weight"
+          ],
+          "all_finite": false,
+          "finite_elements": 21026175,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 1,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 1,
+          "total_elements": 21026176
+        }
+      },
+      "logical_batch_position": 1095,
+      "original_scale": 2048.0,
+      "result": "RECOVERED",
+      "retry": {
+        "optimizer_step_called": true,
+        "unscaled_gradient_diagnostics": {
+          "affected_parameter_names": [],
+          "all_finite": true,
+          "finite_elements": 21026176,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 0,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 0,
+          "total_elements": 21026176
+        }
+      },
+      "retry_scale": 1024.0
+    },
+    {
+      "attempted_global_optimizer_step": 12470,
+      "batch_identity": "0e30a598599d27b6bb8d4f6aaed9f4ec5dcbe409328428728511c2edbfd13539",
+      "epoch": 4,
+      "failed_attempt": {
+        "optimizer_step_called": false,
+        "rng_restored_exact": true,
+        "scaled_gradient_diagnostics": {
+          "affected_parameter_names": [
+            "blocks.0.norm.norm.weight"
+          ],
+          "all_finite": false,
+          "finite_elements": 21026175,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 1,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 1,
+          "total_elements": 21026176
+        },
+        "transaction_invariants_exact": true,
+        "unscaled_gradient_diagnostics": {
+          "affected_parameter_names": [
+            "blocks.0.norm.norm.weight"
+          ],
+          "all_finite": false,
+          "finite_elements": 21026175,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 1,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 1,
+          "total_elements": 21026176
+        }
+      },
+      "logical_batch_position": 594,
+      "original_scale": 2048.0,
+      "result": "RECOVERED",
+      "retry": {
+        "optimizer_step_called": true,
+        "unscaled_gradient_diagnostics": {
+          "affected_parameter_names": [],
+          "all_finite": true,
+          "finite_elements": 21026176,
+          "nan_elements": 0,
+          "negative_inf_elements": 0,
+          "nonfinite_elements": 0,
+          "parameters_with_gradients": 139,
+          "positive_inf_elements": 0,
+          "total_elements": 21026176
+        }
+      },
+      "retry_scale": 1024.0
+    }
+  ],
+  "recovery_checkpoint": {
+    "cursor": {
+      "completed_batch_position": 2031,
+      "epoch": 2,
+      "global_optimizer_step": 7969,
+      "phase": "training",
+      "resumed_optimizer_steps": 5000
+    },
+    "path": "outputs/ecapa_aam_multiepoch_v2/recovery_start_last.pt",
+    "sha256": "3b8d613012ee8340a30ad264729c83ea97501b793e6c97e1d0ed78555e5c96a0"
+  },
+  "result": "PASS",
+  "schema_name": "viespeaker2_ecapa_aam_multiepoch_recovery_report",
+  "schema_version": 1
+}

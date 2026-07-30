@@ -1,0 +1,51 @@
+{
+  "cache_config_sha256": "e6a2132b98f7b4bee51ef19c4ee72b91235177960a185cee0bcf574f773e4c2f",
+  "cache_identity_path": "outputs/fbank_cache_final_test_v2/fbank_cache_identity_final_test_v2.json",
+  "cache_identity_sha256": "bc2a88fa1560c356c12eca4050da64c4924cb58cbf8a65d18c8c6b87d7d0dfde",
+  "cache_index_sha256": "ac51e07b96da20c3226a39132f0cd76e1785dc4bf39621834c2b779bb53cf323",
+  "cache_validation": {
+    "all_shards_read_back": true,
+    "feature_dtype": "float32",
+    "feature_shape": [
+      301,
+      80
+    ],
+    "labels": [
+      -1
+    ],
+    "manifest_index_alignment": true,
+    "row_count": 15355,
+    "shard_count": 60,
+    "speaker_count": 100,
+    "total_shard_bytes": 1480162872,
+    "unexpected_split_directories": 0
+  },
+  "protected_train_validation_cache_unchanged": true,
+  "result": "PASS",
+  "runtime": {
+    "cuda_peak_allocated_bytes": 217628160,
+    "cuda_peak_reserved_bytes": 268435456,
+    "extraction_duration_seconds": 31.948287599996547,
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "model_inference_processes": 1,
+    "module_call_counts": {
+      "classifier": 0,
+      "compute_features": 240,
+      "embedding_model": 0,
+      "mean_var_norm": 0
+    },
+    "oom_count": 0,
+    "result": "PASS",
+    "utterances_per_second": 480.62043863664417
+  },
+  "schema_version": 2,
+  "source_snapshot": {
+    "contains_absolute_paths": false,
+    "row_count": 15355,
+    "schema_version": 2,
+    "sha256": "2c3405cb355a9b1a9d09f49ae4fc74f48bf47ffb603c7376761e820e0c578cd6",
+    "snapshot_kind": "manifest_path_size_mtime_ns",
+    "total_bytes": 1475277690
+  },
+  "source_snapshot_unchanged": true
+}

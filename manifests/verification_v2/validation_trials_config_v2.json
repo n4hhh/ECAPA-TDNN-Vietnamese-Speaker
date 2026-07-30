@@ -1,0 +1,66 @@
+{
+  "absolute_paths_in_artifacts": false,
+  "identity_kind": "validation_trials_config_v2",
+  "input_split": "validation",
+  "negative_protocol": {
+    "participations_per_speaker": 200,
+    "rounds": 200,
+    "schedule": "two_99_round_cycles_plus_first_2_rounds_of_third_cycle",
+    "utterance_selection": "least_used_then_stable_sha256_tie_break"
+  },
+  "pair_uniqueness": "canonical_unordered_relative_audio_path_pair",
+  "positive_protocol": {
+    "pairs_per_speaker": 100,
+    "same_nonempty_duplicate_group_pair_forbidden": true,
+    "selection": "stable_sha256_ranked_canonical_unordered_path_pairs"
+  },
+  "schema_version": 2,
+  "seed": 20260729,
+  "speaker_count": 100,
+  "timestamps_in_identity": false,
+  "training_sampler_binding": {
+    "path": "configs/v2/training_sampler_v2.json",
+    "sampler_plan_identity_sha256": "b11a97fd45f11b8f71fa980ebd26cb335bac0f3bcdfb781e8f87ced535606e4f",
+    "sha256": "e59d3794371095acddcee17218ff99fef4393cb15a7f7176c2d7680120436899"
+  },
+  "trial_counts": {
+    "negative": 10000,
+    "positive": 10000,
+    "total": 20000
+  },
+  "trial_order": "all_hash_ranked_positives_then_round_robin_negatives",
+  "upstream_bindings": {
+    "cache_config": {
+      "path": "outputs/fbank_cache_v2/fbank_cache_config_v2.json",
+      "sha256": "ec71959ec64361038991e760e772d11bf1779e1b505a892dff364cf45aaeb018"
+    },
+    "cache_identity": {
+      "path": "outputs/fbank_cache_v2/fbank_cache_identity_v2.json",
+      "sha256": "1a2d6af777311f687e887575bfaf20915ed0409fd2e05b2f1ac232d43cd0b8c8"
+    },
+    "portable_package_identity": {
+      "path": "manifests/portable_v2/portable_manifests_v2_identity.json",
+      "sha256": "29f374366c917fb6c54dcd44eeeff59ccc46a732b270188e7157a586e4d9e7c5"
+    },
+    "train_cache_index": {
+      "path": "outputs/fbank_cache_v2/train_feature_index_v2.csv",
+      "sha256": "e20c320fc5842502a26684023bb307a7b2afa27a14a3cf1130fdffe31e85d4b9"
+    },
+    "train_label_mapping": {
+      "path": "manifests/portable_v2/speaker_to_label_v2.json",
+      "sha256": "9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8"
+    },
+    "train_manifest": {
+      "path": "manifests/portable_v2/train_manifest_v2.csv",
+      "sha256": "f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b"
+    },
+    "validation_cache_index": {
+      "path": "outputs/fbank_cache_v2/validation_feature_index_v2.csv",
+      "sha256": "1d3a95e95aaa5b13e6614c077fbbdf10f7c208c79970c2a85bdd461193b9f585"
+    },
+    "validation_manifest": {
+      "path": "manifests/portable_v2/validation_manifest_v2.csv",
+      "sha256": "9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc"
+    }
+  }
+}

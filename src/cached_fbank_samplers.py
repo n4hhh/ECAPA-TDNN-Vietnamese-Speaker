@@ -145,15 +145,34 @@ class _PKBase(Sampler[list[int]]):
         grouped: dict[str, list[int]] = defaultdict(list)
         for index, row in enumerate(dataset.rows):
             grouped[row.speaker_id].append(index)
-        too_small = sorted(speaker for speaker, indexes in grouped.items() if len(indexes) < samples_per_speaker)
+        too_small = sorted(
+            speaker
+            for speaker, indexes in grouped.items()
+            if self._distinct_selection_capacity(dataset, indexes) < samples_per_speaker
+        )
         if too_small:
             raise ValueError(
-                f"K={samples_per_speaker} exceeds available distinct samples for "
+                f"K={samples_per_speaker} exceeds duplicate-safe distinct samples for "
                 f"{len(too_small)} speakers; first={too_small[0]!r}"
             )
         self.speaker_indexes = {speaker: tuple(indexes) for speaker, indexes in grouped.items()}
         self.speakers = tuple(sorted(grouped, key=lambda value: dataset.rows[grouped[value][0]].speaker_label))
         self.last_epoch_stats: dict[str, object] = {}
+        self._duplicate_group_rejections = 0
+
+    @staticmethod
+    def _distinct_selection_capacity(
+        dataset: CachedFbankDataset, indexes: Sequence[int],
+    ) -> int:
+        empty_groups = 0
+        nonempty_groups: set[str] = set()
+        for index in indexes:
+            duplicate_group = dataset.rows[index].duplicate_group
+            if duplicate_group:
+                nonempty_groups.add(duplicate_group)
+            else:
+                empty_groups += 1
+        return empty_groups + len(nonempty_groups)
 
     def set_epoch(self, epoch: int) -> None:
         if not isinstance(epoch, int) or epoch < 0:
@@ -174,13 +193,21 @@ class _PKBase(Sampler[list[int]]):
         cycles: Counter[str], preferred: set[int] | None = None,
     ) -> list[int]:
         chosen: list[int] = []
+        chosen_duplicate_groups: set[str] = set()
         while len(chosen) < count:
+            duplicate_safe = []
+            for index in queue:
+                duplicate_group = self.dataset.rows[index].duplicate_group
+                if duplicate_group and duplicate_group in chosen_duplicate_groups:
+                    self._duplicate_group_rejections += 1
+                    continue
+                duplicate_safe.append(index)
             candidates = [
-                index for index in queue
+                index for index in duplicate_safe
                 if index not in chosen and (preferred is None or index in preferred)
             ]
             if not candidates and preferred is not None:
-                candidates = [index for index in queue if index not in chosen]
+                candidates = [index for index in duplicate_safe if index not in chosen]
             if not candidates:
                 queue[:] = list(self.speaker_indexes[speaker])
                 rng.shuffle(queue)
@@ -189,6 +216,9 @@ class _PKBase(Sampler[list[int]]):
             index = candidates[0]
             queue.remove(index)
             chosen.append(index)
+            duplicate_group = self.dataset.rows[index].duplicate_group
+            if duplicate_group:
+                chosen_duplicate_groups.add(duplicate_group)
         return chosen
 
     def _finish_stats(
@@ -200,6 +230,7 @@ class _PKBase(Sampler[list[int]]):
             "queue_cycles_by_speaker": dict(cycles),
             "repeated_selections": sum(value - 1 for value in counts.values()),
             "unique_selected_indexes": len(counts),
+            "duplicate_group_rejections": self._duplicate_group_rejections,
             "distinct_shards_per_batch": [
                 len({self.dataset.rows[index].feature_shard_path for index in batch})
                 for batch in batches
@@ -211,6 +242,7 @@ class GlobalSpeakerBalancedBatchSampler(_PKBase):
     """Globally balanced P x K sampler using shuffled speaker and sample queues."""
 
     def __iter__(self) -> Iterator[list[int]]:
+        self._duplicate_group_rejections = 0
         rng = random.Random(self.seed + self.epoch)
         queues, cycles = self._queues(rng)
         speaker_queue: list[str] = []
@@ -250,6 +282,7 @@ class HybridShardAwareSpeakerBatchSampler(_PKBase):
         self.shards = tuple(sorted(shards))
 
     def __iter__(self) -> Iterator[list[int]]:
+        self._duplicate_group_rejections = 0
         rng = random.Random(self.seed + self.epoch)
         shard_order = list(self.shards)
         rng.shuffle(shard_order)
@@ -271,7 +304,9 @@ class HybridShardAwareSpeakerBatchSampler(_PKBase):
                         eligible[self.dataset.rows[index].speaker_id].add(index)
                 usable = sorted(
                     speaker for speaker, indexes in eligible.items()
-                    if len(indexes) >= self.samples_per_speaker
+                    if self._distinct_selection_capacity(
+                        self.dataset, tuple(indexes)
+                    ) >= self.samples_per_speaker
                 )
                 if len(usable) >= self.speakers_per_batch:
                     break

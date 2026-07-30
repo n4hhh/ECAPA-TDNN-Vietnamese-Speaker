@@ -1,0 +1,151 @@
+{
+  "approved_input_hashes": {
+    "cache_config": "ec71959ec64361038991e760e772d11bf1779e1b505a892dff364cf45aaeb018",
+    "cache_identity": "1a2d6af777311f687e887575bfaf20915ed0409fd2e05b2f1ac232d43cd0b8c8",
+    "portable_package_identity": "29f374366c917fb6c54dcd44eeeff59ccc46a732b270188e7157a586e4d9e7c5",
+    "train_cache_index": "e20c320fc5842502a26684023bb307a7b2afa27a14a3cf1130fdffe31e85d4b9",
+    "train_label_mapping": "9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8",
+    "train_manifest": "f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b",
+    "training_sampler_config": "e59d3794371095acddcee17218ff99fef4393cb15a7f7176c2d7680120436899",
+    "validation_cache_index": "1d3a95e95aaa5b13e6614c077fbbdf10f7c208c79970c2a85bdd461193b9f585",
+    "validation_manifest": "9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc",
+    "validation_trial_config": "9e725ce006ae522f0f0274739b75e9aee7ebb302db331fead73c79cdc326822e",
+    "validation_trial_csv": "11bec5ff0a0a4ca4930e2664bdc391388a9a677795afaefe5de3fee2d0d39e3d",
+    "validation_trial_identity": "09b55236ad3f80537e1517a5efa7ad1d7a7efc3454f6b56d9ba62af83cc6bf73"
+  },
+  "artifacts": {
+    "baseline_identity_sha256": "5000ddabe804f4cfd7c905c3ed51bc8fd1d0273822ca2091019da923f387974c",
+    "embedding_sha256": "0851324f9f7b2187448f8fd5354bcca2aef82489c29f38bd84ab303c476fbfca",
+    "runtime_config_sha256": "b17eaaa1c309ac9491e6b935756646c9c13a4ab2d779b12aec3b8ea52345c6e9",
+    "runtime_sha256": "276623b26707e1e90d2af236b765e1c35d0cbfb43f8d294d16da2e4d29e7a4a4",
+    "scores_sha256": "3945764d96cd41c28c2aa4c628826480696619433a5a28db485827df7161b95e"
+  },
+  "baseline_identity_sha256": "5000ddabe804f4cfd7c905c3ed51bc8fd1d0273822ca2091019da923f387974c",
+  "embedding": {
+    "device": "cpu",
+    "dtype": "float32",
+    "save_load_maximum_absolute_difference": 0.0,
+    "shape": [
+      15355,
+      192
+    ]
+  },
+  "empirical_metrics": {
+    "accuracy": 0.8743,
+    "f1": 0.8743,
+    "far": 0.1257,
+    "fn": 1257,
+    "fp": 1257,
+    "frr": 0.1257,
+    "precision": 0.8743,
+    "recall": 0.8743,
+    "threshold": 0.28827327489852905,
+    "threshold_semantics": "accept same speaker when score >= threshold",
+    "tn": 8743,
+    "tp": 8743
+  },
+  "environment": {
+    "cuda_available": true,
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "python": "3.10.11",
+    "speechbrain": "1.0.3",
+    "torch": "2.2.0+cu121"
+  },
+  "final_test_quarantine": {
+    "audio_opened": false,
+    "evaluation_run": false,
+    "features_extracted": false,
+    "manifest_opened": false,
+    "trials_generated": false
+  },
+  "metric_implementation": "grouped_sorted_tie_aware_o_n_log_n",
+  "metrics": {
+    "eer": 0.1257,
+    "eer_kind": "linearly_interpolated_roc_crossing",
+    "eer_percentage": 12.57,
+    "eer_threshold": 0.28827327489852905,
+    "eer_threshold_kind": "interpolated_non_empirical",
+    "empirical_average_error": 0.1257,
+    "empirical_far": 0.1257,
+    "empirical_far_frr_gap": 0.0,
+    "empirical_frr": 0.1257,
+    "empirical_threshold": 0.28827327489852905,
+    "empirical_threshold_semantics": "accept same speaker when score >= threshold",
+    "far": 0.1257,
+    "frr": 0.1257,
+    "interpolated_eer": 0.1257,
+    "interpolated_eer_percentage": 12.57,
+    "interpolated_far": 0.1257,
+    "interpolated_frr": 0.1257,
+    "interpolated_threshold": 0.28827327489852905
+  },
+  "model_integrity": {
+    "aam_softmax_used": false,
+    "compute_features_call_count": 0,
+    "feature_transpose_used": false,
+    "optimizer_created": false,
+    "parameter_gradients_absent": true,
+    "parameters_frozen": true,
+    "parameters_unchanged": true,
+    "pretrained_classifier_call_count": 0,
+    "training_started": false
+  },
+  "report_kind": "pretrained_ecapa_validation_baseline_v2",
+  "result": "PASS",
+  "runtime": {
+    "embedding_seconds": 72.23180550000052,
+    "metrics_seconds": 0.0705762000006871,
+    "peak_allocated_vram_bytes": 2567059456,
+    "peak_reserved_vram_bytes": 3166699520,
+    "scoring_seconds": 0.9620833999997558,
+    "utterances_per_second": 212.57948480880614
+  },
+  "schema_version": 2,
+  "score_distributions": {
+    "different_speaker": {
+      "count": 10000,
+      "maximum": 0.602975070476532,
+      "mean": 0.1534788316947641,
+      "median": 0.14373768866062164,
+      "minimum": -0.2100071758031845,
+      "q1": 0.07482428289949894,
+      "q3": 0.22558770701289177,
+      "standard_deviation": 0.11294603164726892
+    },
+    "same_speaker": {
+      "count": 10000,
+      "maximum": 0.9752877950668335,
+      "mean": 0.47219380933633076,
+      "median": 0.49064262211322784,
+      "minimum": -0.2114696353673935,
+      "q1": 0.3816196694970131,
+      "q3": 0.5825836062431335,
+      "standard_deviation": 0.15749554871675106
+    }
+  },
+  "source_and_cache_preservation": {
+    "approved_hashes_unchanged": true,
+    "cache_artifacts_modified": false,
+    "source_audio_opened": false
+  },
+  "training_sampler_binding": {
+    "path": "configs/v2/training_sampler_v2.json",
+    "sampler_plan_identity_sha256": "b11a97fd45f11b8f71fa980ebd26cb335bac0f3bcdfb781e8f87ced535606e4f",
+    "sha256": "e59d3794371095acddcee17218ff99fef4393cb15a7f7176c2d7680120436899"
+  },
+  "trials": {
+    "negative": 10000,
+    "positive": 10000,
+    "score_save_load_maximum_absolute_difference": 0.0,
+    "total": 20000
+  },
+  "validation_trial_binding": {
+    "config_path": "manifests/verification_v2/validation_trials_config_v2.json",
+    "config_sha256": "9e725ce006ae522f0f0274739b75e9aee7ebb302db331fead73c79cdc326822e",
+    "csv_path": "manifests/verification_v2/validation_trials_v2.csv",
+    "csv_sha256": "11bec5ff0a0a4ca4930e2664bdc391388a9a677795afaefe5de3fee2d0d39e3d",
+    "identity_path": "manifests/verification_v2/validation_trials_identity_v2.json",
+    "identity_sha256": "09b55236ad3f80537e1517a5efa7ad1d7a7efc3454f6b56d9ba62af83cc6bf73"
+  }
+}

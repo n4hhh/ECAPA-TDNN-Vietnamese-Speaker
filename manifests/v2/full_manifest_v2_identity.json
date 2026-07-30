@@ -1,0 +1,39 @@
+{
+  "creation_tool": "scripts/create_full_manifest_v2.py",
+  "creation_tool_version": "full_manifest_v2_schema_1",
+  "cross_speaker_duplicate_group_count": 0,
+  "dataset_id": "VieSpeaker2.0_augmented_dataset",
+  "duplicate_file_count": 8,
+  "duplicate_group_count": 4,
+  "manifest_relative_path": "manifests/v2/full_manifest_v2.csv",
+  "manifest_schema_version": 1,
+  "manifest_sha256": "26a0157abce3bb00ce5f0ca16f9b964e180f72484e53f9d2602577f5ce4acf8f",
+  "manifest_version": "v2",
+  "path_base_semantics": "relative_to_supplied_dataset_root",
+  "path_separator": "/",
+  "provenance_counts": {
+    "part": 17858,
+    "test": 5664,
+    "train": 86197,
+    "train_small": 16128
+  },
+  "readable_wav_count": 125847,
+  "row_count": 125847,
+  "schema_version": 1,
+  "singleton_speaker_count": 128,
+  "sort_order": [
+    "numeric speaker_id ascending",
+    "audio_path stable ordinal ascending"
+  ],
+  "source_audit_inventory_relative_path": "outputs/dataset_understanding_v2/dataset_audit_inventory_nonproduction_v2.csv",
+  "source_audit_inventory_sha256": "6f33cb9510b00f3503af41246349b921d000779b25de9715b9ea68aed1df6cd5",
+  "source_audit_json_relative_path": "reports/dataset_understanding_v2.json",
+  "source_audit_json_sha256": "305a641ac91f4e7fc41c389bf3818b810f59fea5ec18a7722046407582bc9af2",
+  "source_audit_report_relative_path": "reports/dataset_understanding_v2.md",
+  "source_audit_report_sha256": "79bd00b9f922b5b3a2d492cf910a0f7d7e6e4c6b1403b4b21c7e1aab15c4493a",
+  "source_dataset_snapshot_identity_sha256": "40462a26fa9fc2aee83cc8a55b02a88087e75bbe97e4af1a79925b00d081a303",
+  "speaker_count": 1675,
+  "total_bytes": 12091128066,
+  "total_duration_seconds": 377541,
+  "unique_audio_path_count": 125847
+}

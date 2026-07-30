@@ -1341,3 +1341,1083 @@ Epoch 0 was not retrained and no final-test artifact was accessed.
 Final-test access/evaluation, epochs after 4, further training, hyperparameter
 changes, augmentation, cache/manifest/split/trial regeneration, commit, and
 push.
+
+## 2026-07-28 22:43:29 +07:00 - VieSpeaker2.0 Dataset Understanding and Integration Audit v2
+
+### Goal and exact scope
+
+Audit only the supplied Stage-A output at
+`E:\VieSpeaker2.0\augmented_dataset`, inventory pilot-bound integration
+assumptions, propose a future `full_manifest_v2` schema and config-driven
+migration plan, refresh repository governance, and stop. VieSpeaker2.0
+completely replaces the old `E:\VieSpeaker` pilot dataset for v2; the two were
+not merged. All v1 data-dependent artifacts remain immutable historical pilot
+evidence only.
+
+The full prior worklog was read before dataset access. It confirms that the v1
+pipeline was a pilot on the old dataset and that its latest completed stage was
+resumed multi-epoch ECAPA-AAM fine-tuning through epoch 4.
+
+### Repository context inspected
+
+- Complete root `AGENTS.md`, `.gitignore`, and this complete worklog.
+- Initial clean `git status`, targeted diffs, recent commit history, root
+  structure, and top-level manifest/split directory conventions.
+- Targeted source, script, test, report, cache-name, manifest-name, trial-name,
+  checkpoint-name, split-name, count, shape, label, hash, and path searches.
+- Relevant manifest/audit, split, portable-manifest, Fbank-cache, cached
+  Dataset/sampler, AAM, one-epoch/multi-epoch, SpeechBrain frontend,
+  verification-trial, metric, scoring, and synthetic-test implementations.
+- No quarantined v1 final-test manifest, index, shard, score, embedding, or
+  evaluation artifact was opened, loaded, hashed, statted, or evaluated.
+
+### Dataset audit method
+
+- Deterministic complete filesystem traversal with speaker identity derived
+  only from each WAV's direct parent.
+- Portable Unicode-normalized forward-slash path validation, directory-depth
+  and placement classification, numeric-folder checks, empty/nested/root-level
+  detection, extension inventory, and Windows case-collision analysis.
+- RIFF/WAVE chunk and declared-boundary inspection without decoding waveform
+  sample arrays.
+- Exact distributions and per-speaker/provenance summaries.
+- Deterministic case-aware provenance parser and syntactic
+  provenance/shard/row candidate-source parser.
+- Duplicate stages: cheap metadata group; SHA-256 of bounded first/last bytes;
+  complete-file SHA-256 only for matching partial-digest candidates. Because
+  every file was 96,078 bytes, the bounded stage covered every byte of every
+  WAV (12,091,128,066 bytes); complete SHA-256 was recomputed for eight
+  duplicate candidates (768,624 bytes).
+- Atomic outputs, schema/read-back validation, full count/byte reconciliation,
+  and matching pre/post path-size-mtime snapshots.
+
+### Exact findings
+
+- Files/WAV/non-WAV: `125,847 / 125,847 / 0`.
+- Total bytes: `12,091,128,066` (`11.2607405204326 GiB`).
+- Top-level speaker folders/numeric folders/valid candidate speakers:
+  `1,675 / 1,675 / 1,675`.
+- Readable/unreadable/zero-byte/zero-frame WAVs:
+  `125,847 / 0 / 0 / 0`.
+- Total duration: `377,541` seconds (`104.8725` hours).
+- All files were exactly depth 2. Root-level files, nested WAVs/directories,
+  empty directories/speaker directories, nonnumeric folders, unsafe paths,
+  normalized duplicates, case collisions, and non-WAV entries were all zero.
+- All 125,847 WAVs were 16 kHz, mono, 16-bit PCM, 48,000 frames, 3.0 seconds,
+  and 96,078 bytes. No non-dominant format or duration outlier was observed.
+- Utterances per speaker count/min/mean/population-std/p01/p05/p25/median/p75/
+  p95/p99/max:
+  `1675 / 1 / 75.13253731343283 / 184.64828782053348 / 1 / 1 / 4 /
+  17 / 78 / 319.29999999999995 / 576.8399999999997 / 3037`.
+- Speakers with fewer than 2/3/5/10/20/50 utterances:
+  `128 / 246 / 427 / 670 / 875 / 1125`; more than 100/500:
+  `350 / 29`. The 128 one-utterance speakers cannot form a positive pair from
+  supplied data alone; none was removed.
+
+### Duplicate, provenance, and source-group findings
+
+- Four exact byte-duplicate groups containing eight files, all within the same
+  speaker; zero cross-speaker exact duplicate groups. Potential repeated bytes:
+  `384,312`. No file was deleted or excluded.
+- Provenance:
+  train `86,197` files / `1,024` speakers / `258,591` seconds;
+  train_small `16,128 / 430 / 48,384`;
+  part `17,858 / 536 / 53,574`;
+  test `5,664 / 69 / 16,992`;
+  other/unparseable `0`.
+- Exactly 384 speakers span more than one provenance class. Provenance was not
+  treated as a final split.
+- All 125,847 filenames matched the exact supported
+  `aug_<provenance>-<shard>-of-<total>_<row>.wav` grammar and yielded 125,847
+  singleton candidate coordinates. The syntax is high-confidence, but the
+  underlying-source/augmentation semantics are unproven. The grouping is not
+  strong enough to constrain a future split without authoritative lineage
+  metadata.
+
+### Integration hard-code findings and migration
+
+`reports/integration_hardcode_inventory_v2.csv` contains 41 targeted findings:
+3 must change before full manifest v2; 4 before split v2; 4 before cache v2;
+1 before trials v2; 3 before baseline v2; 7 before training v2; 6 are safe
+reusable production logic; and 13 are historical v1 artifacts that must remain
+untouched.
+
+Unsafe pilot assumptions include the old dataset root; provenance-derived
+trusted/quarantine pools; 31,998/8,504/9,198 rows; 488 classes and labels
+0..487; v1 paths and hashes; fixed `[301,80]`/48,000-sample identities; 19,528
+trials; P16K2/window-8/1,000-batch epochs; pilot thresholds; and pilot
+checkpoint/resume identity. The staged plan derives dataset/artifact versions,
+counts, labels, feature T, cache, trials, sampler, class count, checkpoints,
+baseline, and validation protocol from future approved v2 manifests/config.
+
+Reusable logic includes the native `[B,T,80]` SpeechBrain frontend/encoder
+orientation, deterministic sampler mechanics, configurable AAM/optimizer and
+checkpoint guards, portable trial ownership checks, O(N log N) EER metrics,
+and cosine scoring.
+
+### Governance changes
+
+Root `AGENTS.md` now makes VieSpeaker2.0 exclusive for v2, forbids merging or
+reusing pilot identities, requires direct-parent speaker IDs and
+provenance-neutral future splitting, makes WAVs/dataset root immutable,
+forbids preprocessing/augmentation until approval, reserves final test,
+requires separate v2 paths and manifest/config-derived values, and preserves
+the cached `[B,T,80] -> mean_var_norm -> embedding_model -> [B,1,192] ->
+[B,192]` model contract without feature transposition or the VoxCeleb
+classifier. Unapproved exact v2 counts/configuration were not added as rules.
+
+### Files created
+
+- `src/dataset_audit_v2.py`
+- `scripts/audit_viespeaker2_dataset.py`
+- `tests/test_dataset_audit_v2.py`
+- `reports/dataset_understanding_v2.md`
+- `reports/dataset_understanding_v2.json`
+- `reports/dataset_speaker_summary_v2.csv`
+- `reports/dataset_provenance_summary_v2.csv`
+- `reports/integration_hardcode_inventory_v2.csv`
+- Ignored `outputs/dataset_understanding_v2/` runtime inventory,
+  exact-distribution table, duplicate-group table, and audit logs
+
+The runtime per-file CSV is explicitly named
+`dataset_audit_inventory_nonproduction_v2.csv` and contains no split or label.
+
+### Files modified
+
+- `AGENTS.md`
+- `reports/CODEX_WORKLOG.md` (this append-only entry)
+
+No production full manifest, split, portable manifest, mapping, Fbank cache,
+trial, baseline, checkpoint, environment, pretrained weight, or source audio
+was modified.
+
+### Exact commands
+
+```text
+Get-Content -Raw -LiteralPath 'C:\Users\thanh\.codex\attachments\0cadeded-81f7-4cf6-84a6-173f4d6ed5f3\pasted-text.txt'
+Get-Content -Raw -LiteralPath 'AGENTS.md'
+Get-Content -Raw -LiteralPath '.gitignore'
+Get-Content -Raw -LiteralPath 'reports\CODEX_WORKLOG.md'
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 0 -First 250
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 250 -First 250
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 500 -First 250
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 750 -First 250
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 1000 -First 250
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 1250 -First 251
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 400 -First 300
+(Get-Content -LiteralPath 'reports\CODEX_WORKLOG.md') | Select-Object -Skip 700 -First 300
+git status --short --branch
+Get-ChildItem -Force
+rg --files src scripts tests reports | Sort-Object
+git log -8 --oneline --decorate
+git diff -- AGENTS.md .gitignore src scripts tests reports
+Get-ChildItem -LiteralPath 'manifests' -Force
+Get-ChildItem -LiteralPath 'splits' -Force
+rg -n -i --glob 'src/**' --glob 'scripts/**' --glob 'tests/**' --glob 'reports/*.md' --glob 'reports/*.json' --glob 'README.md' 'VieSpeaker|fbank_cache_v1|validation_trials_v1|pretrained.*baseline|portable.*v1|speaker_to_label_v1|checkpoint|final[_-]?test' .
+rg -n --glob 'src/**' --glob 'scripts/**' --glob 'tests/**' --glob 'reports/*.md' --glob 'reports/*.json' --glob 'README.md' '488|31,?998|8,?504|9,?198|49,?700|1000|1_000|301|48000|48_000|P16K2|active.{0,20}window|expected.*hash|manifest.*hash|trial.*hash|num_classes|class_count|final_split|train_manifest_v1|test_manifest_v1' .
+rg -n --glob 'src/*.py' --glob 'scripts/*.py' --glob 'tests/*.py' 'E:\\VieSpeaker|VieSpeaker|31_?998|8_?504|9_?198|49_?700|488|range\(488\)|0\.\.487' .
+rg -n --glob 'src/*.py' --glob 'scripts/*.py' --glob 'tests/*.py' 'fbank_cache_v1|portable_manifest|train_manifest_v1|validation_manifest_v1|test_manifest_v1|speaker_to_label_v1|validation_trials_v1|pretrained.*baseline|START_CHECKPOINT|best\.pt|checkpoint_v1' .
+rg -n --glob 'src/*.py' --glob 'scripts/*.py' --glob 'tests/*.py' '301|48000|48_000|FRAMES|SAMPLES|feature_shape|EXPECTED_ROWS|EXPECTED_.*HASH|SHA256|sha256|1000|1_000|P16K2|ACTIVE_SHARD|active_shard|window_size|num_classes|class_count' .
+Get-Content -Raw -LiteralPath 'src\build_manifest.py'
+Get-Content -Raw -LiteralPath 'src\inspect_dataset.py'
+Get-Content -Raw -LiteralPath 'src\analyze_manifest.py'
+Get-Content -Raw -LiteralPath 'scripts\create_speaker_split.py'
+Get-Content -Raw -LiteralPath 'scripts\create_portable_manifests.py'
+Get-Content -Raw -LiteralPath 'scripts\precompute_speechbrain_fbank.py'
+Get-Content -Raw -LiteralPath 'tests\test_speaker_split.py'
+Get-Content -Raw -LiteralPath 'tests\test_portable_manifests.py'
+Get-Content -Raw -LiteralPath 'tests\test_fbank_cache.py'
+.venv-cuda\Scripts\python.exe -m py_compile src\dataset_audit_v2.py scripts\audit_viespeaker2_dataset.py tests\test_dataset_audit_v2.py
+.venv-cuda\Scripts\python.exe -m unittest tests.test_dataset_audit_v2 -v
+$auditDir = 'E:\SpeakerVerification\outputs\dataset_understanding_v2'; New-Item -ItemType Directory -Force -Path $auditDir | Out-Null; $process = Start-Process -FilePath 'E:\SpeakerVerification\.venv-cuda\Scripts\python.exe' -ArgumentList @('scripts\audit_viespeaker2_dataset.py','--dataset-root','E:\VieSpeaker2.0\augmented_dataset') -WorkingDirectory 'E:\SpeakerVerification' -RedirectStandardOutput "$auditDir\audit.stdout.log" -RedirectStandardError "$auditDir\audit.stderr.log" -WindowStyle Hidden -PassThru; $process.Id
+$source = (Resolve-Path -LiteralPath 'outputs\dataset_understanding_v2\dataset_inventory_v2.csv').Path; $target = [System.IO.Path]::GetFullPath('E:\SpeakerVerification\outputs\dataset_understanding_v2\dataset_audit_inventory_nonproduction_v2.csv'); $allowed = [System.IO.Path]::GetFullPath('E:\SpeakerVerification\outputs\dataset_understanding_v2') + [System.IO.Path]::DirectorySeparatorChar; if (-not $source.StartsWith($allowed, [System.StringComparison]::OrdinalIgnoreCase) -or -not $target.StartsWith($allowed, [System.StringComparison]::OrdinalIgnoreCase)) { throw 'resolved paths are outside the intended audit output directory' }; Move-Item -LiteralPath $source -Destination $target
+.venv-cuda\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -v
+Import-Csv -LiteralPath 'reports\integration_hardcode_inventory_v2.csv'
+Get-Content -Raw -LiteralPath 'reports\dataset_understanding_v2.json' | ConvertFrom-Json
+git diff --check
+git diff -- AGENTS.md src\dataset_audit_v2.py scripts\audit_viespeaker2_dataset.py tests\test_dataset_audit_v2.py reports\dataset_understanding_v2.md reports\dataset_understanding_v2.json reports\dataset_speaker_summary_v2.csv reports\dataset_provenance_summary_v2.csv reports\integration_hardcode_inventory_v2.csv reports\CODEX_WORKLOG.md
+git status --short
+git check-ignore -v outputs\dataset_understanding_v2\dataset_audit_inventory_nonproduction_v2.csv outputs\dataset_understanding_v2\dataset_metadata_distributions_v2.csv outputs\dataset_understanding_v2\dataset_duplicate_groups_v2.csv
+Select-String -LiteralPath reports\dataset_provenance_summary_v2.csv,reports\dataset_speaker_summary_v2.csv,reports\integration_hardcode_inventory_v2.csv,reports\dataset_understanding_v2.json -Pattern '[A-Za-z]:[\\/]'
+```
+
+### Tests, preservation, and result
+
+- New Python `py_compile`: PASS.
+- Focused synthetic audit suite: 6 passed.
+- Complete repository unittest discovery: 118 passed.
+- The initial focused run had one fixture-expectation failure for
+  `aug_train.wav`; the fixture was corrected to the genuinely malformed
+  `aug_train-.wav`, after which the focused suite passed twice. Audit
+  production logic was not changed for that correction.
+- Persisted CSV/JSON schema parsing and inventory read-back: PASS.
+- `git diff --check`: PASS.
+- Pre/post files/bytes/directories:
+  `125847/12091128066/1676` and identical.
+- Pre/post path-size-mtime identity SHA-256:
+  `40462a26fa9fc2aee83cc8a55b02a88087e75bbe97e4af1a79925b00d081a303`
+  and identical; zero snapshot errors.
+- Dataset-root immediate child set matched. No dataset file was changed and no
+  artifact was written inside the dataset root.
+- Result: **PASS** for the audit task. This is not split approval.
+
+### Limitations and explicitly deferred
+
+Header inspection does not measure SNR, reverberation, clipping, perceptual
+quality, VAD quality, or normalization. Exact-byte hashing does not detect
+acoustically equal re-encodings. Candidate source coordinates lack
+authoritative lineage semantics. Folder IDs were not checked against an
+external speaker registry.
+
+Explicitly deferred: approved `full_manifest_v2`, every split/label decision,
+portable manifests v2, Fbank/cache v2, SpeechBrain/ECAPA loading, embeddings,
+trials v2, baseline/scoring/EER/thresholds, sampler approval, AAM/training,
+checkpoint creation/resume, all final-test access, commit, and push. No commit
+or push occurred.
+
+## 2026-07-28 — VieSpeaker2.0 Production Full Manifest v2
+
+### Scope and approved inputs
+
+Created only the deterministic, unsplit VieSpeaker2.0 production full manifest
+v2 and its immutable identity metadata. The approved inputs were the read-only
+VieSpeaker2.0 dataset root, the nonproduction v2 audit inventory, and the
+approved Dataset Understanding v2 Markdown/JSON reports. The old pilot dataset
+was not merged or consulted. No split generation followed this task.
+
+Approved input identities:
+
+- Audit inventory SHA-256:
+  `6f33cb9510b00f3503af41246349b921d000779b25de9715b9ea68aed1df6cd5`
+- Audit Markdown SHA-256:
+  `79bd00b9f922b5b3a2d492cf910a0f7d7e6e4c6b1403b4b21c7e1aab15c4493a`
+- Audit JSON SHA-256:
+  `305a641ac91f4e7fc41c389bf3818b810f59fea5ec18a7722046407582bc9af2`
+- Dataset snapshot identity SHA-256:
+  `40462a26fa9fc2aee83cc8a55b02a88087e75bbe97e4af1a79925b00d081a303`
+
+### Schema, artifacts, and policy
+
+The exact manifest columns are:
+
+```text
+audio_path,speaker_id,filename,provenance,provenance_parse_status,sample_rate_hz,channel_count,sample_width_bytes,bits_per_sample,wav_encoding,frame_count,duration_seconds,file_size_bytes,wav_status,duplicate_group,candidate_source_group,source_group_parse_status,manifest_version
+```
+
+Artifacts:
+
+- `manifests/v2/full_manifest_v2.csv`
+- `manifests/v2/full_manifest_v2_identity.json`
+- `reports/full_manifest_v2_summary.md`
+- `reports/full_manifest_v2_summary.json`
+
+Rows are ordered by numeric direct-parent `speaker_id`, then ordinal
+dataset-relative `audio_path`. Paths use `/` and contain no absolute prefix,
+drive, backslash, or parent traversal. Filenames do not define speaker
+identity. Provenance and candidate source groups are descriptive/syntactic
+only and do not create a split or authoritative lineage.
+
+All 128 singleton speakers were preserved. All four audited groups
+`dup_000001` through `dup_000004` and all eight duplicate files were preserved;
+no representative was chosen and no file was removed. All groups remain
+within-speaker.
+
+### Exact counts and identities
+
+- Rows / unique paths / readable WAVs: `125847 / 125847 / 125847`
+- Speakers: `1675`
+- Bytes / duration seconds: `12091128066 / 377541`
+- Provenance `train / train_small / part / test`:
+  `86197 / 16128 / 17858 / 5664`
+- Duplicate groups / duplicate files / cross-speaker groups: `4 / 8 / 0`
+- Singleton speakers: `128`
+- Manifest SHA-256:
+  `26a0157abce3bb00ce5f0ca16f9b964e180f72484e53f9d2602577f5ce4acf8f`
+- Identity-file SHA-256:
+  `f7b6c1cbc95b8a0d20b596b4841de7ebc26e69d6bd7c130801937dab681c544e`
+
+### Files created
+
+- `src/full_manifest_v2.py`
+- `scripts/create_full_manifest_v2.py`
+- `tests/test_full_manifest_v2.py`
+- `manifests/v2/full_manifest_v2.csv`
+- `manifests/v2/full_manifest_v2_identity.json`
+- `reports/full_manifest_v2_summary.md`
+- `reports/full_manifest_v2_summary.json`
+- Ignored reproducibility pair under
+  `outputs/full_manifest_v2_reproduction_v2/`
+
+### Files modified
+
+- `reports/CODEX_WORKLOG.md` (this append-only entry)
+
+Pre-existing dirty and untracked work was preserved.
+
+### Exact commands
+
+```text
+.venv-cuda\Scripts\python.exe -m py_compile src\full_manifest_v2.py scripts\create_full_manifest_v2.py tests\test_full_manifest_v2.py
+.venv-cuda\Scripts\python.exe -m unittest tests.test_full_manifest_v2 -v
+.venv-cuda\Scripts\python.exe scripts\create_full_manifest_v2.py --dataset-root "E:\VieSpeaker2.0\augmented_dataset" --audit-inventory outputs\dataset_understanding_v2\dataset_audit_inventory_nonproduction_v2.csv --output-dir manifests\v2
+.venv-cuda\Scripts\python.exe scripts\create_full_manifest_v2.py --dataset-root "E:\VieSpeaker2.0\augmented_dataset" --audit-inventory outputs\dataset_understanding_v2\dataset_audit_inventory_nonproduction_v2.csv --output-dir outputs\full_manifest_v2_reproduction_v2 --reference-dir manifests\v2
+.venv-cuda\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -v
+git diff --check
+```
+
+### Tests, reproducibility, preservation, and result
+
+- Python compilation: PASS.
+- Focused synthetic suite: 12 passed.
+- Complete repository unittest discovery: 130 passed.
+- `git diff --check`: PASS.
+- Finalized CSV and JSON schema/value/hash read-back: PASS.
+- The independent verification build was byte-identical for both manifest and
+  identity JSON.
+- CSV uses UTF-8 without BOM, LF records, fixed columns, and six-decimal
+  duration; JSON uses UTF-8 without BOM, LF, sorted keys, two-space indentation,
+  and no timestamp.
+- Both builds reported identical pre/post dataset snapshot identities and
+  `dataset_preservation_match: true`; no artifact was written under the dataset
+  root and no source WAV was changed.
+- Result: **PASS** for the production full manifest v2 only. This does not
+  approve a speaker split.
+
+Deferred: every train/validation/test split and label decision, portable split
+manifests v2, Fbank/cache v2, SpeechBrain/ECAPA loading, embeddings, trials,
+baseline/scoring/EER/thresholds, sampler benchmarking, training, checkpoint
+work, and all final-test access. No commit or push occurred.
+
+## 2026-07-29 — VieSpeaker2.0 Final Speaker-Disjoint Split Package v2
+
+### Exact scope and approved inputs
+
+Created only the approved final speaker-disjoint v2 split, portable manifests,
+train label mapping, policy/identity bindings, and versioned reports. The
+authoritative inputs passed the mandatory fail-closed gate before any split
+artifact was written:
+
+- `manifests/v2/full_manifest_v2.csv`
+  SHA-256 `26a0157abce3bb00ce5f0ca16f9b964e180f72484e53f9d2602577f5ce4acf8f`
+- `manifests/v2/full_manifest_v2_identity.json`
+  SHA-256 `f7b6c1cbc95b8a0d20b596b4841de7ebc26e69d6bd7c130801937dab681c544e`
+
+The existing dirty and untracked Dataset Understanding v2 and full-manifest v2
+work was preserved. Historical v1 outputs were not modified, and quarantined
+v1 final-test artifacts were not recursively enumerated or opened.
+
+### Deterministic policy and algorithm
+
+- Split seed: `20260729`.
+- Evaluation eligibility: at least 20 utterances.
+- Train eligibility: at least 2 utterances.
+- Singleton policy: excluded from portable train/validation/test manifests,
+  retained in the authoritative full manifest.
+- Evaluation buckets and capacities:
+  `20-49=250`, `50-99=199`, `100-199=202`, `200-499=120`,
+  `500+=29`.
+- Exact largest-remainder selection quotas in configured bucket order:
+  `63 / 50 / 50 / 30 / 7`.
+- Within each bucket, selection uses ascending
+  `SHA256(UTF8("<seed>:<speaker_id>"))`, then numeric speaker ID.
+- Exact dynamic programming assigns the selected 200 speakers by priority:
+  exact `100/100` counts; per-bucket count difference at most one; minimum
+  absolute utterance difference; minimum absolute duplicate-file difference;
+  configured-bucket/SHA-256 stable tie break.
+- Filename provenance and candidate source groups do not influence assignment.
+
+Validation/test bucket counts are:
+
+```text
+20-49:    32 / 31
+50-99:    25 / 25
+100-199:  25 / 25
+200-499:  15 / 15
+500+:      3 / 4
+```
+
+Validation and test each contain exactly 15,355 utterances, so the total
+utterance difference is zero. Their duplicate-file counts are `0 / 4`.
+
+### Exact split results
+
+| Split | Speakers | Rows | Duration seconds | Duplicate groups | Duplicate files |
+|---|---:|---:|---:|---:|---:|
+| train | 1,347 | 95,009 | 285,027 | 2 | 4 |
+| validation | 100 | 15,355 | 46,065 | 0 | 0 |
+| test | 100 | 15,355 | 46,065 | 2 | 4 |
+| excluded | 128 | 128 | 384 | 0 | 0 |
+
+All 1,675 speakers and all 125,847 rows reconcile exactly. Speaker
+intersections are empty. All 128 excluded speakers have one utterance; every
+train speaker has at least two; every validation/test speaker has at least
+twenty.
+
+Train labels are assigned in numeric speaker-ID order and are exactly
+contiguous `0..1346`. Validation and test labels are all `-1`. Portable paths
+are dataset-root-relative and use `/`.
+
+All four exact duplicate groups and all eight duplicate files remain in the
+owning speaker's single final split. Nothing was deduplicated and no preferred
+representative was selected. Later validation-trial generation must reject a
+positive pair whose two files share the same non-empty `duplicate_group`.
+
+### Created artifacts and SHA-256
+
+- `splits/v2/speaker_split_v2.csv`:
+  `cbbcdcd4d3561ff2470a6cd713187cbb612939e643e5bc8cf4ed25504539f87e`
+- `splits/v2/speaker_split_v2_identity.json`:
+  `87d2a542ae1716f5d143e27835bf0478413e672cfa131462c0410808498c3c67`
+- `splits/v2/split_policy_v2.json`:
+  `3e414836b4fe307841810cffa56c3f0040d0c662d265d276d73a7d00a16a5d10`
+- `manifests/portable_v2/train_manifest_v2.csv`:
+  `f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b`
+- `manifests/portable_v2/validation_manifest_v2.csv`:
+  `9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc`
+- `manifests/portable_v2/test_manifest_v2.csv`:
+  `14c782fa36d9c23040dd7a7fce26d91b9a57a230bdeebd19658dbcb2ee8364eb`
+- `manifests/portable_v2/speaker_to_label_v2.json`:
+  `9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8`
+- `manifests/portable_v2/portable_manifests_v2_identity.json`:
+  `29f374366c917fb6c54dcd44eeeff59ccc46a732b270188e7157a586e4d9e7c5`
+- `reports/speaker_split_v2_summary.md`
+- `reports/speaker_split_v2_summary.json`
+- `src/speaker_split_v2.py`
+- `scripts/create_speaker_split_package_v2.py`
+- `tests/test_speaker_split_v2.py`
+- Ignored independent reproduction package under
+  `outputs/speaker_split_v2_reproduction/`
+
+### Files modified
+
+- `AGENTS.md`, after package validation only, with approved v2 paths, speaker
+  counts, singleton/label semantics, identity binding, and final-test
+  quarantine.
+- `reports/CODEX_WORKLOG.md` by this single append-only entry.
+
+### Exact commands
+
+```text
+.venv-cuda\Scripts\python.exe -m py_compile src\speaker_split_v2.py scripts\create_speaker_split_package_v2.py tests\test_speaker_split_v2.py
+.venv-cuda\Scripts\python.exe -m unittest tests.test_speaker_split_v2 -v
+.venv-cuda\Scripts\python.exe scripts\create_speaker_split_package_v2.py
+$verificationRoot = 'outputs\speaker_split_v2_reproduction'; New-Item -ItemType Directory -Path $verificationRoot | Out-Null; .venv-cuda\Scripts\python.exe scripts\create_speaker_split_package_v2.py --output-root $verificationRoot --reference-root .
+.venv-cuda\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -v
+git diff --check
+```
+
+### Tests, reproducibility, and preservation
+
+- `py_compile`: PASS.
+- Focused synthetic split suite: 13 passed.
+- Complete repository unittest discovery: 143 passed.
+- Cross-process runs with `PYTHONHASHSEED=1` and `999`: byte-identical
+  assignment output.
+- Transactional publication rollback test: PASS.
+- Final CSV/JSON read-back, schemas, hashes, paths, labels, row/speaker totals,
+  duplicate ownership, and disjointness: PASS.
+- Independent second build: all eight required artifacts byte-identical.
+- Deterministic formatting: UTF-8 without BOM, LF, fixed CSV columns,
+  six-decimal durations, sorted JSON keys, two-space indentation, and no
+  identity timestamps.
+- Full manifest and its identity matched before/after hashes.
+- The builder has no dataset-root argument and did not open source WAV content;
+  no source WAV was changed.
+- `git diff --check`: PASS.
+
+### Final-test quarantine, result, and deferred work
+
+The final-test manifest was created and metadata-validated, then became
+immutable/quarantined after the independent hash comparison. No test WAV
+content was opened. No test Fbank, trials, model load, embeddings, scores, EER,
+threshold, or accuracy were produced.
+
+Result: **PASS** for the final speaker-disjoint split package v2 only.
+
+Deferred: Fbank/cache v2, validation and final-test trials, SpeechBrain/ECAPA
+loading, embeddings, baseline/scoring/EER/thresholds, sampler benchmarks,
+training, checkpoints, every final-test content/evaluation action, commit, and
+push. No commit or push occurred.
+
+## 2026-07-29 — VieSpeaker2.0 Train/Validation Fbank Cache and Cached ECAPA Preflight v2
+
+### Exact scope and approved identities
+
+Performed only the approved v2 train/validation raw SpeechBrain Fbank cache,
+full cache validation, versioned lazy Dataset/DataLoader integration, and one
+cached train plus one cached validation ECAPA CUDA preflight. No trial, score,
+metric, sampler, AAM, optimizer, training, checkpoint, or final-test stage
+followed.
+
+The fail-closed gate matched all nine supplied identities before source access
+and again after extraction:
+
+- Full manifest:
+  `26a0157abce3bb00ce5f0ca16f9b964e180f72484e53f9d2602577f5ce4acf8f`
+- Full-manifest identity:
+  `f7b6c1cbc95b8a0d20b596b4841de7ebc26e69d6bd7c130801937dab681c544e`
+- Speaker split / identity:
+  `cbbcdcd4d3561ff2470a6cd713187cbb612939e643e5bc8cf4ed25504539f87e` /
+  `87d2a542ae1716f5d143e27835bf0478413e672cfa131462c0410808498c3c67`
+- Split policy:
+  `3e414836b4fe307841810cffa56c3f0040d0c662d265d276d73a7d00a16a5d10`
+- Portable-package identity:
+  `29f374366c917fb6c54dcd44eeeff59ccc46a732b270188e7157a586e4d9e7c5`
+- Train / validation manifests:
+  `f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b` /
+  `9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc`
+- Train label mapping:
+  `9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8`
+
+### Feature contract and cache results
+
+The real train-only preflight measured raw `compute_features` output as
+`[T,80] = [301,80]`, float32, finite, pre-normalization, and non-transposed.
+The required CUDA batch-size-64 preflight produced `[64,301,80]` from
+`[64,48000]`; no batch-size fallback was required.
+
+The single production process used `cuda:0`, extraction batch size 64, and
+shard size 256. It wrote 95,009 train rows in 372 shards and 15,355 validation
+rows in 60 shards: 110,364 utterances and 10,638,641,568 shard bytes total.
+Extraction took 206.745 seconds. Every shard was read back and every tensor,
+label, path, speaker, split, manifest row index, shape, dtype, and finite-value
+contract passed. Train labels cover exactly `0..1346`; validation labels are
+all `-1`; global paths are unique; no unexpected shard or split directory
+exists.
+
+Config and index plans generated twice were byte-identical. Two fixed samples
+per split were re-extracted in their original production batch contexts and
+matched the cache exactly with maximum absolute difference `0.0`.
+
+### Dataset, DataLoader, and cached ECAPA
+
+`CachedFbankDataset` now detects v1 or v2 dynamically. V2 validation binds the
+completion identity, config hash, index hashes, dynamic `[T,80]`, authoritative
+row/class/label metadata, train/validation allowlist, deterministic
+manifest-row/shard alignment, lazy CPU loading, bounded LRU behavior, and
+portable paths. V1 config/index/shard/sample/collate behavior remains
+compatible.
+
+Real-cache DataLoader checks passed for each split: two sequential batches
+with `num_workers=0` and one two-sample batch with `num_workers=2`, preserving
+tensor, label, path, metadata, `dataset_index`, and `manifest_row_index`
+alignment.
+
+One train and one validation batch of four followed:
+
+```text
+cached Fbank [4,301,80]
+-> mean_var_norm [4,301,80]
+-> embedding_model [4,1,192]
+-> squeeze(1) [4,192]
+```
+
+All tensors were CUDA float32 and finite. Train labels were valid and
+validation labels were `-1`. Evaluation/inference mode, frozen parameters,
+absent gradients, unchanged parameters, and no optimizer were verified.
+Forward hooks recorded zero `compute_features` calls and zero pretrained
+classifier calls.
+
+### Cache identities
+
+- Config:
+  `ec71959ec64361038991e760e772d11bf1779e1b505a892dff364cf45aaeb018`
+- Cache identity:
+  `1a2d6af777311f687e887575bfaf20915ed0409fd2e05b2f1ac232d43cd0b8c8`
+- Train index:
+  `e20c320fc5842502a26684023bb307a7b2afa27a14a3cf1130fdffe31e85d4b9`
+- Validation index:
+  `1d3a95e95aaa5b13e6614c077fbbdf10f7c208c79970c2a85bdd461193b9f585`
+- Runtime result:
+  `71fa3164c0f2adf2eb435defa9559b1379bcb566942119264657deed4fbc15b9`
+- Cached ECAPA result:
+  `4d634d87a1c8fa614effb8f520ffa6265975336bebec50d53db67bd7bdd55f02`
+
+### Files created
+
+- `scripts/precompute_speechbrain_fbank_v2.py`
+- `scripts/smoke_test_cached_ecapa_v2.py`
+- `tests/test_fbank_cache_v2.py`
+- `reports/fbank_cache_v2_summary.md`
+- `reports/fbank_cache_v2_summary.json`
+- Ignored `outputs/fbank_cache_v2/` config, completion identity, indexes,
+  train/validation shards, runtime results, cached ECAPA result, and logs
+
+### Files modified
+
+- `src/cached_fbank_dataset.py`
+- `AGENTS.md`
+- `reports/CODEX_WORKLOG.md` by this one append-only entry
+
+All pre-existing dirty and untracked work was preserved.
+
+### Exact commands and validation
+
+```text
+.venv-cuda\Scripts\python.exe -m py_compile scripts\precompute_speechbrain_fbank_v2.py src\cached_fbank_dataset.py scripts\smoke_test_cached_ecapa_v2.py tests\test_fbank_cache_v2.py
+.venv-cuda\Scripts\python.exe -m unittest tests.test_fbank_cache_v2 -v
+.venv-cuda\Scripts\python.exe scripts\precompute_speechbrain_fbank_v2.py --dataset-root "<runtime supplied approved v2 root>" --device cuda:0 --batch-size 64 --shard-size 256 --cache-dir outputs\fbank_cache_v2
+.venv-cuda\Scripts\python.exe scripts\smoke_test_cached_ecapa_v2.py --cache-dir outputs\fbank_cache_v2 --device cuda:0 --batch-size 4
+.venv-cuda\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -v
+git diff --check
+```
+
+Long extraction stdout/stderr was redirected to ignored files inside the v2
+cache. Python compilation passed, 13 focused v2 cache tests passed, all 156
+repository tests passed, and `git diff --check` passed. A pre-final full-suite
+run exposed three v2-only metadata keys in legacy v1 samples; they were
+restricted to v2, after which the full suite passed.
+
+### Preservation, quarantine, result, and deferred work
+
+Approved train/validation source path-size-mtime state matched before/after for
+all 110,364 rows. No source WAV, environment, or pretrained weight was
+modified. No absolute dataset root was persisted.
+
+The final-test manifest was not opened, statted, hashed, parsed, or loaded. No
+final-test or excluded WAV was accessed, and no `test` cache directory, index,
+shard, feature, embedding, or trial exists.
+
+Result: **PASS** for the v2 train/validation Fbank cache and cached ECAPA
+preflight only.
+
+Deferred: trials, scores, EER, thresholds, accuracy, sampler benchmarks, AAM,
+optimizer/training work, checkpoints, all final-test content/evaluation
+actions, commit, and push. No commit or push occurred.
+
+## 2026-07-29 18:48:52 +07:00 - VieSpeaker2.0 Training Readiness v2
+
+### Goal and exact scope
+
+Perform only the approved VieSpeaker2.0 training-readiness stage: validate and
+freeze the requested hybrid sampler, generate fixed validation verification
+trials, and evaluate the untouched pretrained ECAPA validation baseline. No
+comparative sampler benchmark, AAM-Softmax, optimizer, training, checkpoint,
+augmentation, final-test operation, commit, or push was performed.
+
+### Approved input bindings
+
+All required hashes were validated before use and remained unchanged:
+
+- Portable package identity:
+  `29f374366c917fb6c54dcd44eeeff59ccc46a732b270188e7157a586e4d9e7c5`
+- Train manifest:
+  `f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b`
+- Validation manifest:
+  `9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc`
+- Train label mapping:
+  `9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8`
+- Cache config:
+  `ec71959ec64361038991e760e772d11bf1779e1b505a892dff364cf45aaeb018`
+- Cache identity:
+  `1a2d6af777311f687e887575bfaf20915ed0409fd2e05b2f1ac232d43cd0b8c8`
+- Train cache index:
+  `e20c320fc5842502a26684023bb307a7b2afa27a14a3cf1130fdffe31e85d4b9`
+- Validation cache index:
+  `1d3a95e95aaa5b13e6614c077fbbdf10f7c208c79970c2a85bdd461193b9f585`
+
+Train manifest/cache alignment passed for 95,009 rows, 1,347 speakers, labels
+0..1346, 372 shards, four rows in two nonempty duplicate groups, and zero
+metadata mismatches. Validation alignment passed for 15,355 rows, 100
+speakers, labels all `-1`, 60 shards, and zero metadata mismatches.
+
+### Approved sampler and validation
+
+`configs/v2/training_sampler_v2.json` approves only
+`HybridShardAwareSpeakerBatchSampler` with P=16, K=2, batch size 32, active
+shard window 8, seed 20260729, 2,969 batches and 95,008 logical selections per
+epoch, workers 0, Dataset LRU size 8, and `validate_finite=False` for the
+already fully validated immutable cache.
+
+Full metadata-only plans for epochs 0 and 1 passed exact P x K, train-only
+selection, all-speaker coverage, duplicate-group separation, metadata
+immutability, same-epoch reproduction, and different-epoch change checks.
+Epoch 0/1 plan hashes are
+`010e80f042ae91f1c890045d12833005359833466ba6d5a4b5fc70e5c8f04a68`
+and
+`c5ff9c7fca4c88541c47738706b1852293e6727da9bb420350e75379179bba0f`.
+The combined sampler-plan identity is
+`b11a97fd45f11b8f71fa980ebd26cb335bac0f3bcdfb781e8f87ced535606e4f`
+and reproduced under `PYTHONHASHSEED=1` and `987654`.
+
+Epoch 0/1 LRU(8) simulated hit rates were
+`0.8150997810710677 / 0.8136683226675648`; duplicate-group safeguards
+rejected `1 / 2` candidates and produced zero conflicts. Speaker batch
+exposure mean was `35.26651818856718` for both epochs, with population CV
+`0.2550267930232451 / 0.23782636723207598`. The first 16 real cache batches
+only (512 samples) passed exact shape `[32,301,80]`, float32, P x K, train-only,
+duplicate-group, LRU-bound, and metadata-preservation checks. No comparative
+benchmark was run.
+
+Sampler config SHA-256:
+`e59d3794371095acddcee17218ff99fef4393cb15a7f7176c2d7680120436899`.
+
+### Fixed validation trial protocol
+
+The deterministic trial package contains exactly 10,000 positive and 10,000
+negative trials over all 100 approved validation speakers. Positives use 100
+stable-SHA-ranked canonical unordered path pairs per speaker and reject a pair
+sharing the same nonempty duplicate group. Negatives use 200 round-robin
+rounds: two complete 99-round cycles plus the first two rounds of cycle three,
+giving exactly 200 participations per speaker. Utterances use least-used
+selection with stable SHA-256 tie breaks. Trial IDs and canonical unordered
+path pairs are unique, and every path/speaker ownership check passed.
+
+The CSV, config, and identity reproduced byte-for-byte both in-process and in
+an independent process with `PYTHONHASHSEED=987654`. They contain no timestamp
+or absolute local path.
+
+- Trial CSV:
+  `11bec5ff0a0a4ca4930e2664bdc391388a9a677795afaefe5de3fee2d0d39e3d`
+- Trial config:
+  `9e725ce006ae522f0f0274739b75e9aee7ebb302db331fead73c79cdc326822e`
+- Trial identity:
+  `09b55236ad3f80537e1517a5efa7ad1d7a7efc3454f6b56d9ba62af83cc6bf73`
+
+### Untouched pretrained ECAPA validation baseline
+
+The baseline ran sequentially on CUDA 0 with batch size 64 and workers 0 using
+only:
+
+```text
+cached Fbank [B,301,80]
+-> mean_var_norm [B,301,80]
+-> embedding_model [B,1,192]
+-> squeeze(1) [B,192]
+```
+
+It stored 15,355 ordered finite float32 CPU embeddings shaped `[15355,192]`
+and exactly 20,000 finite cosine scores. Hooks recorded zero
+`compute_features` calls and zero pretrained classifier calls. Parameters were
+frozen and unchanged, gradients were absent, and no transpose, waveform
+frontend, optimizer, AAM-Softmax, or training step was used. Tensor save/load
+maximum absolute differences were zero.
+
+Grouped, tie-aware O(N log N) metrics produced interpolated EER `0.1257`
+(`12.57%`) at threshold `0.28827327489852905`. This crossing is also an actual
+empirical threshold: FAR and FRR are both `0.1257`. With acceptance semantics
+`score >= threshold`, TP/TN/FP/FN are `8743/8743/1257/1257`; accuracy,
+precision, recall, and F1 are all `0.8743`.
+
+Same-speaker score min/mean/std/median/max:
+`-0.2114696353673935 / 0.47219380933633076 /
+0.15749554871675106 / 0.49064262211322784 / 0.9752877950668335`.
+Different-speaker:
+`-0.2100071758031845 / 0.1534788316947641 /
+0.11294603164726892 / 0.14373768866062164 / 0.602975070476532`.
+
+Embedding extraction took `72.23180550000052` seconds at
+`212.57948480880614` utterances/second; scoring took
+`0.9620833999997558` seconds and metrics `0.0705762000006871` seconds.
+Peak allocated/reserved VRAM was
+`2567059456 / 3166699520` bytes on the NVIDIA GeForce RTX 3050 Laptop GPU.
+
+Runtime baseline identity:
+`5000ddabe804f4cfd7c905c3ed51bc8fd1d0273822ca2091019da923f387974c`.
+Embedding and score artifact hashes:
+`0851324f9f7b2187448f8fd5354bcca2aef82489c29f38bd84ab303c476fbfca`
+and
+`3945764d96cd41c28c2aa4c628826480696619433a5a28db485827df7161b95e`.
+
+### Files created
+
+- `configs/v2/training_sampler_v2.json`
+- `manifests/verification_v2/validation_trials_v2.csv`
+- `manifests/verification_v2/validation_trials_config_v2.json`
+- `manifests/verification_v2/validation_trials_identity_v2.json`
+- `src/training_readiness_v2.py`
+- `src/verification_v2.py`
+- `scripts/prepare_training_readiness_v2.py`
+- `scripts/generate_validation_trials_v2.py`
+- `scripts/evaluate_pretrained_validation_baseline_v2.py`
+- `tests/test_training_readiness_v2.py`
+- `tests/test_verification_v2.py`
+- `reports/training_sampler_v2.json`
+- `reports/training_sampler_v2.md`
+- `reports/validation_trials_v2.json`
+- `reports/validation_trials_v2.md`
+- `reports/pretrained_ecapa_validation_baseline_v2.json`
+- `reports/pretrained_ecapa_validation_baseline_v2.md`
+- Ignored `outputs/pretrained_ecapa_validation_baseline_v2/` embeddings,
+  scores, identity, runtime/configuration, and redirected logs
+- Ignored `outputs/validation_trials_v2_reproduction/` independent
+  reproduction artifacts
+
+### Files modified
+
+- `src/cached_fbank_samplers.py` for duplicate-safe P x K selection and
+  rejection accounting while preserving v1 behavior
+- `AGENTS.md` with the approved sampler/trial/baseline governance
+- `reports/CODEX_WORKLOG.md` by this one append-only entry
+
+All pre-existing dirty and untracked work, including the prior v2 cache task's
+`src/cached_fbank_dataset.py` change, was preserved.
+
+### Commands and tests
+
+```text
+.venv-cuda\Scripts\python.exe -m py_compile src\cached_fbank_samplers.py src\training_readiness_v2.py src\verification_v2.py scripts\prepare_training_readiness_v2.py scripts\generate_validation_trials_v2.py scripts\evaluate_pretrained_validation_baseline_v2.py tests\test_training_readiness_v2.py tests\test_verification_v2.py
+.venv-cuda\Scripts\python.exe -m unittest tests.test_cached_fbank_samplers tests.test_verification_trials tests.test_verification_metrics tests.test_verification_baseline tests.test_training_readiness_v2 tests.test_verification_v2 -v
+.venv-cuda\Scripts\python.exe scripts\prepare_training_readiness_v2.py
+PYTHONHASHSEED=1/987654 .venv-cuda\Scripts\python.exe scripts\prepare_training_readiness_v2.py --plan-hash-only
+.venv-cuda\Scripts\python.exe scripts\generate_validation_trials_v2.py
+PYTHONHASHSEED=987654 .venv-cuda\Scripts\python.exe scripts\generate_validation_trials_v2.py --output-dir outputs\validation_trials_v2_reproduction
+.venv-cuda\Scripts\python.exe scripts\evaluate_pretrained_validation_baseline_v2.py
+.venv-cuda\Scripts\python.exe -m unittest discover -s tests -v
+git diff --check
+```
+
+Nine new focused tests, 36 focused/regression tests, and all 165 repository
+tests passed. Cross-process sampler and trial determinism under different
+Python hash seeds passed.
+
+### Preservation, quarantine, result, and deferred work
+
+Approved manifests, cache configuration/identity/indexes, cache shards,
+source WAVs, environments, pretrained weights, checkpoints, historical
+reports, and prior artifacts were not modified. No absolute dataset root was
+persisted.
+
+The final-test manifest was not opened, statted, hashed, parsed, or loaded. No
+final-test audio was opened, no final-test feature was extracted, no
+final-test trial was generated, and no final-test evaluation occurred.
+
+Result: **PASS** for the requested sampler approval, fixed validation trial
+package, and untouched pretrained ECAPA validation baseline only.
+
+Deferred: AAM-Softmax, optimizer creation, all training and checkpoints,
+augmentation, comparative sampler benchmarking, final-test access/trials/
+evaluation, commit, and push. No commit or push occurred.
+
+## 2026-07-29 19:55:47 +07:00 - VieSpeaker2.0 ECAPA-AAM CUDA preflight, production epoch 0, and fixed validation
+
+Performed only the approved v2 CUDA preflight, one production epoch zero,
+fresh-object checkpoint roundtrip, and fixed validation task. No epoch-one
+training, scheduling, augmentation, gradient clipping, early stopping,
+threshold tuning, final-test work, commit, or push occurred.
+
+### Approved inputs and implementation
+
+Validated the approved portable package, train/validation manifests, train
+label mapping, cache config/identity/indexes, sampler config and exact plans,
+fixed validation trial package, and pretrained validation baseline before and
+after the run. Their SHA-256 identities remained:
+
+- Portable package: `29f374366c917fb6c54dcd44eeeff59ccc46a732b270188e7157a586e4d9e7c5`
+- Train/validation manifests: `f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b` / `9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc`
+- Train label mapping: `9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8`
+- Cache config/identity: `ec71959ec64361038991e760e772d11bf1779e1b505a892dff364cf45aaeb018` / `1a2d6af777311f687e887575bfaf20915ed0409fd2e05b2f1ac232d43cd0b8c8`
+- Train/validation cache indexes: `e20c320fc5842502a26684023bb307a7b2afa27a14a3cf1130fdffe31e85d4b9` / `1d3a95e95aaa5b13e6614c077fbbdf10f7c208c79970c2a85bdd461193b9f585`
+- Sampler config: `e59d3794371095acddcee17218ff99fef4393cb15a7f7176c2d7680120436899`
+- Trial CSV/config/identity: `11bec5ff0a0a4ca4930e2664bdc391388a9a677795afaefe5de3fee2d0d39e3d` / `9e725ce006ae522f0f0274739b75e9aee7ebb302db331fead73c79cdc326822e` / `09b55236ad3f80537e1517a5efa7ad1d7a7efc3454f6b56d9ba62af83cc6bf73`
+- Baseline identity: `5000ddabe804f4cfd7c905c3ed51bc8fd1d0273822ca2091019da923f387974c`
+- Combined/epoch-0/epoch-1 sampler plans: `b11a97fd45f11b8f71fa980ebd26cb335bac0f3bcdfb781e8f87ced535606e4f` / `010e80f042ae91f1c890045d12833005359833466ba6d5a4b5fc70e5c8f04a68` / `c5ff9c7fca4c88541c47738706b1852293e6727da9bb420350e75379179bba0f`
+
+Created `src/ecapa_one_epoch_v2.py`,
+`scripts/run_ecapa_aam_one_epoch_v2.py`,
+`tests/test_ecapa_one_epoch_v2.py`, and the tracked
+`reports/ecapa_aam_one_epoch_v2.json` and `.md` reports. Modified
+`src/verification_v2.py` to report TPR, specificity, and TNR, and updated
+`AGENTS.md` only after the complete task passed.
+
+The run used the pretrained `speechbrain/spkrec-ecapa-voxceleb` cached-feature
+path, 1,347 train classes, AAM margin `0.2` and scale `30`, P=16/K=2 logical
+batches of 32, physical microbatches of 4 with 8-way accumulation, AdamW
+learning rates `1e-5` for ECAPA and `1e-3` for AAM, weight decay `1e-4`,
+FP16 ECAPA with FP32 AAM/loss, and GradScaler initial scale 128. All
+BatchNorm modules remained in evaluation mode with affine parameters
+trainable. No pretrained VoxCeleb classifier was used.
+
+### CUDA preflight and epoch zero
+
+The isolated train-only CUDA preflight used fresh disposable objects for
+exactly two optimizer updates. Losses were `15.970597863197327` and
+`15.634921431541443`. ECAPA/AAM maximum parameter deltas were
+`2.002716064453125e-05` / `0.002001367509365082`, with aggregate deltas
+`287.1260554654291` / `402.4821472167969`. BatchNorm buffers were exact,
+all optimizer state was finite, no scaler update was skipped, validation was
+not run, and no production checkpoint was written. Peak allocated/reserved
+CUDA memory was `778252800 / 880803840` bytes. These objects were discarded
+before fresh production construction.
+
+Production completed exactly 2,969 optimizer updates and 95,008 logical
+selections, then stopped before epoch one. The 2,969 logical losses had
+first/final/mean/min/max values
+`15.970597863197327 / 0.5739374789409339 / 3.0659153226259708 /
+0.07522520795464516 / 16.667139291763306`. Training took
+`2103.319411900001` seconds; peak allocated/reserved CUDA memory was
+`776417792 / 891289600` bytes. All gradients, parameters, and optimizer
+states were finite, all updates advanced, BatchNorm buffers remained exact,
+and the log contained the required 100-step cadence plus step 2,969.
+
+### Checkpoints and fresh-object roundtrip
+
+Atomic checkpoints were written with no temporary residue:
+
+- `last.pt`: `68665317ae5d5279593c87ae985be60198e3a410bf768ae901db90bf0d7fbcc4`
+- `epoch_000.pt`: `62ec327788fb349c08a96eebb5259d4e2879747cf1a00278949bfa5bb068da10`
+- `best.pt`: `19cfd3482172ce482d21b65915fd347aeeac4ee1e51bc61e59484f46a31a38db`
+
+Independent readback confirmed exact upstream and sampler bindings, AAM
+shape `[1347, 192]`, AdamW step 2,969 for every state entry, cursor
+epoch 1/batch 0/global step 2,969, and `epoch_1_started=false`. Fresh CPU
+SpeechBrain, AAM, AdamW, and GradScaler objects exactly restored embedding,
+normalizer, AAM, optimizer, scaler, DataLoader generator, RNG, BatchNorm
+policy/buffers, and cursor state. A fresh sampler regenerated the approved
+epoch-one plan hash without taking an optimizer step or starting epoch one.
+
+### Fixed validation and baseline comparison
+
+Sequential, non-augmented validation produced exactly 15,355 CPU float32
+embeddings of shape `[15355, 192]`, then scored exactly 20,000 fixed trials
+(10,000 positive and 10,000 negative). It made zero AAM,
+`compute_features`, or pretrained-classifier calls. Embedding extraction
+took `79.5039850000012` seconds at `193.13497304568781`
+utterances/second; scoring and metrics took `1.0520947000004526` and
+`0.0977578000001813` seconds. Peak validation allocated/reserved CUDA
+memory was `2577747968 / 3196059648` bytes.
+
+Interpolated EER was `0.064` (`6.4%`) at threshold
+`0.16190975904464722`; this was also the empirical threshold, with
+FAR=FRR=`0.064`. TP/TN/FP/FN were `9360/9360/640/640`; accuracy,
+precision, recall/TPR, specificity/TNR, and F1 were all `0.936`.
+Same-speaker score min/mean/std/median/max was
+`-0.15145419538021088 / 0.428650140974205 /
+0.15662893391829685 / 0.4465496391057968 / 0.9826944470405579`.
+Different-speaker was
+`-0.3604694604873657 / 0.014766331464692485 /
+0.09456113088666378 / 0.01176312891766429 / 0.5310559272766113`.
+Direct independent recomputation from the stored scores reproduced the
+confusion matrix and FAR/FRR exactly.
+
+Against baseline EER `0.1257`, the signed and absolute changes were
+`-0.061700000000000005` and `0.0617` (percentage-point change `-6.17`,
+relative change `-0.4908512330946699`), classified `IMPROVED`.
+
+### Artifact identities, tests, and preservation
+
+Output hashes beyond the checkpoints:
+
+- CUDA preflight: `91ff16a0534184337605e61db21b9bc8bc54982db8b832d37668b60d3e9e4b74`
+- Training log/losses: `d5b265af5d5abd0920d0af27a4ad43ab4965f3af88a7032ea6883c19af57a162` / `e3bda643bc488cc7dbfd3c90613f015dfa5daa9d9507423851a07131d6d79a89`
+- Validation embeddings/scores/metrics: `2702d195f901a7c3c456f6f7590e8a65d3dd56aef339ce8717808e0816fd5b80` / `4447e0e24924f3c73efee2db5507772807f6ee41af730e870ea71006d3978716` / `841ae9be2c6149a5c247c1cbf382064930037399a319d1a40b96e0c78a0cacc4`
+- Runtime: `f3e4f678dc0dee858441d969be892bb3dc23efc1b07fe7a293bcd56859e28758`
+- Tracked JSON/Markdown reports: `ffea2e9b706404a75de40ce5fb68579d2890b351e38243a79d74c425f261afb3` / `77219ac68ebc1359025ab090a73d9f9f167cd9140447d68628c77484fce8ed2b`
+
+Python compilation passed. The new module's 12 tests passed; 51 focused and
+regression tests passed; the complete CUDA-environment repository suite
+passed all 177 tests. `git diff --check` passed. JSON runtime/report and
+checkpoint identities are portable and contain no absolute local paths.
+
+Source WAVs, approved manifests, cache config/identity/indexes/shards,
+environments, pretrained weights, historical reports, and pre-existing
+checkpoints were not modified. The stable `.venv-cuda` environment was not
+changed. The final-test manifest was not opened, statted, hashed, parsed, or
+loaded; no final-test audio, cache, embeddings, trials, threshold
+application, or evaluation occurred.
+
+Result: **PASS** for the requested v2 CUDA preflight, production epoch zero,
+checkpoint roundtrip, and fixed validation only.
+
+Deferred: epoch-one training, scheduler/warmup, augmentation, gradient
+clipping, early stopping, threshold tuning, final-test access/trials/
+evaluation, commit, and push. No commit or push occurred.
+
+## 2026-07-30 - VieSpeaker2.0 AMP overflow recovery and final multi-epoch completion v2
+
+The preceding multi-epoch attempt failed closed during epoch 2 before batch
+2,532 after detecting one non-finite ECAPA gradient. Its runtime, failure
+record, reports, epoch-one checkpoint, and latest valid atomic checkpoint were
+preserved as historical evidence. Recovery bound the exact `last.pt` SHA-256
+`3b8d613012ee8340a30ad264729c83ea97501b793e6c97e1d0ed78555e5c96a0`
+at epoch 2/batch position 2,031/global step 7,969, retained a byte-identical
+copy, and removed only five uncommitted scalar-log suffix rows for resumed
+steps 5,100–5,500.
+
+The approved execution-only remediation allowed one retry of the exact same
+materialized logical batch at half GradScaler scale when forward tensors,
+loss, parameters, and optimizer state were finite and non-finiteness appeared
+only in gradients. The historical batch 2,532 replayed finite and was recorded
+as `historical_overflow_not_reproduced`. Three other isolated overflows
+occurred at epoch 2/batch 2,585/global step 8,523, epoch 3/batch 1,095/global
+step 10,002, and epoch 4/batch 594/global step 12,470. Each affected only
+`blocks.0.norm.norm.weight`, changed scale 2,048 to 1,024, retried the same
+batch identity once, advanced zero counters on the failed attempt, and then
+completed exactly one optimizer update. Counts were three attempted, three
+recovered, and zero failed; no logical batch was skipped.
+
+Epochs 2–4 each completed exactly 2,969 updates and immutable validation ran
+once per epoch. Validation EERs for epochs 0–4 were `0.064`, `0.0602`,
+`0.0587`, `0.0584`, and `0.0584`. Epoch 4 tied epoch 3, so the earlier epoch 3
+remained selected. Training stopped at epoch 4 with `max_epoch`, final global
+step 14,845, resumed updates 11,876, and exact final cosine multiplier 0.1.
+The selected `best.pt` is byte-identical to `epoch_003.pt`, SHA-256
+`ba9d989c1b6a922f3f392cd297fb771bba05319d3fad99df740ac889d2836d6f`,
+with EER `0.0584` and locked empirical threshold `0.16545939445495605`.
+
+Independent fresh-object audits restored final `last.pt` and `best.pt`
+without optimizer work, reproduced counters, RNG/generator state, BatchNorm
+buffers, selected metrics, FAR/FRR, and confusion. The focused 31 tests,
+combined 82 tests, and complete 208-test suite passed; Python compilation and
+`git diff --check` passed. Approved inputs, source audio, cache, environments,
+pretrained weights, and historical evidence remained unchanged. Final-test
+content was not opened, statted, hashed, parsed, loaded, or evaluated. No
+commit or push occurred.
+
+Result: **PASS** for AMP overflow remediation, exact atomic recovery, resumed
+epochs 2–4, fixed validation, final checkpoint selection, and threshold lock.
+
+Deferred: final-test access, threshold application to final test, final-test
+trials/cache/embeddings/evaluation, further training or tuning, commit, and
+push.
+
+## 2026-07-30 - VieSpeaker2.0 one-time authoritative final evaluation v2
+
+Quarantine was lifted only for this explicitly approved task and only for the
+approved test manifest plus its 15,355 referenced WAVs. The metadata-only
+protocol was locked before test audio or model access. The fixed trial package
+contains 10,000 positive and 10,000 negative trials and reproduced
+byte-identically under a different `PYTHONHASHSEED`; its identity SHA-256 is
+`b06ba77783a6ad3442f3b7f77ebc1c367f8772b9707ff30191f963476dddb1c6`.
+The evaluation-lock identity SHA-256 is
+`7bff4b3b5f5b78fc2314a8031f70566c0e527f7e2e3a2721e2e01479031b049d`.
+
+The completely separate final-test Fbank cache contains exactly 15,355
+manifest-ordered `[301,80]` float32 raw non-transposed features in 60 shards.
+Its completion identity SHA-256 is
+`bc2a88fa1560c356c12eca4050da64c4924cb58cbf8a65d18c8c6b87d7d0dfde`.
+The path-size-mtime snapshot of all approved source WAVs matched before and
+after extraction, and the existing train/validation cache remained unchanged.
+
+The checkpoint and threshold were fixed in advance: only
+`outputs/ecapa_aam_multiepoch_v2/best.pt`, byte-identical to `epoch_003.pt`
+with SHA-256
+`ba9d989c1b6a922f3f392cd297fb771bba05319d3fad99df740ac889d2836d6f`,
+was evaluated, and the operational threshold remained the selected epoch-3
+validation threshold `0.16545939445495605`. One inference process produced
+exactly 15,355 `[192]` embeddings and 20,000 aligned cosine scores. At the
+locked threshold, TP/TN/FP/FN were `9598/9426/574/402`, FAR was `0.0574`,
+FRR was `0.0402`, and accuracy was `0.9512`.
+
+The descriptive test EER was `0.0453` at descriptive threshold
+`0.17728488147258759`. It is non-operational, did not replace the locked
+validation threshold, and caused no test-side training, tuning, calibration,
+checkpoint selection, threshold adjustment, rerun, or rescoring. The
+finalized state prevents another normal evaluation; the dedicated
+dependency-light metrics-only command reproduced the saved-score metrics
+exactly without SpeechBrain, CUDA, WAV, Fbank, embedding extraction, or
+rescoring access.
+
+Python compilation passed; 31 focused tests, 91 combined tests, and the
+complete 239-test suite passed. `git diff --check` passed. Source WAVs,
+approved manifests, train/validation cache, environments, pretrained weights,
+checkpoints, and historical reports remained unchanged. No excluded or
+unrelated audio was accessed. No commit or push occurred.
+
+Result: **PASS** for the one-time authoritative VieSpeaker2.0 final
+evaluation, locked-threshold metrics, descriptive non-operational test
+diagnostic, immutable finalization, and metrics-only reproducibility.
+
+Deferred: any further training, tuning, checkpoint selection, threshold
+adjustment, final-test trial regeneration, feature or embedding extraction,
+normal inference, rescoring, commit, and push.

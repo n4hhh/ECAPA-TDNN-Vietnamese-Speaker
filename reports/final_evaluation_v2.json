@@ -1,0 +1,180 @@
+{
+  "checkpoint": {
+    "byte_identical_epoch_003": true,
+    "path": "outputs/ecapa_aam_multiepoch_v2/best.pt",
+    "selected_epoch": 3,
+    "sha256": "ba9d989c1b6a922f3f392cd297fb771bba05319d3fad99df740ac889d2836d6f"
+  },
+  "final_test_tuning_performed": false,
+  "integrity_pass_independent_of_metric_quality": true,
+  "lock_identity_sha256": "7bff4b3b5f5b78fc2314a8031f70566c0e527f7e2e3a2721e2e01479031b049d",
+  "locked_threshold": 0.16545939445495605,
+  "metrics": {
+    "descriptive_test_diagnostic_non_operational": {
+      "eer": 0.0453,
+      "eer_kind": "linearly_interpolated_roc_crossing",
+      "eer_percentage": 4.53,
+      "eer_threshold": 0.17728488147258759,
+      "eer_threshold_kind": "interpolated_non_empirical",
+      "empirical_average_error": 0.0453,
+      "empirical_far": 0.0453,
+      "empirical_far_frr_gap": 0.0,
+      "empirical_frr": 0.0453,
+      "empirical_threshold": 0.17728488147258759,
+      "empirical_threshold_semantics": "accept same speaker when score >= threshold",
+      "far": 0.0453,
+      "frr": 0.0453,
+      "interpolated_eer": 0.0453,
+      "interpolated_eer_percentage": 4.53,
+      "interpolated_far": 0.0453,
+      "interpolated_frr": 0.0453,
+      "interpolated_threshold": 0.17728488147258759,
+      "label": "DESCRIPTIVE TEST DIAGNOSTIC - NON-OPERATIONAL",
+      "must_not_replace_locked_threshold": true,
+      "operational": false
+    },
+    "generalization_analysis": {
+      "absolute_eer_gap": 0.0131,
+      "final_test_descriptive_eer_minus_validation_eer": -0.0131,
+      "full_score_range_comparison": {
+        "final_test": {
+          "maximum": 0.9891860485076904,
+          "minimum": -0.36574140191078186
+        },
+        "validation": {
+          "maximum": 0.9853910207748413,
+          "minimum": -0.36854538321495056
+        }
+      },
+      "locked_accuracy_minus_validation_accuracy": 0.009600000000000053,
+      "locked_far_minus_validation_far": -0.0010000000000000009,
+      "locked_frr_minus_validation_frr": -0.0182,
+      "negative_mean_shift": -0.0013976523245917642,
+      "negative_median_shift": -0.0006446982733905315,
+      "negative_standard_deviation_shift": 0.0003767810085651274,
+      "percentage_point_eer_gap": -1.31,
+      "positive_mean_shift": 0.021517296253913076,
+      "positive_median_shift": 0.019214913249015808,
+      "positive_standard_deviation_shift": -0.0018333019585695665,
+      "relative_eer_change": -0.2243150684931507
+    },
+    "metrics_implementation_version": "viespeaker2_grouped_tie_aware_eer_and_locked_confusion_v2",
+    "primary_locked_validation_threshold": {
+      "accuracy": 0.9512,
+      "average_error": 0.048799999999999996,
+      "balanced_protocol_caveat": "Accuracy, precision, and F1 describe this balanced 50/50 trial protocol and do not represent real-world same/different-speaker prevalence.",
+      "decision_rule": "cosine_score >= threshold => accept as same speaker",
+      "f1": 0.9516161015268689,
+      "far": 0.0574,
+      "far_frr_gap": 0.0172,
+      "fn": 402,
+      "fp": 574,
+      "frr": 0.0402,
+      "independent_confusion_reproduction": true,
+      "precision": 0.9435705859221392,
+      "recall": 0.9598,
+      "specificity": 0.9426,
+      "threshold": 0.16545939445495605,
+      "threshold_semantics": "accept same speaker when score >= threshold",
+      "threshold_source": "selected epoch-3 validation threshold",
+      "tn": 9426,
+      "tnr": 0.9426,
+      "tp": 9598,
+      "tpr": 0.9598
+    },
+    "score_distributions": {
+      "full_range": {
+        "maximum": 0.9891860485076904,
+        "minimum": -0.36574140191078186
+      },
+      "negative": {
+        "count": 10000,
+        "maximum": 0.4627918004989624,
+        "mean": 0.010393687324866186,
+        "median": 0.008648556657135487,
+        "minimum": -0.36574140191078186,
+        "standard_deviation": 0.0967073759155211
+      },
+      "positive": {
+        "count": 10000,
+        "maximum": 0.9891860485076904,
+        "mean": 0.4668801829315722,
+        "median": 0.4837736636400223,
+        "minimum": -0.18597255647182465,
+        "standard_deviation": 0.15489902834304287
+      }
+    }
+  },
+  "metrics_only_recomputation_permitted": true,
+  "normal_inference_or_rescoring_permitted": false,
+  "one_time_status": "finalized",
+  "report_kind": "authoritative_final_evaluation_v2",
+  "result": "PASS",
+  "result_identity_path": "outputs/final_evaluation_v2/final_evaluation_result_identity_v2.json",
+  "result_identity_sha256": "2c6a45bb4979c3232f99a83e7ce5029e4b0e5719b67059b22be11bdc2538c8a1",
+  "runtime": {
+    "cache_bytes": 1480162872,
+    "cache_shard_count": 60,
+    "cuda_peak_allocated_bytes": 2561522176,
+    "cuda_peak_reserved_bytes": 3166699520,
+    "descriptive_eer_duration_seconds": 0.05011839998769574,
+    "embedding_extraction_duration_seconds": 74.70890539999527,
+    "embedding_utterances_per_second": 205.53105306239664,
+    "fbank_extraction_duration_seconds": 31.948287599996547,
+    "fbank_utterances_per_second": 480.62043863664417,
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "locked_metric_duration_seconds": 0.0076336000056471676,
+    "model_inference_processes": 1,
+    "oom_count": 0,
+    "parameters_preserved": true,
+    "retained_module_call_counts": {
+      "embedding_model": 240,
+      "mean_var_norm": 240
+    },
+    "scoring_duration_seconds": 0.045247500005643815,
+    "total_authoritative_evaluation_duration_seconds": 150.58457500001532,
+    "trial_generation_duration_seconds": 42.13546250000945
+  },
+  "schema_version": 2,
+  "source_and_protected_artifacts_unchanged": true,
+  "threshold_source": "selected epoch-3 validation threshold",
+  "validation_reference": {
+    "accuracy": 0.9416,
+    "confusion": {
+      "fn": 584,
+      "fp": 584,
+      "tn": 9416,
+      "tp": 9416
+    },
+    "eer": 0.0584,
+    "far": 0.0584,
+    "frr": 0.0584,
+    "score_distributions": {
+      "full_range": {
+        "maximum": 0.9853910207748413,
+        "minimum": -0.36854538321495056
+      },
+      "negative": {
+        "count": 10000,
+        "maximum": 0.5763332843780518,
+        "mean": 0.01179133964945795,
+        "median": 0.009293254930526018,
+        "minimum": -0.36854538321495056,
+        "q1": -0.052190572023391724,
+        "q3": 0.07346910238265991,
+        "standard_deviation": 0.09633059490695597
+      },
+      "positive": {
+        "count": 10000,
+        "maximum": 0.9853910207748413,
+        "mean": 0.4453628866776591,
+        "median": 0.46455875039100647,
+        "minimum": -0.14669062197208405,
+        "q1": 0.35608965158462524,
+        "q3": 0.5533672422170639,
+        "standard_deviation": 0.15673233030161243
+      }
+    },
+    "threshold": 0.16545939445495605
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "approved_input_identities": {
+    "full_manifest": "26a0157abce3bb00ce5f0ca16f9b964e180f72484e53f9d2602577f5ce4acf8f",
+    "full_manifest_identity": "f7b6c1cbc95b8a0d20b596b4841de7ebc26e69d6bd7c130801937dab681c544e",
+    "portable_package_identity": "29f374366c917fb6c54dcd44eeeff59ccc46a732b270188e7157a586e4d9e7c5",
+    "speaker_split": "cbbcdcd4d3561ff2470a6cd713187cbb612939e643e5bc8cf4ed25504539f87e",
+    "speaker_split_identity": "87d2a542ae1716f5d143e27835bf0478413e672cfa131462c0410808498c3c67",
+    "split_policy": "3e414836b4fe307841810cffa56c3f0040d0c662d265d276d73a7d00a16a5d10",
+    "train_label_mapping": "9d4e9015d25f023b8466f7932c296faece937104b17120bdb85c45ad10623cd8",
+    "train_manifest": "f76aa0321f5f9a2714b2bad9f4b9ab0fd155075f26b50397f79931c8a4bd552b",
+    "validation_manifest": "9c85332cbcd3e33818055c526c0bc54e5b86e7a2c4ed8b3c869433412c24a6fc"
+  },
+  "cache": {
+    "batch_size_fallback_used": false,
+    "device": "cuda:0",
+    "dtype": "float32",
+    "extraction_batch_size": 64,
+    "extraction_seconds": 206.7450961000004,
+    "feature_shape": [
+      301,
+      80
+    ],
+    "included_splits": [
+      "train",
+      "validation"
+    ],
+    "model_source": "speechbrain/spkrec-ecapa-voxceleb",
+    "path": "outputs/fbank_cache_v2/",
+    "raw_pre_normalization": true,
+    "requested_batch_size": 64,
+    "shard_size": 256,
+    "total_cached_utterances": 110364,
+    "total_shard_bytes": 10638641568,
+    "transposed": false
+  },
+  "cached_dataset_and_dataloader": {
+    "bounded_lru": true,
+    "dataset_index_and_manifest_row_identity_aligned": true,
+    "lazy_cpu_shards": true,
+    "num_workers_0_sequential_batches_per_split": 2,
+    "num_workers_2_batches_per_split": 1,
+    "train_dataset_length": 95009,
+    "v1_backward_compatibility": true,
+    "validation_dataset_length": 15355,
+    "windows_dataloader_compatible": true
+  },
+  "cached_ecapa_preflight": {
+    "batch_size": 4,
+    "compute_features_call_count": 0,
+    "device": "cuda:0",
+    "embedding_model_shape": [
+      4,
+      1,
+      192
+    ],
+    "embedding_shape_after_squeeze": [
+      4,
+      192
+    ],
+    "feature_transpose_used": false,
+    "gradients_absent": true,
+    "input_normalized_and_embeddings_finite": true,
+    "optimizer_created": false,
+    "parameters_frozen": true,
+    "parameters_unchanged": true,
+    "pretrained_classifier_call_count": 0,
+    "train_labels_valid": true,
+    "validation_labels_all_minus_one": true
+  },
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "python": "3.10.11",
+    "speechbrain": "1.0.3",
+    "torch": "2.2.0+cu121",
+    "torchaudio": "2.2.0+cu121"
+  },
+  "feature_preflight": {
+    "batch_size_64_feature_shape": [
+      64,
+      301,
+      80
+    ],
+    "batch_size_64_waveform_shape": [
+      64,
+      48000
+    ],
+    "finite": true,
+    "measured_feature_shape": [
+      301,
+      80
+    ],
+    "measured_on_split": "train",
+    "small_preflight_samples": 4
+  },
+  "final_test_quarantine": {
+    "cache_artifacts_created": false,
+    "cache_directory_created": false,
+    "manifest_opened": false,
+    "source_audio_accessed": false
+  },
+  "identity_and_hashes": {
+    "cached_ecapa_preflight": "4d634d87a1c8fa614effb8f520ffa6265975336bebec50d53db67bd7bdd55f02",
+    "config": "ec71959ec64361038991e760e772d11bf1779e1b505a892dff364cf45aaeb018",
+    "identity": "1a2d6af777311f687e887575bfaf20915ed0409fd2e05b2f1ac232d43cd0b8c8",
+    "runtime_result": "71fa3164c0f2adf2eb435defa9559b1379bcb566942119264657deed4fbc15b9",
+    "train_index": "e20c320fc5842502a26684023bb307a7b2afa27a14a3cf1130fdffe31e85d4b9",
+    "validation_index": "1d3a95e95aaa5b13e6614c077fbbdf10f7c208c79970c2a85bdd461193b9f585"
+  },
+  "reproducibility": {
+    "config_generated_twice_identically": true,
+    "indexes_generated_twice_identically": true,
+    "maximum_absolute_feature_difference": 0.0,
+    "stable_metadata_and_index_hashes": true,
+    "train_reextracted_samples": 2,
+    "validation_reextracted_samples": 2
+  },
+  "result": "PASS",
+  "source_preservation": {
+    "approved_input_hashes_unchanged": true,
+    "approved_source_rows_checked": 110364,
+    "source_allowlist_state_unchanged": true,
+    "source_wav_rewrites": 0
+  },
+  "tests": {
+    "full_repository_unittests": 156,
+    "full_repository_unittests_passed": true,
+    "git_diff_check_passed": true,
+    "py_compile_passed": true,
+    "synthetic_fbank_cache_v2_tests": 13,
+    "synthetic_fbank_cache_v2_tests_passed": true
+  },
+  "train_cache": {
+    "class_count": 1347,
+    "index_rows": 95009,
+    "label_range": [
+      0,
+      1346
+    ],
+    "shard_bytes": 9158497768,
+    "shards": 372
+  },
+  "validation_cache": {
+    "index_rows": 15355,
+    "labels_all_minus_one": true,
+    "shard_bytes": 1480143800,
+    "shards": 60
+  }
+}

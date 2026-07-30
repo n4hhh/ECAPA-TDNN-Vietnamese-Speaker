@@ -1,0 +1,17 @@
+{
+  "absolute_paths_in_identity": false,
+  "checkpoint_sha256": "ba9d989c1b6a922f3f392cd297fb771bba05319d3fad99df740ac889d2836d6f",
+  "evaluation_id": "5fe56f8a5bd80af9860bbe9321bc4dd306661001349e7655b38c49ecdf5ed2c8",
+  "fbank_config_sha256": "e6a2132b98f7b4bee51ef19c4ee72b91235177960a185cee0bcf574f773e4c2f",
+  "identity_kind": "final_evaluation_lock_identity_v2",
+  "lock_config_path": "configs/v2/final_evaluation_v2.json",
+  "lock_config_sha256": "1a8b09002eaf1a8a6547a7d7775f923c261f5674cae915976e94bdde9eb36c19",
+  "one_time_policy_version": "viespeaker2_authoritative_final_evaluation_once_v2",
+  "operational_threshold": 0.16545939445495605,
+  "protocol_locked": true,
+  "schema_version": 2,
+  "selected_epoch": 3,
+  "threshold_source": "selected epoch-3 validation threshold",
+  "timestamps_in_identity": false,
+  "trial_identity_sha256": "b06ba77783a6ad3442f3b7f77ebc1c367f8772b9707ff30191f963476dddb1c6"
+}
