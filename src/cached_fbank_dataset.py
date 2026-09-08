@@ -15,6 +15,7 @@ from torch.utils.data import DataLoader, Dataset, Sampler
 
 V1_SPLITS = ("train", "validation", "test")
 V2_SPLITS = ("train", "validation")
+ADAPTIVE_AUGMENTED_3S_V1_SPLITS = ("train", "validation")
 V1_INDEX_FIELDS = {
     "relative_audio_path",
     "feature_shard_path",
@@ -50,6 +51,30 @@ V1_SHARD_KEYS = {
     "final_split",
 }
 V2_SHARD_KEYS = V1_SHARD_KEYS | {"schema_version", "manifest_row_indices"}
+ADAPTIVE_AUGMENTED_3S_V1_INDEX_FIELDS = {
+    "relative_audio_path",
+    "speaker_id",
+    "speaker_label",
+    "final_split",
+    "shard_path",
+    "within_shard_index",
+}
+ADAPTIVE_AUGMENTED_3S_V1_SHARD_KEYS = {
+    "schema_version",
+    "features",
+    "speaker_labels",
+    "speaker_ids",
+    "relative_audio_paths",
+    "final_split",
+}
+ADAPTIVE_AUGMENTED_3S_V1_BINDINGS = {
+    "dataset_identity": "8fd9fcc0b802d56d4a96080e53180e73e317e57165c25f8d81b77ce4f18d421d",
+    "split_identity": "6aa9f029cec5cfd76e00bcf4eebad92d4f61aeb39467055009ce0e06ab22885c",
+    "train_manifest": "16be3c155430c018976d240853a34e28e272668db7c5a3190fd6e674a39f8d3f",
+    "validation_manifest": "3ed60cf7d2041d564476de52808d375c3bb9cb84e5f01689bdf5a18ced98ca69",
+    "speaker_to_label": "d99df32a65bc95d7b2bc6f73155a335ef736167b925a2e5d630d4dccf4ff159d",
+    "speaker_split": "eaa3a695079bfb00d077415df440e4a744a24cd93e5eb7d7ec98c84f67d0eb61",
+}
 
 
 @dataclass(frozen=True)
@@ -60,7 +85,7 @@ class CachedFbankRow:
     speaker_id: str
     speaker_label: int
     final_split: str
-    filename_group: str
+    filename_group: str = ""
     manifest_row_index: int = -1
     duplicate_group: str = ""
     manifest_version: str = "v1"
@@ -98,6 +123,12 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
                     "final-test and excluded cache access is forbidden"
                 )
             self.identity: dict[str, Any] | None = self._read_v2_identity()
+        elif self.cache_version == 3:
+            if split not in ADAPTIVE_AUGMENTED_3S_V1_SPLITS:
+                raise ValueError(
+                    "adaptive_augmented_3s_v1 cache permits only train and validation"
+                )
+            self.identity = self._read_adaptive_augmented_3s_v1_identity()
         else:
             self.identity = None
         self.rows = self._read_index()
@@ -114,6 +145,7 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
         candidates = (
             (1, self.cache_dir / "fbank_cache_config_v1.json"),
             (2, self.cache_dir / "fbank_cache_config_v2.json"),
+            (3, self.cache_dir / "fbank_cache_config_adaptive_augmented_3s_v1.json"),
         )
         existing = [(version, path) for version, path in candidates if path.is_file()]
         if not existing:
@@ -134,8 +166,99 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
         if self.cache_version == 1:
             self._validate_v1_config(config)
         else:
-            self._validate_v2_config(config)
+            if self.cache_version == 2:
+                self._validate_v2_config(config)
+            else:
+                self._validate_adaptive_augmented_3s_v1_config(config)
         return config
+
+    @staticmethod
+    def _validate_adaptive_augmented_3s_v1_config(config: dict[str, Any]) -> None:
+        required = {
+            "schema_version",
+            "cache_version",
+            "model_source",
+            "speechbrain_version",
+            "input_bindings",
+            "task1_identity_sha256",
+            "included_splits",
+            "feature_stage",
+            "feature_shape",
+            "feature_dtype",
+            "raw_pre_normalization",
+            "transposed",
+            "shard_schema_version",
+            "shard_size",
+            "expected_rows",
+            "train_class_count",
+            "train_label_range",
+            "validation_label",
+            "index_filenames",
+            "index_fields",
+            "index_order",
+            "shard_assignment",
+            "path_base_semantics",
+            "fbank",
+        }
+        missing = required - set(config)
+        if missing:
+            raise ValueError(
+                "adaptive_augmented_3s_v1 cache config is missing keys: "
+                f"{sorted(missing)}"
+            )
+        if (
+            config["schema_version"] != 3
+            or config["cache_version"] != "adaptive_augmented_3s_v1"
+            or config["model_source"] != "speechbrain/spkrec-ecapa-voxceleb"
+        ):
+            raise ValueError("unsupported adaptive_augmented_3s_v1 cache schema")
+        if config["included_splits"] != list(ADAPTIVE_AUGMENTED_3S_V1_SPLITS):
+            raise ValueError("cache included_splits must be exactly train/validation")
+        bindings = config["input_bindings"]
+        if (
+            not isinstance(bindings, dict)
+            or config["task1_identity_sha256"] != ADAPTIVE_AUGMENTED_3S_V1_BINDINGS
+            or {
+                name: value.get("sha256") if isinstance(value, dict) else None
+                for name, value in bindings.items()
+            } != {key: value for key, value in ADAPTIVE_AUGMENTED_3S_V1_BINDINGS.items() if key != "speaker_split"}
+        ):
+            raise ValueError("cache does not bind the approved Task 1 identities")
+        if (
+            config["feature_stage"] != "raw_compute_features_before_mean_var_norm"
+            or config["feature_shape"] != [301, 80]
+            or config["feature_dtype"] != "float32"
+            or config["raw_pre_normalization"] is not True
+            or config["transposed"] is not False
+            or config["shard_schema_version"] != 3
+        ):
+            raise ValueError("invalid adaptive_augmented_3s_v1 feature contract")
+        if config["fbank"] != {
+            "sample_rate": 16000, "n_fft": 400, "win_length": 400,
+            "hop_length": 160, "center": True, "n_mels": 80,
+            "f_min": 0, "f_max": 8000,
+        }:
+            raise ValueError("cache Fbank configuration differs from the approved frontend")
+        if not isinstance(config["shard_size"], int) or config["shard_size"] < 1:
+            raise ValueError("cache has invalid shard_size")
+        if config["expected_rows"] != {"train": 48640, "validation": 6076}:
+            raise ValueError("cache row counts do not match the approved package")
+        if (
+            config["train_class_count"] != 488
+            or config["train_label_range"] != [0, 487]
+            or config["validation_label"] != -1
+        ):
+            raise ValueError("cache label contract does not match the approved package")
+        if config["index_filenames"] != {
+            "train": "train_feature_index_adaptive_augmented_3s_v1.csv",
+            "validation": "validation_feature_index_adaptive_augmented_3s_v1.csv",
+        } or set(config["index_fields"]) != ADAPTIVE_AUGMENTED_3S_V1_INDEX_FIELDS:
+            raise ValueError("cache index schema is invalid")
+        if (
+            config["index_order"] != "portable_manifest_row_order"
+            or config["shard_assignment"] != "manifest_row_index divmod shard_size"
+        ):
+            raise ValueError("cache deterministic ordering contract is invalid")
 
     @staticmethod
     def _validate_v1_config(config: dict[str, Any]) -> None:
@@ -325,6 +448,45 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
             raise ValueError("v2 cache identity has invalid index hashes")
         return identity
 
+    def _read_adaptive_augmented_3s_v1_identity(self) -> dict[str, Any]:
+        path = self.cache_dir / "fbank_cache_identity_adaptive_augmented_3s_v1.json"
+        if not path.is_file():
+            raise FileNotFoundError(f"missing finalized cache identity: {path}")
+        try:
+            identity = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ValueError(f"malformed cache identity {path}: {error}") from error
+        required = {
+            "schema_version", "identity_kind", "cache_version", "config_sha256",
+            "included_splits", "feature_shape", "feature_dtype", "shard_size",
+            "row_counts", "index_sha256", "shard_counts",
+            "total_cached_utterances", "final_test_cache_absent", "identity_sha256",
+        }
+        if not isinstance(identity, dict) or required - set(identity):
+            raise ValueError("cache identity is missing required fields")
+        canonical = dict(identity)
+        declared_hash = canonical.pop("identity_sha256")
+        encoded = json.dumps(canonical, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        if hashlib.sha256(encoded).hexdigest() != declared_hash:
+            raise ValueError("cache identity hash is invalid")
+        if (
+            identity["schema_version"] != 3
+            or identity["identity_kind"] != "adaptive_augmented_3s_fbank_cache"
+            or identity["cache_version"] != self.config["cache_version"]
+            or identity["included_splits"] != list(ADAPTIVE_AUGMENTED_3S_V1_SPLITS)
+            or identity["feature_shape"] != self.config["feature_shape"]
+            or identity["feature_dtype"] != "float32"
+            or identity["shard_size"] != self.config["shard_size"]
+            or identity["row_counts"] != self.config["expected_rows"]
+            or identity["total_cached_utterances"] != 54716
+            or identity["final_test_cache_absent"] is not True
+            or identity["config_sha256"] != self._file_sha256(self.config_path)
+        ):
+            raise ValueError("cache identity disagrees with its config")
+        if set(identity["index_sha256"]) != set(ADAPTIVE_AUGMENTED_3S_V1_SPLITS):
+            raise ValueError("cache identity has invalid index hashes")
+        return identity
+
     @staticmethod
     def _safe_relative_path(value: str, description: str) -> str:
         pure = PurePosixPath(value)
@@ -339,6 +501,8 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
         return value
 
     def _read_index(self) -> tuple[CachedFbankRow, ...]:
+        if self.cache_version == 3:
+            return self._read_adaptive_augmented_3s_v1_index()
         if self.cache_version == 1:
             path = self.cache_dir / f"{self.split}_feature_index_v1.csv"
             required_fields = V1_INDEX_FIELDS
@@ -476,6 +640,53 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
                 raise ValueError("v2 train index does not cover the complete label range")
         return tuple(rows)
 
+    def _read_adaptive_augmented_3s_v1_index(self) -> tuple[CachedFbankRow, ...]:
+        path = self.cache_dir / self.config["index_filenames"][self.split]
+        if self.identity is None or self.identity["index_sha256"][self.split] != self._file_sha256(path):
+            raise ValueError(f"{self.split} index hash disagrees with cache identity")
+        rows: list[CachedFbankRow] = []
+        seen_paths: set[str] = set()
+        with path.open("r", encoding="utf-8-sig", newline="") as stream:
+            reader = csv.DictReader(stream)
+            if set(reader.fieldnames or ()) != ADAPTIVE_AUGMENTED_3S_V1_INDEX_FIELDS:
+                raise ValueError(f"{path} has an invalid cache index schema")
+            for line, raw in enumerate(reader, start=2):
+                try:
+                    relative = self._safe_relative_path(raw["relative_audio_path"].strip(), "audio path")
+                    shard_path = self._safe_relative_path(raw["shard_path"].strip(), "shard path")
+                    position = int(raw["within_shard_index"])
+                    label = int(raw["speaker_label"])
+                except (TypeError, ValueError) as error:
+                    raise ValueError(f"{path}:{line}: malformed cache row: {error}") from error
+                dataset_index = len(rows)
+                expected_shard = f"{self.split}/shard_{dataset_index // self.config['shard_size']:05d}.pt"
+                if (
+                    not raw["speaker_id"].strip()
+                    or raw["final_split"].strip() != self.split
+                    or PurePosixPath(relative).parent.name != raw["speaker_id"].strip()
+                    or relative in seen_paths
+                    or position != dataset_index % self.config["shard_size"]
+                    or shard_path != expected_shard
+                ):
+                    raise ValueError(f"{path}:{line}: cache row alignment failed")
+                if self.split == "train":
+                    if not 0 <= label <= 487:
+                        raise ValueError(f"{path}:{line}: invalid train label")
+                elif label != -1:
+                    raise ValueError(f"{path}:{line}: invalid validation label")
+                seen_paths.add(relative)
+                rows.append(CachedFbankRow(
+                    relative_audio_path=relative, feature_shard_path=shard_path,
+                    feature_index=position, speaker_id=raw["speaker_id"].strip(),
+                    speaker_label=label, final_split=self.split,
+                    manifest_row_index=dataset_index, manifest_version="adaptive_augmented_3s_v1",
+                ))
+        if len(rows) != self.config["expected_rows"][self.split]:
+            raise ValueError(f"{self.split} index count does not match cache config")
+        if self.split == "train" and {row.speaker_label for row in rows} != set(range(488)):
+            raise ValueError("train index does not cover the complete label range")
+        return tuple(rows)
+
     def __len__(self) -> int:
         return len(self.rows)
 
@@ -498,7 +709,7 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
             shard = self._shard_cache.pop(relative_path)
             self._shard_cache[relative_path] = shard
             return shard
-        if self.cache_version == 2:
+        if self.cache_version in {2, 3}:
             pure = PurePosixPath(relative_path)
             if len(pure.parts) != 2 or pure.parts[0] != self.split:
                 raise ValueError(
@@ -519,12 +730,18 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
         return shard
 
     def _validate_shard(self, shard: Any, path: Path) -> None:
-        shard_keys = V1_SHARD_KEYS if self.cache_version == 1 else V2_SHARD_KEYS
+        shard_keys = (
+            V1_SHARD_KEYS if self.cache_version == 1
+            else V2_SHARD_KEYS if self.cache_version == 2
+            else ADAPTIVE_AUGMENTED_3S_V1_SHARD_KEYS
+        )
         if not isinstance(shard, dict) or set(shard) != shard_keys:
             raise ValueError(
                 f"malformed shard {path}: expected keys {sorted(shard_keys)}"
             )
         if self.cache_version == 2 and shard["schema_version"] != 2:
+            raise ValueError(f"malformed shard {path}: unsupported schema version")
+        if self.cache_version == 3 and shard["schema_version"] != 3:
             raise ValueError(f"malformed shard {path}: unsupported schema version")
         features = shard["features"]
         labels = shard["speaker_labels"]
@@ -615,8 +832,9 @@ class CachedFbankDataset(Dataset[dict[str, Any]]):
             "speaker_id": row.speaker_id,
             "relative_audio_path": row.relative_audio_path,
             "final_split": row.final_split,
-            "filename_group": row.filename_group,
         }
+        if self.cache_version != 3:
+            sample["filename_group"] = row.filename_group
         if self.cache_version == 2:
             sample.update(
                 {
@@ -644,8 +862,11 @@ def collate_cached_fbank(samples: Sequence[dict[str, Any]]) -> dict[str, Any]:
             sample["relative_audio_path"] for sample in samples
         ],
         "final_split": [sample["final_split"] for sample in samples],
-        "filename_group": [sample["filename_group"] for sample in samples],
     }
+    if "filename_group" in samples[0]:
+        if not all("filename_group" in sample for sample in samples):
+            raise ValueError("cannot collate mixed cache schemas")
+        batch["filename_group"] = [sample["filename_group"] for sample in samples]
     if "manifest_row_index" in samples[0]:
         if not all("manifest_row_index" in sample for sample in samples):
             raise ValueError("cannot collate mixed v1/v2 cache samples")
