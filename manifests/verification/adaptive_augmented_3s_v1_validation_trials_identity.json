@@ -1,0 +1,42 @@
+{
+  "final_test_access": false,
+  "generation_algorithm": "hash_ranked_genuine_and_balanced_impostor_endpoints_v1",
+  "identity_kind": "adaptive_augmented_3s_validation_trials",
+  "identity_sha256": "5897ab00009f8cdd30d27d5028089a6fd358d66b2d76f4d13d1bd79282f78d67",
+  "input_bindings": {
+    "dataset_identity": {
+      "path": "manifests/adaptive_augmented_3s_v1_dataset_identity.json",
+      "sha256": "8fd9fcc0b802d56d4a96080e53180e73e317e57165c25f8d81b77ce4f18d421d"
+    },
+    "split_identity": {
+      "path": "splits/adaptive_augmented_3s_v1_split_identity.json",
+      "sha256": "6aa9f029cec5cfd76e00bcf4eebad92d4f61aeb39467055009ce0e06ab22885c"
+    },
+    "validation_manifest": {
+      "path": "manifests/adaptive_augmented_3s_v1_validation_manifest.csv",
+      "sha256": "3ed60cf7d2041d564476de52808d375c3bb9cb84e5f01689bdf5a18ced98ca69"
+    }
+  },
+  "input_split": "validation",
+  "package_version": "adaptive_augmented_3s_v1",
+  "pair_identity": "canonical_unordered_dataset_relative_audio_paths",
+  "schema_version": 1,
+  "seed": 2026,
+  "speaker_count": 61,
+  "timestamps_in_identity": false,
+  "trial_counts": {
+    "genuine": 10000,
+    "impostor": 10000,
+    "total": 20000
+  },
+  "trial_csv_path": "manifests/verification/adaptive_augmented_3s_v1_validation_trials.csv",
+  "trial_csv_sha256": "58d6526904a51a64e1eb2cedf06648ddfbf3154f1dcf79fa398a1cd584bb915e",
+  "trial_schema": [
+    "trial_id",
+    "left_audio_path",
+    "right_audio_path",
+    "left_speaker_id",
+    "right_speaker_id",
+    "target"
+  ]
+}
