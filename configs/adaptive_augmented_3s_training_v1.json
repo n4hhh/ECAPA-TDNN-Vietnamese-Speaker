@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "training_version": "adaptive_augmented_3s_v1",
+  "cache": {
+    "identity_sha256": "019e2734ad6e1b62b230c3938befa2d3620a70af895778952622f9ab2bf7446b",
+    "config_sha256": "e7c1524f1289839eb15db3bb1e49434f726af4a6c49409ed82f920c730a9bf75",
+    "train_rows": 48640,
+    "validation_rows": 6076,
+    "feature_shape": [301, 80]
+  },
+  "sampler": {
+    "name": "HybridShardAwareSpeakerBatchSampler",
+    "seed": 20260729,
+    "speakers_per_batch": 16,
+    "samples_per_speaker": 2,
+    "active_shard_window": 8,
+    "batches_per_epoch": 1520
+  },
+  "model": {
+    "source": "speechbrain/spkrec-ecapa-voxceleb",
+    "embedding_dim": 192
+  },
+  "aam": {
+    "num_classes": 488,
+    "margin": 0.2,
+    "scale": 30.0
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "ecapa_lr": 0.00001,
+    "aam_lr": 0.001,
+    "weight_decay": 0.0001
+  },
+  "amp": {
+    "enabled": true,
+    "ecapa_dtype": "float16",
+    "grad_scaler_initial_scale": 128.0
+  },
+  "scheduler": {
+    "name": "cosine",
+    "max_epochs": 10,
+    "steps_per_epoch": 1520,
+    "total_steps": 15200,
+    "minimum_factor": 0.1,
+    "warmup_steps": 0
+  },
+  "early_stopping": {
+    "patience": 2,
+    "min_improvement_eer": 0.0001
+  },
+  "validation": {
+    "trial_identity_sha256": "5897ab00009f8cdd30d27d5028089a6fd358d66b2d76f4d13d1bd79282f78d67",
+    "trial_csv_sha256": "58d6526904a51a64e1eb2cedf06648ddfbf3154f1dcf79fa398a1cd584bb915e",
+    "trial_count": 20000,
+    "batch_size": 64
+  },
+  "checkpoint_interval_updates": 100
+}
