@@ -37,6 +37,14 @@ class ValidationTrial:
     right_speaker_id: str
     target: int
 
+    @property
+    def left_relative_audio_path(self) -> str:
+        return self.left_audio_path
+
+    @property
+    def right_relative_audio_path(self) -> str:
+        return self.right_audio_path
+
 
 def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()

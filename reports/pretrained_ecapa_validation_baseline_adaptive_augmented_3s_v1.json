@@ -1,0 +1,80 @@
+{
+  "embedding": {
+    "count": 6076,
+    "dtype": "float32",
+    "ordering": "validation_cache_index_order",
+    "shape": [
+      6076,
+      192
+    ]
+  },
+  "final_test_access_count": 0,
+  "identity_kind": "adaptive_augmented_3s_pretrained_validation_baseline",
+  "identity_sha256": "8e60ad0fb9890727fba80ec56c53dd02fbcbb67910274eadcdb516af8a3857ee",
+  "input_bindings": {
+    "cache_identity": "019e2734ad6e1b62b230c3938befa2d3620a70af895778952622f9ab2bf7446b",
+    "cache_identity_file_sha256": "96345f6a5fd0a9557362d31cf00c13c248447af0fdc3b32a5a862663691460da",
+    "dataset_identity": "8fd9fcc0b802d56d4a96080e53180e73e317e57165c25f8d81b77ce4f18d421d",
+    "model": {
+      "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2",
+      "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+      "source": "speechbrain/spkrec-ecapa-voxceleb"
+    },
+    "split_identity": "6aa9f029cec5cfd76e00bcf4eebad92d4f61aeb39467055009ce0e06ab22885c",
+    "trial_csv_sha256": "58d6526904a51a64e1eb2cedf06648ddfbf3154f1dcf79fa398a1cd584bb915e",
+    "trial_identity": "5897ab00009f8cdd30d27d5028089a6fd358d66b2d76f4d13d1bd79282f78d67"
+  },
+  "metric_implementation": "src.verification_metrics.calculate_eer",
+  "metrics": {
+    "eer": {
+      "eer": 0.1216,
+      "eer_kind": "linearly_interpolated_roc_crossing",
+      "eer_percentage": 12.16,
+      "eer_threshold": 0.2944788634777069,
+      "eer_threshold_kind": "interpolated_non_empirical",
+      "empirical_average_error": 0.1216,
+      "empirical_far": 0.1216,
+      "empirical_far_frr_gap": 0.0,
+      "empirical_frr": 0.1216,
+      "empirical_threshold": 0.2944788634777069,
+      "empirical_threshold_semantics": "accept same speaker when score >= threshold",
+      "far": 0.1216,
+      "frr": 0.1216,
+      "interpolated_eer": 0.1216,
+      "interpolated_eer_percentage": 12.16,
+      "interpolated_far": 0.1216,
+      "interpolated_frr": 0.1216,
+      "interpolated_threshold": 0.2944788634777069
+    },
+    "genuine_scores": {
+      "count": 10000,
+      "maximum": 0.9999999403953552,
+      "mean": 0.506042823179625,
+      "median": 0.5310507118701935,
+      "minimum": -0.11219619959592819,
+      "q1": 0.41282524168491364,
+      "q3": 0.6210819184780121,
+      "standard_deviation": 0.1706715909837146
+    },
+    "impostor_scores": {
+      "count": 10000,
+      "maximum": 0.6182124018669128,
+      "mean": 0.14875124734918355,
+      "median": 0.1404854729771614,
+      "minimum": -0.23501256108283997,
+      "q1": 0.06229233182966709,
+      "q3": 0.2228408195078373,
+      "standard_deviation": 0.11964374934822836
+    }
+  },
+  "schema_version": 1,
+  "score_csv_path": "reports/pretrained_ecapa_validation_baseline_adaptive_augmented_3s_v1_scores.csv",
+  "score_csv_sha256": "0134dc0b95e3b963f8b1e04fbfaf2548580d01f1400e0918374bebd1eee8297d",
+  "scoring_method": "torch.nn.functional.cosine_similarity",
+  "timestamps_in_identity": false,
+  "trials": {
+    "count": 20000,
+    "genuine": 10000,
+    "impostor": 10000
+  }
+}
