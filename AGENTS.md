@@ -1,52 +1,51 @@
 # Repository Rules
 
-- Inspect the repository before editing and keep each task limited to its explicitly approved stage.
-- Do not automatically continue to another pipeline stage.
+- Inspect the repository, this policy, and `reports/CODEX_WORKLOG.md` before editing; keep each task limited to its explicitly approved stage. Preserve pre-existing user changes.
+- Do not automatically continue to another pipeline stage or preemptively generate downstream artifacts. Complete and review each stage before proceeding under the next explicit instruction.
 - Do not commit or push unless explicitly instructed.
-- Preserve source audio, `manifests/full_manifest.csv`, environments, pretrained weights, caches, checkpoints, and historical reports.
-- Do not commit datasets, checkpoints, environments, caches, or manifests containing absolute local paths.
+- Do not commit datasets, WAVs, environments, pretrained weights, caches, checkpoints, large runtime artifacts, or machine-local path-bound outputs.
 - The stable CUDA environment is `.venv-cuda`; do not modify it or the existing CPU environment.
 
-## VieSpeaker2.0 governance
+## Production dataset authority
 
-- The final v2 dataset root is `E:\VieSpeaker2.0\augmented_dataset`.
-- VieSpeaker2.0 completely replaces `E:\VieSpeaker` for v2; the two datasets must never be merged.
-- The old dataset and all v1 artifacts are immutable historical pilot evidence only.
-- Do not reuse v1 splits, labels, label mappings, portable manifests, Fbank cache, trials, baselines, thresholds, checkpoints, or other data-dependent identities for v2.
-- V2 artifacts must use separate versioned paths. Dataset-dependent counts and identities must come from an explicitly approved v2 manifest or configuration.
-- Derive speaker identity from each WAV file's direct parent folder. Filename provenance is not an authoritative final split.
-- The final v2 speaker split is approved only through the versioned split and identity artifacts below; do not reinterpret or regenerate it without explicit approval.
-- Source WAVs are immutable. Do not write into the dataset root or run new preprocessing, resampling, channel conversion, VAD, normalization, cropping, padding, or augmentation before explicit approval.
-- Do not hard-code the final v2 speaker/label count, feature length, sampler configuration, batches per epoch, split ratios, or source-group interpretation before explicit approval.
-- Final splits must be speaker-disjoint, and every utterance from one speaker must remain in one final split.
-- Validation and final test must not receive stochastic training augmentation. Validation will select checkpoints and thresholds; final test remains untouched until the explicitly approved final-evaluation task.
-- The approved v2 split artifacts are `splits/v2/speaker_split_v2.csv`, `splits/v2/speaker_split_v2_identity.json`, and `splits/v2/split_policy_v2.json`; the approved portable package and binding identity are under `manifests/portable_v2/`.
-- V2 speaker assignments are train 1,347, validation 100, final test 100, and excluded 128. The excluded speakers are exactly the singleton speakers and remain represented in `manifests/v2/full_manifest_v2.csv`.
-- `manifests/portable_v2/speaker_to_label_v2.json` assigns train speakers contiguous labels `0..1346` in numeric speaker-ID order; every validation and final-test row has label `-1`.
-- `manifests/portable_v2/test_manifest_v2.csv` is immutable. Its one-time authorized final evaluation is complete; do not reopen final-test audio or regenerate any final-test artifact.
-- Every downstream v2 task must validate and bind the approved full-manifest and split hashes recorded in the v2 identity artifacts; do not substitute hand-maintained row counts.
-- The approved raw train/validation Fbank cache is `outputs/fbank_cache_v2/`, with `fbank_cache_config_v2.json` and `fbank_cache_identity_v2.json` as its configuration and completion identity.
-- The measured v2 cached feature shape is `[301, 80]`, float32, raw pre-normalization, and non-transposed.
-- The immutable completed final-test cache is `outputs/fbank_cache_final_test_v2/`; its completion identity is `outputs/fbank_cache_final_test_v2/fbank_cache_identity_final_test_v2.json`, SHA-256 `bc2a88fa1560c356c12eca4050da64c4924cb58cbf8a65d18c8c6b87d7d0dfde`.
-- Every downstream v2 cache consumer must validate and bind the v2 cache config and identity hashes rather than relying on path or shape alone.
-- The approved v2 training sampler is defined only by `configs/v2/training_sampler_v2.json`: `HybridShardAwareSpeakerBatchSampler`, P=16, K=2, batch size 32, active shard window 8, seed 20260729, 2,969 batches and 95,008 logical selections per epoch, DataLoader workers 0, and Dataset LRU size 8 with `validate_finite=False` for the already validated immutable cache.
-- Training must validate the sampler config hash and sampler-plan identity, call `set_epoch(epoch)`, preserve exact P x K batches, and keep rows sharing a nonempty duplicate group out of the same speaker batch. Do not reinterpret, benchmark alternatives, or regenerate this approved configuration without explicit approval.
-- The fixed validation verification package is `manifests/verification_v2/validation_trials_v2.csv`, `validation_trials_config_v2.json`, and `validation_trials_identity_v2.json`. It contains exactly 10,000 positive and 10,000 negative trials over all 100 validation speakers and is immutable downstream input.
-- The approved untouched pretrained validation reference is recorded in `reports/pretrained_ecapa_validation_baseline_v2.json`; its executable empirical threshold is validation-only evidence and must not be applied to final test before the explicitly approved final-evaluation task.
-- The approved completed v2 epoch-zero run is `outputs/ecapa_aam_one_epoch_v2/`: `epoch_000.pt` is the immutable epoch-completion checkpoint, `last.pt` is the rolling/final-step checkpoint, and `best.pt` is the validation-selected trained checkpoint.
-- The immutable v2 epoch-zero training origin is `outputs/ecapa_aam_one_epoch_v2/best.pt`, SHA-256 `19cfd3482172ce482d21b65915fd347aeeac4ee1e51bc61e59484f46a31a38db`; it produced validation EER `0.064` at validation-only threshold `0.16190975904464722`.
-- Final v2 multi-epoch training is complete under `outputs/ecapa_aam_multiepoch_v2/` after resumed epochs 1–4, using at most one exact-same-batch AMP gradient-overflow retry at half GradScaler scale. Three overflow events recovered, zero failed, and training stopped at epoch 4 with reason `max_epoch`.
-- The selected final v2 checkpoint is `outputs/ecapa_aam_multiepoch_v2/best.pt`, byte-identical to `epoch_003.pt`, SHA-256 `ba9d989c1b6a922f3f392cd297fb771bba05319d3fad99df740ac889d2836d6f`. Its validation EER is `0.0584` and its locked validation empirical threshold is `0.16545939445495605`.
-- The one-time final v2 evaluation is complete. The immutable trial package is `manifests/verification_v2/final_test_trials_v2.csv`, `final_test_trials_config_v2.json`, and `final_test_trials_identity_v2.json`; the identity SHA-256 is `b06ba77783a6ad3442f3b7f77ebc1c367f8772b9707ff30191f963476dddb1c6`.
-- The immutable evaluation lock is `configs/v2/final_evaluation_v2.json` with identity `configs/v2/final_evaluation_v2_identity.json`, SHA-256 `7bff4b3b5f5b78fc2314a8031f70566c0e527f7e2e3a2721e2e01479031b049d`.
-- The evaluated checkpoint remains `outputs/ecapa_aam_multiepoch_v2/best.pt`, SHA-256 `ba9d989c1b6a922f3f392cd297fb771bba05319d3fad99df740ac889d2836d6f`. The operational threshold remains `0.16545939445495605`, sourced only from selected epoch-3 validation.
-- Primary final-test metrics and the descriptive non-operational test EER are recorded in `reports/final_evaluation_v2.json` and `reports/final_evaluation_v2.md`. Test-derived thresholds are non-operational.
-- Final-test cache, trials, embeddings, scores, and reports are immutable. Do not rerun normal model inference or rescoring; only metrics-only recomputation from the saved scores is permitted.
-- Do not use final-test results for further training, tuning, checkpoint selection, or threshold adjustment.
+- Main repository: `E:\SpeakerVerification`. Preprocessing belongs to the independent `E:\SpeakerDataPipeline` repository.
+- The only approved downstream dataset is `E:\adaptive_augmented_3s`. Do not train directly on the original `E:\adaptive_augmented`, use VieSpeaker/VieSpeaker2.0 as production inputs, or merge these datasets.
+- Approved contract: 610 speakers and 60,803 WAV files; each WAV is 16,000 Hz, mono, exactly 48,000 samples and 3.0 seconds. SpeakerDataPipeline preprocessing validation passed with zero failures. These are supplied contract values to verify in the authorized manifest stage, not a new audit performed by this policy update.
+- Layout is `dataset_root/speaker_id/*.wav`. Derive authoritative speaker identity from each WAV's direct parent directory.
+- Filename suffixes such as `_noise` and `_rev` must not define splits, classification labels, provenance assumptions, or experimental groups.
+- Normalization used WebRTC VAD-assisted deterministic contiguous-window cropping for long recordings, preserved exactly 3-second recordings, and symmetrically zero padded short recordings. No additional noise/reverb augmentation was added during normalization.
+- Never modify source audio or write into `E:\adaptive_augmented_3s`. Write generated artifacts elsewhere. Do not perform new preprocessing, resampling, channel conversion, VAD, normalization, cropping, padding, or augmentation without an explicitly approved task; approval to generate artifacts does not authorize source changes.
+
+## Historical evidence and stale artifacts
+
+- All data-dependent artifacts derived from `E:\adaptive_augmented`, VieSpeaker, or VieSpeaker2.0 are stale for this production phase unless explicitly regenerated and verified against `E:\adaptive_augmented_3s`.
+- This includes full/split/portable manifests, speaker assignments, labels and mappings, Fbank caches and identities, sampler plans/configurations/identities, verification trials, baselines, EERs, thresholds, checkpoint dataset identities, old final-test artifacts, and dataset-specific counts or hashes.
+- Regenerate in separate versioned paths during the authorized stage; never relabel an old artifact as belonging to the new dataset or overwrite immutable historical evidence. Do not copy VieSpeaker2.0 data-dependent values into production.
+- Preserve old datasets, `manifests/full_manifest.csv`, pretrained weights, caches, checkpoints, and historical reports. Prior v1/v2 identities and run results remain documented in `reports/CODEX_WORKLOG.md` and their versioned reports/configurations; they are historical evidence, not current production authority. Preserve worklog history; future authorized worklog updates should be append-only.
+- VieSpeaker2.0's one-time final evaluation is complete. Its final-test manifest, cache, trials, evaluation lock, embeddings, scores, and reports remain immutable. Do not reopen its final-test audio, regenerate artifacts, rerun inference, or rescore. Only an explicitly requested metrics-only recomputation from saved scores is permitted; results must not guide further training, tuning, checkpoint selection, or threshold adjustment.
+
+## Speaker split and evaluation isolation
+
+- Intended production split: all 610 speakers assigned to train 488, validation 61, and final test 61. The split unit is the speaker; every utterance from one speaker stays in exactly one split, with zero speaker overlap. Never randomly split individual utterances.
+- Generate and verify deterministic speaker assignments only in the authorized split stage. The approved counts do not constitute an existing split package, seed, label mapping, or approval to reuse earlier assignments or exclusion rules.
+- Validation supports checkpoint selection, hyperparameter decisions, threshold selection, model comparison, and verification tuning. Validation and final test must not receive stochastic training augmentation.
+- Lock final test after its authorized creation and metadata validation. Do not open or evaluate it early or generate downstream final-test artifacts during train/validation work. Use task-specific paths and avoid recursive inspection of quarantined final-test artifacts.
+- Final test must never support hyperparameter tuning, checkpoint/threshold selection, model tuning, or exploratory comparison. Its one-time evaluation requires an explicit final-evaluation task after the training/validation pipeline is finalized, with checkpoint and operational threshold locked from validation.
+- Preserve final-test artifacts after evaluation. Any descriptive test-derived EER threshold is non-operational and must not replace the validation-selected threshold.
+
+## Artifact identity and reproducibility
+
+- Every data-dependent artifact must bind to the normalized dataset and its approved upstream identities: dataset fingerprint, full manifest, speaker split, train label mapping, Fbank cache, sampler plan, validation trials, baseline, and checkpoint training identity as applicable.
+- Downstream consumers must validate the relevant manifest/split hashes and cache configuration/completion identity hashes before use. Path, tensor shape, or hand-maintained counts alone are insufficient; fail on identity mismatches.
+- Derive runtime counts, labels, feature length, sampler settings, epoch size, seeds, and trial configuration from newly approved artifacts/configurations. Verify the supplied dataset/split contract, but do not inherit old constants, hashes, thresholds, or checkpoint/resume identities.
+- Prefer deterministic generation with stable ordering, explicit seeds, and deterministic hashing; do not depend on filesystem traversal order, unordered containers, or implicit RNG state.
+- Keep committed portable manifests dataset-root-relative. Any exceptional nonportable path requirement needs a strong documented reason; machine-local absolute-path artifacts must remain ignored.
+- Preserve exact approved sampler behavior when reused: validate configuration and plan identity, call `set_epoch(epoch)`, and keep exact P x K batches. Where authoritative duplicate groups exist, keep duplicate-group rows out of the same speaker batch. Do not infer those groups from filename suffixes or disable integrity checks based on validation of an old cache.
 
 ## Model invariants
 
-- Use the pretrained `speechbrain/spkrec-ecapa-voxceleb` model; do not train ECAPA-TDNN from scratch.
+- Use the pretrained `speechbrain/spkrec-ecapa-voxceleb` model with project-owned AAM-Softmax for training; do not train ECAPA-TDNN from scratch. Do not redesign the architecture unless a real incompatibility is identified.
+- Waveform path: waveform -> SpeechBrain `compute_features` (80-d Log-Mel Fbank) -> `mean_var_norm` -> `embedding_model` -> 192-dimensional speaker embedding.
 - The production cached-feature path remains:
 
 ```text
@@ -60,3 +59,53 @@ cached Fbank [B, T, 80]
 
 - Do not transpose SpeechBrain features or replace the pretrained SpeechBrain frontend with `src/fbank.py`.
 - Do not use the pretrained VoxCeleb classifier for the Vietnamese task.
+
+- Cache raw pre-normalization, non-transposed Fbank features. Establish the new dataset's feature length and cache compatibility in the authorized Fbank compatibility stage.
+- Reuse suitable existing mechanisms: `CachedFbankDataset`, `HybridShardAwareSpeakerBatchSampler`, AAM-Softmax, AMP, gradient accumulation, frozen BatchNorm running statistics, checkpoint/resume, cosine learning-rate scheduling, fixed validation trials, cosine scoring, EER, and best-checkpoint selection. Reuse of mechanisms does not authorize reuse of their dataset-dependent identities or settings.
+
+## Production stage discipline
+
+- Typical sequence: normalized dataset -> full manifest -> speaker-disjoint split -> portable split manifests -> train label mapping -> Fbank compatibility check -> Fbank cache -> sampler configuration -> fixed validation trials -> untouched pretrained ECAPA validation baseline -> ECAPA + AAM fine-tuning -> validation/checkpoint selection -> one-time final-test evaluation.
+- The sequence is guidance, not authorization. Implement only the requested stage or explicitly requested stage package.
+- Before real fine-tuning, complete the dedicated repository cleanup/readiness stage and the production README gate below.
+
+## Code readability and focused validation
+
+- Prefer short focused functions, clear names, simple control flow, explicit data flow, small modules, minimal abstraction, straightforward CLI entrypoints, useful errors, and comments explaining why.
+- Avoid oversized files, deep helper layers, generic frameworks for simple tasks, duplicated logic, dead branches, speculative extensibility, excessive configuration machinery, unnecessary classes, trivial wrappers, and comments narrating obvious code.
+- Existing complexity does not justify new complexity. Simplify a touched component where reasonable within scope while preserving behavior and data integrity; do not perform unrelated large refactors.
+- Use focused checks for speaker-disjointness, dataset path identity, label mapping correctness, cache/data compatibility, checkpoint identity, and final-test isolation.
+- Keep production validation/integrity logic that protects real data and evaluation correctness. Do not classify it as unnecessary merely because it validates something.
+- Do not build a large testing framework or many synthetic test scripts unless necessary. Development-only tests, temporary scripts, synthetic benchmarks, exploratory utilities, and obsolete harnesses are candidates for safe removal in the dedicated cleanup stage.
+
+## Production minimalism and readiness gate
+
+- Target a compact repository where every retained source file has a clear role: environment installation, artifact/cache preparation, fixed validation trials, pretrained baseline, ECAPA+AAM fine-tuning, checkpoint validation/resume, or final evaluation.
+- Cleanup must audit obsolete/debug/experimental/migration/one-off/redundant scripts, dead modules, development-only tests, synthetic benchmarks, duplicate implementations, unused CLI entrypoints, stale dataset references/constants, and documentation drift.
+- Also audit accidental runtime artifacts, absolute local paths, datasets, caches, checkpoints, environments, and generated outputs. Preserve protected data/evidence; checking ignore coverage does not authorize deleting them.
+- Remove legacy files only in an explicitly requested cleanup task, after verifying they are absent from the retained production dependency graph and documented workflow. Age alone is not grounds for deletion.
+- Before training, ensure `.gitignore` prevents accidental commits of datasets/WAVs, virtual environments, caches, checkpoints, large runtime artifacts, local-machine outputs, and other non-source production artifacts.
+
+## README gate before real fine-tuning
+
+- Make `README.md` practical and production-ready in its authorized documentation stage, sufficient for another person to clone, install, and run the supported workflow.
+- Document the overview, repository structure, supported environment and Python/PyTorch/torchaudio/SpeechBrain versions, installation, virtual environment setup, and dependencies.
+- Document dataset structure/audio contract; actual commands for artifact preparation, required Fbank cache, validation trials, pretrained baseline, exact fine-tuning invocation and important arguments, checkpoint/output locations, resume if supported, validation, and final-test evaluation.
+- Include final-test isolation, reproducibility details, and important seeds/identities where appropriate. Commands must match retained production entrypoints; do not document obsolete or unused scripts.
+
+## Environment authority
+
+- Stable stack: Python 3.10.11; PyTorch and torchaudio 2.2.0+cu121; SpeechBrain 1.0.3; RTX 3050 Laptop GPU with 4 GB VRAM.
+- Existing CUDA environment: `E:\SpeakerVerification\.venv-cuda` (repository-relative `.venv-cuda`, as verified on disk and used in the worklog). The production brief's `E:\SpeakerVerification.venv-cuda` omits the directory separator; do not create or migrate to that path.
+- Preserve the CUDA and existing CPU environments. Prefer the stable stack; introduce dependencies or environment changes only for a demonstrated incompatibility within an explicitly authorized task.
+
+## Commit discipline
+
+- Bring each meaningful stage to a commit-ready state before moving on: functional correctness, data integrity, reproducibility, readable implementation, minimal production surface, correct artifact identity, a clean scoped diff, and relevant documentation.
+- Commit and push only when explicitly requested. Keep commits logically scoped; use meaningful stage-specific titles such as `feat(data): build normalized dataset manifest` or `feat(split): add deterministic speaker-disjoint dataset split`, with a concise body describing additions, changes, removals, and validation. Avoid vague titles such as "update", "fix stuff", "final", or "done".
+
+## Task 0 boundary
+
+- This task changes only `AGENTS.md`. Read the existing policy and worklog first.
+- Do not modify production code, scripts, tests, README, manifests, artifacts, configs, training code, or the worklog; do not implement manifest/split generation, regenerate artifacts, delete legacy files, commit, or push.
+- Next recommended stage only: production full manifest + deterministic speaker-disjoint 488 / 61 / 61 split package for `E:\adaptive_augmented_3s`. Do not start it without an explicit request.
