@@ -1,0 +1,60 @@
+{
+  "all_dataset_rows_assigned_once": true,
+  "all_dataset_speakers_assigned": true,
+  "dataset_identity_path": "manifests/adaptive_augmented_3s_v1_dataset_identity.json",
+  "dataset_identity_sha256": "8fd9fcc0b802d56d4a96080e53180e73e317e57165c25f8d81b77ce4f18d421d",
+  "evaluation_label_sentinel": -1,
+  "final_test_locked_after_package_acceptance": true,
+  "full_manifest_path": "manifests/adaptive_augmented_3s_v1_full_manifest.csv",
+  "full_manifest_sha256": "983b6d846c4faa42136e22b135f03ad658b59ef3985401a813f2954106852e52",
+  "identity_kind": "adaptive_augmented_3s_speaker_split",
+  "manifest_paths": {
+    "final_test": "manifests/adaptive_augmented_3s_v1_final_test_manifest.csv",
+    "train": "manifests/adaptive_augmented_3s_v1_train_manifest.csv",
+    "validation": "manifests/adaptive_augmented_3s_v1_validation_manifest.csv"
+  },
+  "manifest_sha256": {
+    "final_test": "73c1ce536b66266ef620de06f8e4fdca7777576934e032f5540aec444034a912",
+    "train": "16be3c155430c018976d240853a34e28e272668db7c5a3190fd6e674a39f8d3f",
+    "validation": "3ed60cf7d2041d564476de52808d375c3bb9cb84e5f01689bdf5a18ced98ca69"
+  },
+  "package_version": "adaptive_augmented_3s_v1",
+  "row_counts": {
+    "final_test": 6087,
+    "train": 48640,
+    "validation": 6076
+  },
+  "schema_version": 1,
+  "speaker_counts": {
+    "final_test": 61,
+    "train": 488,
+    "validation": 61
+  },
+  "speaker_sets_pairwise_disjoint": true,
+  "speaker_split_path": "splits/adaptive_augmented_3s_v1_speaker_split.csv",
+  "speaker_split_sha256": "eaa3a695079bfb00d077415df440e4a744a24cd93e5eb7d7ec98c84f67d0eb61",
+  "speaker_to_label_path": "manifests/adaptive_augmented_3s_v1_speaker_to_label.json",
+  "speaker_to_label_sha256": "d99df32a65bc95d7b2bc6f73155a335ef736167b925a2e5d630d4dccf4ff159d",
+  "split_algorithm": "sort by SHA256(UTF8('<seed>|<exact speaker_id>')), then exact speaker_id",
+  "split_ranges": {
+    "final_test": [
+      549,
+      609
+    ],
+    "train": [
+      0,
+      487
+    ],
+    "validation": [
+      488,
+      548
+    ]
+  },
+  "split_seed": 2026,
+  "timestamps_in_identity": false,
+  "train_label_order": "numeric-aware exact speaker_id ascending",
+  "train_label_range": [
+    0,
+    487
+  ]
+}

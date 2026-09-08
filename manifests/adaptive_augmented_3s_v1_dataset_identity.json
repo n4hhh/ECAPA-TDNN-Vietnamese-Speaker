@@ -1,0 +1,31 @@
+{
+  "audio_contract": {
+    "compression_type": "NONE",
+    "duration_sec": "3.0",
+    "num_channels": 1,
+    "num_samples": 48000,
+    "sample_rate": 16000,
+    "sample_width_bytes": 2
+  },
+  "canonical_manifest_identity_method": "sorted compact JSON rows with LF",
+  "canonical_manifest_identity_sha256": "2601e116e29aebd880e8dea80c18b3bc363d7a30e9ad170a8dfb1337bece0907",
+  "creation_tool": "scripts/create_adaptive_augmented_3s_package.py",
+  "creation_tool_version": "adaptive_augmented_3s_package_schema_1",
+  "full_manifest_path": "manifests/adaptive_augmented_3s_v1_full_manifest.csv",
+  "full_manifest_sha256": "983b6d846c4faa42136e22b135f03ad658b59ef3985401a813f2954106852e52",
+  "identity_kind": "adaptive_augmented_3s_dataset",
+  "normalization_provenance_row_count": 60803,
+  "normalization_provenance_sha256": "be4eb159020185377b3026961b7e3600fb9eb37b8c60d6a6a5b4c42543eda76d",
+  "normalization_summary_sha256": "a3ebf1de8f8d3b517e2266b0c8d185cf97ab16b9f178d3212c73f92b7988e49e",
+  "package_version": "adaptive_augmented_3s_v1",
+  "path_base": "dataset_root_cli_argument",
+  "path_separator": "/",
+  "provenance_path_set_matches_inventory": true,
+  "schema_version": 1,
+  "source_audio_modified": false,
+  "speaker_count": 610,
+  "total_duration_sec": "182409.0",
+  "validation_summary_sha256": "2451a4ef43cd858430ea78d654b5ae762563ce0b7585ac53dd6a187ce4865ea1",
+  "wav_content_hashing": false,
+  "wav_count": 60803
+}
