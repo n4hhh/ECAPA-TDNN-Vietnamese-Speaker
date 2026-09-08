@@ -60,6 +60,7 @@ VALIDATION_MANIFEST_PATH = ROOT / "manifests/adaptive_augmented_3s_v1_validation
 DEFAULT_OUTPUT_DIR = ROOT / "outputs/ecapa_aam_adaptive_augmented_3s_v1"
 CHECKPOINT_SCHEMA = "adaptive_augmented_3s_ecapa_aam_training"
 CHECKPOINT_VERSION = 1
+AMP_OVERFLOW_RETRY_LIMIT = 1
 
 
 def canonical_json(value: Any) -> bytes:
@@ -375,12 +376,24 @@ def optimizer_update(
     scaler.unscale_(optimizer)
     scale_before = float(scaler.get_scale())
     scaler.step(optimizer)
+    try:
+        found_inf_per_device = scaler._per_optimizer_states[id(optimizer)]["found_inf_per_device"]
+    except (AttributeError, KeyError) as error:
+        raise RuntimeError("GradScaler did not expose optimizer overflow state") from error
+    optimizer_updated = not any(
+        bool(found_inf.detach().item()) for found_inf in found_inf_per_device.values()
+    )
     scaler.update()
     scale_after = float(scaler.get_scale())
-    if scale_after < scale_before:
-        raise RuntimeError("AMP overflow skipped an optimizer update")
+    if not optimizer_updated:
+        if scale_after >= scale_before:
+            raise RuntimeError("GradScaler reported overflow without reducing its scale")
+        optimizer.zero_grad(set_to_none=True)
     assert_batchnorm_running_state_exact(embedding_model, objects["batchnorm_reference_state"])
-    return {"loss": total_loss, "backward_calls": backwards, "scaler_scale": scale_after}
+    return {
+        "loss": total_loss, "backward_calls": backwards, "scaler_scale": scale_after,
+        "optimizer_updated": int(optimizer_updated),
+    }
 
 
 def validation_eer(
@@ -582,7 +595,24 @@ def run_training(
         )
         for position, batch in enumerate(loader, start=start):
             logical = validate_logical_batch(batch, config)
-            update = optimizer_update(objects, logical, config)
+            overflow_events = 0
+            while True:
+                update = optimizer_update(objects, logical, config)
+                if update["optimizer_updated"]:
+                    break
+                overflow_events += 1
+                if overflow_events > AMP_OVERFLOW_RETRY_LIMIT:
+                    save_state(output_dir, "last.pt", objects, scheduler, config_hash=config_hash,
+                        binding=binding, epoch=epoch, next_epoch=epoch, next_position=position,
+                        best_eer=state["best_validation_eer"], best_epoch=state["best_epoch"],
+                        patience_counter=state["early_stopping"]["patience_counter"],
+                        completed_epochs=state["completed_epochs"], reason="amp_overflow_retry_exhausted")
+                    raise RuntimeError(
+                        "AMP overflow retry limit exceeded at "
+                        f"epoch={epoch}, logical_batch={position}, "
+                        f"scaler_scale={update['scaler_scale']}, "
+                        f"retry_count={AMP_OVERFLOW_RETRY_LIMIT}"
+                    )
             scheduler.step()
             updates += 1
             next_epoch = epoch if position + 1 < len(planned) else epoch + 1
