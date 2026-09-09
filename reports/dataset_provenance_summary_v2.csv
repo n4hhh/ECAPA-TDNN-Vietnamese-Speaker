@@ -1,7 +1,0 @@
-provenance_class,file_count,speaker_count,readable_wav_count,duration_seconds
-train,86197,1024,86197,258591.0
-train_small,16128,430,16128,48384.0
-part,17858,536,17858,53574.0
-test,5664,69,5664,16992.0
-other,0,0,0,0
-unparseable,0,0,0,0

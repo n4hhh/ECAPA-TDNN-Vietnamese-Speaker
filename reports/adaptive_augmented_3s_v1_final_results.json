@@ -1,0 +1,18 @@
+{
+  "experiment": "adaptive_augmented_3s_v1",
+  "pretrained_validation_eer": 0.1216,
+  "best_finetuned_validation_eer": 0.0527,
+  "best_epoch": 6,
+  "final_test_eer": 0.0693,
+  "final_test_empirical_eer_threshold_descriptive_only": 0.15099745988845825,
+  "generalization_gap": 0.0166,
+  "best_checkpoint": {"path": "outputs/ecapa_aam_adaptive_augmented_3s_v1/best.pt", "sha256": "bfe49d9b96176d5c1dcc69c7275bd941a3c440ea57fe8458c53ebaab634ab5cc"},
+  "final_test_trials": {"csv_sha256": "e6d752a6dce0f3513482c713cf0375d2c99d7550d86e001ec5cf1bc674389427", "identity_sha256": "22a0d85241c91851bceb859c8bec0a3db598530a06c382bb89b8a47bc406e63a"},
+  "final_test_cache_identity_sha256": "a5af40586ac9fe2cec625be403371d28c1c21594cc8ca4b7ed6472aa65f3f535",
+  "final_test_embeddings": 6087,
+  "final_test_scores": 20000,
+  "genuine_trials": 10000,
+  "impostor_trials": 10000,
+  "evaluation_invocations": {"failed_pre_scoring_oom": 1, "completed_scoring": 1},
+  "final_test_not_used_for_model_selection_or_tuning": true
+}
