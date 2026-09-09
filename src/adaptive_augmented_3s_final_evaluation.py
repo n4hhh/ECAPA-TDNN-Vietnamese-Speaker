@@ -17,6 +17,7 @@ from src.verification_metrics import calculate_eer
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "configs/adaptive_augmented_3s_final_evaluation_v1.json"
+INFERENCE_BATCH_SIZE = 64
 
 
 def sha256_file(path: Path) -> str:
@@ -94,7 +95,22 @@ def validate_bound_inputs() -> tuple[dict, tuple[ValidationRow, ...], tuple[Vali
     return config, manifest, trials
 
 
-def run_evaluation(device: str) -> dict:
+def embed_cached_features(
+    features: torch.Tensor, norm: torch.nn.Module, embedding: torch.nn.Module,
+    device: str, batch_size: int = INFERENCE_BATCH_SIZE,
+) -> torch.Tensor:
+    if batch_size < 1:
+        raise ValueError("inference batch size must be positive")
+    vectors = []
+    with torch.inference_mode():
+        for start in range(0, features.shape[0], batch_size):
+            batch = features[start:start + batch_size].to(device=device, dtype=torch.float32)
+            lengths = torch.ones(batch.shape[0], device=device)
+            vectors.append(embedding(norm(batch, lengths), lengths).squeeze(1).cpu())
+    return torch.cat(vectors)
+
+
+def run_evaluation(device: str, inference_batch_size: int = INFERENCE_BATCH_SIZE) -> dict:
     config, manifest, trials = validate_bound_inputs()
     checkpoint = torch.load(resolved(config["checkpoint"]["path"]), map_location="cpu", weights_only=False)
     frontend = SpeechBrainECAPAFrontend(device="cpu")
@@ -104,8 +120,7 @@ def run_evaluation(device: str) -> dict:
     cache_root = resolved(config["cache"]["path"]); paths, vectors = [], []
     for shard in sorted((cache_root / "final_test").glob("shard_*.pt")):
         payload = torch.load(shard, map_location="cpu", weights_only=False)
-        features = payload["features"].to(device=device, dtype=torch.float32); lengths = torch.ones(features.shape[0], device=device)
-        with torch.inference_mode(): vectors.append(embedding(norm(features, lengths), lengths).squeeze(1).cpu())
+        vectors.append(embed_cached_features(payload["features"], norm, embedding, device, inference_batch_size))
         paths.extend(payload["relative_audio_paths"])
     embeddings = torch.cat(vectors)
     if tuple(embeddings.shape) != (6087, 192) or set(paths) != {row.audio_path for row in manifest}:
@@ -119,13 +134,14 @@ def main() -> None:
     parser.add_argument("--check", action="store_true", help="verify frozen bindings without embeddings or scoring")
     parser.add_argument("--run", action="store_true", help="perform the later authorized one-shot evaluation")
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--inference-batch-size", type=int, default=INFERENCE_BATCH_SIZE)
     args = parser.parse_args()
     if args.check == args.run:
         parser.error("specify exactly one of --check or --run")
     if args.check:
         config, rows, trials = validate_bound_inputs(); print(json.dumps({"validated_final_test_rows": len(rows), "validated_trials": len(trials), "checkpoint": config["checkpoint"]["path"], "embeddings_computed": 0, "scores_computed": 0}, sort_keys=True))
     else:
-        print(json.dumps(run_evaluation(args.device), sort_keys=True))
+        print(json.dumps(run_evaluation(args.device, args.inference_batch_size), sort_keys=True))
 
 
 if __name__ == "__main__":
